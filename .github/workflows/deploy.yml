@@ -1,0 +1,57 @@
+# build → peaceiris 推 gh-pages（与 SmilingWayne/me 思路一致）
+name: Deploy VitePress
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # 避免部分环境下 git 报 “dubious ownership”
+      - name: 配置 Git
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: 安装依赖
+        run: npm install --no-audit --no-fund
+
+      - name: 构建
+        run: npx vitepress build docs
+
+      - name: 列出构建产物
+        run: ls -la docs/.vitepress/dist | head -40
+
+      - name: 确认入口文件存在
+        run: |
+          test -f docs/.vitepress/dist/index.html
+          test -f docs/.vitepress/dist/.nojekyll
+
+      - name: 推送到 gh-pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs/.vitepress/dist
+          publish_branch: gh-pages
+          force_orphan: true
+          keep_files: false
+          user_name: "github-actions[bot]"
+          user_email: "41898282+github-actions[bot]@users.noreply.github.com"
