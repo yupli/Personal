@@ -2,6 +2,13 @@
 
 本仓库用于**记录个人知识积累**，正文全部为 **Markdown**，存放在 `docs/` 下。
 
+## 链接
+
+| 说明 | 地址 |
+|------|------|
+| **在线站点（GitHub Pages）** | <https://yupli.github.io/Personal/> |
+| **本仓库** | <https://github.com/yupli/Personal> |
+
 ## 内容目录
 
 | 区块 | 路径 |
