@@ -41,7 +41,11 @@ export default defineConfig({
     ],
 
     sidebar: {
-      "/or-opt/": [{ text: "运筹优化", link: "/or-opt/" }],
+      "/or-opt/": [
+        { text: "运筹优化", link: "/or-opt/" },
+        { text: "列生成", link: "/or-opt/column-generation" },
+        { text: "拉格朗日", link: "/or-opt/lagrangian" },
+      ],
       "/ai/": [{ text: "人工智能", link: "/ai/" }],
     },
 
