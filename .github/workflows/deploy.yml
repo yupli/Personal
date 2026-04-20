@@ -1,5 +1,5 @@
-# 流程对齐官方 static Pages 模板：configure-pages → upload-pages-artifact → deploy-pages（同一 job）
-# 文档: https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages
+# 推送到 gh-pages 分支，由「从分支发布」托管（不依赖 deploy-pages / github-pages 环境审批）
+# 发布后请在仓库 Settings → Pages 选择 Branch: gh-pages, Folder: / (root)
 name: Deploy VitePress
 
 on:
@@ -8,19 +8,14 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 concurrency:
   group: pages
   cancel-in-progress: false
 
 jobs:
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+  build-and-publish:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -34,14 +29,15 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
+      - name: 确认入口文件存在（避免空白部署）
+        run: |
+          test -f docs/.vitepress/dist/index.html
+          test -f docs/.vitepress/dist/.nojekyll
+          ls -la docs/.vitepress/dist | head -25
 
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+      - name: 推送到 gh-pages 分支
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          path: docs/.vitepress/dist
-
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v5
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: docs/.vitepress/dist
+          force_orphan: true

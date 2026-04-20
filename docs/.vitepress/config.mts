@@ -1,6 +1,7 @@
 import { defineConfig } from "vitepress";
 
-// GitHub Pages 项目站路径；若改用自定义域名或用户主页仓库，可改为 "/"
+// 须与浏览器里的项目路径一致：https://<用户>.github.io/<仓库名>/
+// 若实际 URL 为小写 /personal/，这里改为 "/personal/"
 const BASE = "/Personal/";
 
 export default defineConfig({
