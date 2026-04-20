@@ -36,13 +36,11 @@ export default defineConfig({
 
     nav: [
       { text: "首页", link: "/" },
-      { text: "About", link: "/about/", activeMatch: "/about/" },
       { text: "运筹优化", link: "/or-opt/", activeMatch: "/or-opt/" },
       { text: "人工智能", link: "/ai/", activeMatch: "/ai/" },
     ],
 
     sidebar: {
-      "/about/": [{ text: "关于本站", link: "/about/" }],
       "/or-opt/": [{ text: "运筹优化", link: "/or-opt/" }],
       "/ai/": [{ text: "人工智能", link: "/ai/" }],
     },
