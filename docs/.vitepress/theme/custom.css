@@ -1,7 +1,4 @@
-/**
- * 全站可视化：参考 SmilingWayne/me（Material 文档站气质 + 霞鹜文楷阅读体验）
- * 技术栈为 VitePress，通过 CSS 变量与组件覆写接近「完整文档站」观感。
- */
+/* VitePress 主题覆写：字体、色板、首页与文档页排版 */
 
 @import url("https://cdn.jsdelivr.net/npm/lxgw-wenkai-screen-webfont@1.1.0/style.css");
 
