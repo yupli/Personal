@@ -11,6 +11,17 @@
 | **在线站点（GitHub Pages）** | <https://yupli.github.io/Personal/> |
 | **本仓库** | <https://github.com/yupli/Personal> |
 
+## 只有 `main` 分支？
+
+这是正常现象：**代码始终在 `main`**；**`gh-pages` 不需要你本地新建**，也**不要**在 GitHub 上手动「Create branch」空分支。
+
+1. 打开 **Settings → Actions → General**，翻到 **Workflow permissions**，选 **Read and write permissions**（并允许写入），保存。  
+2. 打开 **Actions** → 左侧选 **Deploy VitePress** → 右上角 **Run workflow** → 选分支 **main** → **Run**。  
+3. 等该次运行**全部绿色成功**后，回到仓库 **Code** 页，分支下拉里会出现 **`gh-pages`**（里面是构建好的静态文件，含 `index.html`）。  
+4. 再打开 **Settings → Pages**：**Deploy from a branch** → **Branch: `gh-pages`** → **Folder: `/ (root)`** → Save。  
+
+若第 2 步失败，点开红色任务查看日志（常见原因：权限未开、依赖安装失败）。以后每次推送 `main`，工作流也会自动再部署 `gh-pages`。
+
 ## 内容目录
 
 | 区块 | 路径 |
