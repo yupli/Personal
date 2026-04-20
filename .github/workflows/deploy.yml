@@ -1,5 +1,5 @@
-# 推送到 gh-pages 分支，由「从分支发布」托管（不依赖 deploy-pages / github-pages 环境审批）
-# 发布后请在仓库 Settings → Pages 选择 Branch: gh-pages, Folder: / (root)
+# 与 SmilingWayne/me 同款：build → peaceiris 推 gh-pages（见对方 update.yml）
+# MkDocs 输出 ./site；本仓库为 VitePress，输出 docs/.vitepress/dist
 name: Deploy VitePress
 
 on:
@@ -19,6 +19,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-node@v4
         with:
@@ -29,15 +31,17 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: 确认入口文件存在（避免空白部署）
+      - name: 确认入口文件存在
         run: |
           test -f docs/.vitepress/dist/index.html
           test -f docs/.vitepress/dist/.nojekyll
-          ls -la docs/.vitepress/dist | head -25
 
-      - name: 推送到 gh-pages 分支
+      - name: Deploy
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: docs/.vitepress/dist
+          publish_dir: ./docs/.vitepress/dist
           force_orphan: true
+          keep_files: false
+          user_name: "github-actions[bot]"
+          user_email: "41898282+github-actions[bot]@users.noreply.github.com"
