@@ -1,11 +1,27 @@
 # Personal
 
-本仓库用于**记录个人知识积累**：学习笔记、技术总结、阅读摘录、实践心得等，便于整理、检索与长期沉淀。
+本仓库用于**记录个人知识积累**，正文全部为 **Markdown**，存放在 `docs/` 下。
 
-## 使用说明
+## 内容目录
 
-- 可按主题建立文件夹或文档，命名方式自定，保持自己能快速找到即可。
-- 建议定期回顾与合并重复内容，把零散记录提炼成可复用的条目。
+| 区块 | 路径 |
+|------|------|
+| About | `docs/about/` |
+| 运筹优化 | `docs/or-opt/` |
+| 人工智能 | `docs/ai/` |
+
+新增页面后，在 `docs/.vitepress/config.mts` 的 `sidebar` 里补充链接。
+
+## 本地预览
+
+```bash
+npm install
+npm run dev
+```
+
+## 在线站点
+
+推送 `main` 后由 GitHub Actions 发布到 `gh-pages`。仓库 `yupli/Personal` 时一般为：<https://yupli.github.io/Personal/>
 
 ## 许可
 
