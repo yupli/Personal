@@ -11,7 +11,7 @@ npm run dev
 
 ## 发布（GitHub Pages）
 
-工作流会把构建结果交给 GitHub Pages 部署（见仓库 **Actions**）。在仓库 **Settings → Pages** 中，**Source** 请选择 **GitHub Actions**，否则不会部署构建产物，容易出现 [404 说明](https://docs.github.com/en/pages/getting-started-with-github-pages/troubleshooting-404-errors-for-github-pages-sites) 里提到的「发布根目录没有 `index.html`」一类问题。
+工作流在同一 job 内执行 **configure-pages → 上传构建产物 → deploy-pages**（与 GitHub 官方静态站模板一致）。请在 **Settings → Pages** 将 **Source** 设为 **GitHub Actions**；部署 job 使用 **github-pages** 环境，若首次卡在审批，请到 **Settings → Environments** 处理。访问项目站请使用 `https://<用户>.github.io/<仓库名>/`，与 `config.mts` 里 `base` 一致。
 
 项目站示例：`https://yupli.github.io/Personal/`（与 `docs/.vitepress/config.mts` 中的 `base` 一致）。
 

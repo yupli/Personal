@@ -23,11 +23,14 @@ npm run dev
 
 仓库 `yupli/Personal` 时地址一般为：<https://yupli.github.io/Personal/>
 
-**若出现 404**，请按 [GitHub Pages 文档](https://docs.github.com/en/pages) 检查：
+**若出现 404（There isn't a GitHub Pages site here）**，请逐项确认：
 
-1. **Settings → Pages → Build and deployment**：**Source** 必须选 **GitHub Actions**（本仓库工作流使用官方 `deploy-pages`，不再依赖向 `gh-pages` 分支推送）。若仍选「从分支发布」且指向 `main` / `(root)`，根目录没有构建后的 `index.html`，会 404。说明见：[配置发布来源](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site)、[排查 404](https://docs.github.com/en/pages/getting-started-with-github-pages/troubleshooting-404-errors-for-github-pages-sites)。
-2. 推送 `main` 后打开 **Actions**，确认 **Deploy VitePress** 已成功；首次启用 Pages 有时需几分钟生效。
-3. 项目站请使用带仓库名的路径访问（如上链接），并尽量使用站点内相对链接。
+1. **访问地址**必须是项目站：`https://yupli.github.io/Personal/`（带仓库名 `/Personal/`）。打开 `https://yupli.github.io/` 且未建 `username/username.github.io` 仓库时，也会出现同类提示。
+2. **Settings → Pages → Build and deployment**：**Source** 选 **GitHub Actions** 并保存。若仍是 **Deploy from a branch**，本仓库的 Actions 部署不会生效。
+3. 打开 **Actions → Deploy VitePress**，确认最新运行**绿色成功**。若卡在 **deploy** 步骤：到 **Settings → Environments → github-pages**，关闭需人工审批的 protection，或完成首次审批。
+4. **私有仓库**：免费账号下私有库的 Pages 规则以 [GitHub 文档](https://docs.github.com/en/pages/getting-started-with-github-pages/github-pages-limits) 为准，未开通时可能无法公开访问。
+
+更多说明：[配置发布来源](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site)、[排查 404](https://docs.github.com/en/pages/getting-started-with-github-pages/troubleshooting-404-errors-for-github-pages-sites)。
 
 ## 许可
 
