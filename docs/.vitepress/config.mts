@@ -38,6 +38,7 @@ export default defineConfig({
       { text: "首页", link: "/" },
       { text: "运筹优化", link: "/or-opt/", activeMatch: "/or-opt/" },
       { text: "人工智能", link: "/ai/", activeMatch: "/ai/" },
+      { text: "个人随笔", link: "/essays/", activeMatch: "/essays/" },
     ],
 
     sidebar: {
@@ -47,6 +48,7 @@ export default defineConfig({
         { text: "拉格朗日", link: "/or-opt/lagrangian" },
       ],
       "/ai/": [{ text: "人工智能", link: "/ai/" }],
+      "/essays/": [{ text: "个人随笔", link: "/essays/" }],
     },
 
     search: {
