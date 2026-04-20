@@ -1,7 +1,5 @@
-# 人工智能
+# **人工智能**
 
-机器学习、深度学习与应用笔记。新文件放在本目录，并在 `docs/.vitepress/config.mts` 的 `/ai/` 侧栏添加条目，例如：
+## 目录
 
-```ts
-{ text: "标题", link: "/ai/文件名" },
-```
+（尚无子页；在 `docs/ai/` 下新增 `.md` 后，在 `docs/.vitepress/config.mts` 的 `sidebar` → `/ai/` 中登记链接，并在此列出。）
