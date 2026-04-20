@@ -27,7 +27,8 @@
 1. 打开失败的那一次运行 → 展开**第一个变红**的步骤，把日志**最后约 30 行**（含 `Error` / `npm ERR` / `ENOENT` 等）复制下来搜索或求助。  
 2. **Deploy / 推送失败**（含 `remote: Permission denied`、`Resource not accessible`）：多半是 **Workflow permissions** 仍是只读，或组织策略禁止 `GITHUB_TOKEN` 写仓库；需在仓库或组织设置里允许 **Read and write**。  
 3. **Build / vitepress 失败**：本地安装 Node 20+ 后执行 `npm install` 与 `npx vitepress build docs`，看是否复现；若本地能通过而 CI 失败，把 CI 完整构建日志与本地 Node 版本一并对照。  
-4. **npm install 失败**：多为网络/registry 超时，可在 Actions 里 **Re-run failed jobs** 重试。
+4. **npm install 失败**：多为网络/registry 超时，可在 Actions 里 **Re-run failed jobs** 重试。  
+5. **提示 *account is locked due to a billing issue***：属于 **GitHub 账号/组织账单**问题（欠费、付款方式失效、需验证等），与代码无关。请到 **Settings → Billing and plans**（或组织的 **Billing**）处理；恢复前 **Actions 不会执行**。可先本地 `npm install` + `npx vitepress build docs`，再将 `docs/.vitepress/dist` 内容手动推到 **`gh-pages`** 分支根目录，或改用 Netlify / Cloudflare Pages 等托管。
 
 ## 内容目录
 
