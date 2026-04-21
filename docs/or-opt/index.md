@@ -3,5 +3,6 @@
 ## 目录
 
 - [分支定界](/or-opt/branch-and-bound)
+- [分支切割](/or-opt/branch-and-cut)
 - [列生成](/or-opt/column-generation)
 - [拉格朗日](/or-opt/lagrangian)
