@@ -1,4 +1,5 @@
 import { defineConfig } from "vitepress";
+import mathjax3 from "markdown-it-mathjax3";
 
 const BASE = "/Personal/";
 
@@ -19,6 +20,9 @@ export default defineConfig({
   markdown: {
     theme: { light: "github-light", dark: "github-dark" },
     lineNumbers: true,
+    config: (md) => {
+      md.use(mathjax3);
+    },
   },
 
   themeConfig: {
