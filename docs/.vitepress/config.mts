@@ -44,6 +44,7 @@ export default defineConfig({
     sidebar: {
       "/or-opt/": [
         { text: "运筹优化", link: "/or-opt/" },
+        { text: "分支定界", link: "/or-opt/branch-and-bound" },
         { text: "列生成", link: "/or-opt/column-generation" },
         { text: "拉格朗日", link: "/or-opt/lagrangian" },
       ],
