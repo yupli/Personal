@@ -349,3 +349,37 @@ div[class*="language-"] {
 ::selection {
   background: color-mix(in srgb, var(--vp-c-brand-2) 26%, transparent);
 }
+
+/* ----- 算法流程框 ----- */
+.custom-block.algorithm {
+  border: 2px solid var(--vp-c-brand-2);
+  border-radius: var(--vp-radius);
+  background: color-mix(in srgb, var(--vp-c-brand-soft) 30%, var(--vp-c-bg-alt));
+  padding: 16px 20px;
+  margin: 16px 0;
+}
+
+.custom-block.algorithm .custom-block-title {
+  color: var(--vp-c-brand-1);
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.custom-block.algorithm .custom-block-title::before {
+  content: "▶";
+  font-size: 0.9rem;
+}
+
+.custom-block.algorithm p {
+  margin: 8px 0;
+}
+
+.custom-block.algorithm ol,
+.custom-block.algorithm ul {
+  margin: 8px 0;
+  padding-left: 1.5em;
+}
