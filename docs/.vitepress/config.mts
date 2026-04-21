@@ -68,7 +68,10 @@ export default defineConfig({
         { text: "拉格朗日", link: "/or-opt/lagrangian" },
       ],
       "/ai/": [{ text: "人工智能", link: "/ai/" }],
-      "/essays/": [{ text: "自白记录", link: "/essays/" }],
+      "/essays/": [
+        { text: "自白记录", link: "/essays/" },
+        { text: "加密工具", link: "/essays/encrypt-tool" },
+      ],
     },
 
     search: {

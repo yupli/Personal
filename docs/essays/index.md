@@ -2,11 +2,8 @@
 layout: doc
 ---
 
-<!-- 密码：ZIYU -->
-<PasswordProtect hash="5392a63cce195fcbb4adc208ff0befd75aec1e4b0880c60568d17b07353462f9">
-
-# 自白记录
-
-这里记录一些个人思考、心路历程和真实感悟。
-
-</PasswordProtect>
+<SecureContent
+  ciphertext="OUxhOXZFMjRrUkZKaTBSSWM0NFFvMjRmdnhEcFF3TExTQjBnNVVOYVF0cmo4b2VsSTR1MjBaT01xZ1N5Y20rdkllY0dna05PRjdidW1EZ1BUVUtkV295K2gzMWpPY2lBeDhTdkt1QkNHZz09LmEyODUwL09NV2xoN3BHeXNDOG5Tcnc9PQ=="
+  salt="VuCaMzVY+dkKRDwZidvklA=="
+  iv="T+DrUg9kvghzckxr"
+/>
