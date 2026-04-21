@@ -363,15 +363,7 @@ div[class*="language-"] {
   color: var(--vp-c-brand-1);
   font-weight: 700;
   font-size: 1.1rem;
-  margin-bottom: 12px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.custom-block.algorithm .custom-block-title::before {
-  content: "▶";
-  font-size: 0.9rem;
+  margin: 0 0 12px 0;
 }
 
 .custom-block.algorithm p {

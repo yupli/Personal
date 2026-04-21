@@ -1,5 +1,6 @@
 import { defineConfig } from "vitepress";
 import mathjax3 from "markdown-it-mathjax3";
+import container from "markdown-it-container";
 
 const BASE = "/Personal/";
 
@@ -22,13 +23,19 @@ export default defineConfig({
     lineNumbers: true,
     config: (md) => {
       md.use(mathjax3);
-    },
-    container: {
-      tipLabel: "提示",
-      warningLabel: "警告",
-      dangerLabel: "危险",
-      infoLabel: "信息",
-      detailsLabel: "详细信息",
+      // 自定义 algorithm 容器
+      md.use(container, "algorithm", {
+        render(tokens, idx, _options, env) {
+          const token = tokens[idx];
+          const info = token.info.trim().slice("algorithm".length).trim();
+          if (token.nesting === 1) {
+            const title = info || "算法流程";
+            return `<div class="custom-block algorithm"><p class="custom-block-title">▶ ${title}</p>\n`;
+          } else {
+            return `</div>\n`;
+          }
+        },
+      });
     },
   },
 
