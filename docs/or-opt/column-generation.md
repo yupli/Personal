@@ -241,6 +241,115 @@ $$a_i \geq 0 \text{ 且为整数}, \quad \forall i \in I \tag{10}$$
 
 ---
 
+## 5. VRPTW 的列生成建模方法
+
+### 5.1 基于路径的建模方式
+
+本节介绍如何用列生成算法求解**带时间窗的车辆路径问题（VRPTW, Vehicle Routing Problem with Time Windows）**。
+
+**问题描述**：
+- 顾客集合 $C = \{1, 2, \cdots, n\}$
+- 所有车辆同质（容量等参数相同）
+- $R$ 表示所有可行路径的集合（满足时间窗约束和载重约束）
+
+**关键说明**：$R$ 中的元素可能非常多。如果每个节点的时间窗都非常大，那么 $R$ 中的元素个数会随着顾客数量的增大呈现**阶乘级别**的增长。
+
+**决策变量**：
+
+$$y_r = \begin{cases} 1, & \text{如果路径 } r \text{ 在最优解中被选中} \\ 0, & \text{其他} \end{cases} \tag{11}$$
+
+其中，$r = (0, i_1, i_2, \cdots, 0)$ 是一条完整的从 depot（点 0）出发，最终回到 depot 的闭合路径。路径 $r \in R$ 的成本（长度）为 $c_r$。
+
+### 5.2 基于路径的完整模型
+
+VRPTW 的基于路径的模型可以写成下面的**集分割问题（Set Partitioning Problem）**：
+
+$$\min \sum_{r \in R} c_r y_r \tag{12}$$
+
+$$\text{s.t.} \quad \sum_{r \in R} \theta_{ir} y_r = 1, \quad \forall i \in C \tag{13}$$
+
+$$y_r \in \{0, 1\}, \quad \forall r \in R \tag{14}$$
+
+其中，$\theta_{ir}$ 是一个参数：如果顾客 $i \in C$ 在路径 $r$ 中被访问到了，那么 $\theta_{ir} = 1$，否则 $\theta_{ir} = 0$。
+
+### 5.3 列生成建模
+
+当所有可行路径集合 $R$ 中的元素数量非常庞大时，我们很难直接穷举出完整的 $R$。一个可行的做法是：
+
+1. 先列出一些初始的可行路径 $R' \subset R$
+2. 使用列生成算法，用循环的方式动态地寻找新的可行路径
+3. 将其添加到限制性主问题（RMP）中
+
+#### 5.3.1 限制性主问题（RMP）
+
+基于当前已经列出的可行路径集合 $R'$ 构造的模型：
+
+$$\min \sum_{r \in R'} c_r y_r \tag{15}$$
+
+$$\text{s.t.} \quad \sum_{r \in R'} \theta_{ir} y_r = 1, \quad \forall i \in C \tag{16}$$
+
+$$y_r \in \{0, 1\}, \quad \forall r \in R' \tag{17}$$
+
+为了给子问题提供对偶变量的取值信息，需要将 RMP 松弛成线性规划，将约束 (17) 松弛为：
+
+$$0 \leq y_r \leq 1, \quad \forall r \in R' \tag{18}$$
+
+事实上，该约束还可以进一步松弛为 $y_r \geq 0$，但本文中依然采用 (18) 的形式。
+
+RMP 的线性松弛可以写成：
+
+$$\min \sum_{r \in R'} c_r y_r \tag{19}$$
+
+$$\text{s.t.} \quad \sum_{r \in R'} \theta_{ir} y_r = 1, \quad \forall i \in C \tag{20}$$
+
+$$0 \leq y_r \leq 1, \quad \forall r \in R' \tag{21}$$
+
+求解 (19)-(21)，我们可以得到约束 (20) 对应的 $|C|$ 个对偶变量 $\pi_i, \forall i \in C$。
+
+#### 5.3.2 子问题（定价问题）
+
+VRPTW 的子问题就是寻找一条**检验数为最小且为负**的列，即子问题的目标函数为：
+
+$$\min_{r \in R} \quad c_r - \sum_{i \in C} \pi_i \theta_{ir} \tag{22}$$
+
+:::warning 注意
+
+这里是在**所有可行路径 $R$ 中**去寻找检验数最小的路径，而不仅仅是当前已知的 $R'$。
+
+:::
+
+所有可行路径的集合 $R$ 其实是由一系列约束的可行域描述的，具体来说，就是由子问题的模型描述的。该子问题就是一个**带资源约束的基本最短路问题（Elementary Shortest Path Problem with Resource Constraints, ESPPRC）**。
+
+ESPPRC 的模型可以写成：
+
+$$\min \sum_{i \in N} \sum_{j \in N} (c_{ij} - \pi_i) x_{ij} \tag{23}$$
+
+$$\text{s.t.} \quad \sum_{i \in C} d_i \sum_{j \in N} x_{ij} \leq q \tag{24}$$
+
+$$\sum_{j \in N} x_{0j} = 1 \tag{25}$$
+
+$$\sum_{i \in N} x_{ih} - \sum_{j \in N} x_{hj} = 0, \quad \forall h \in C \tag{26}$$
+
+$$\sum_{i \in N} x_{i,n+1} = 1 \tag{27}$$
+
+$$s_i + t_{ij} - M(1 - x_{ij}) \leq s_j, \quad \forall i, j \in N, i \neq j \tag{28}$$
+
+$$a_i \leq s_i \leq b_i, \quad \forall i \in N \tag{29}$$
+
+$$x_{ij} \in \{0, 1\}, \quad \forall i, j \in N, i \neq j \tag{30}$$
+
+其中：
+- $N$：所有节点集合（包括 depot 和顾客）
+- $d_i$：顾客 $i$ 的需求量
+- $q$：车辆容量
+- $c_{ij}$：从节点 $i$ 到节点 $j$ 的行驶成本
+- $t_{ij}$：从节点 $i$ 到节点 $j$ 的行驶时间
+- $s_i$：到达节点 $i$ 的时间
+- $[a_i, b_i]$：节点 $i$ 的时间窗
+- $M$：一个大正数
+
+---
+
 ## 备忘
 
 （在此补充 Dantzig–Wolfe 分解、收敛与实现要点。）
