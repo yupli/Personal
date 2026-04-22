@@ -32,7 +32,7 @@ alwaysApply: true
 4. **推送到远程**
    - 执行 `git push origin main` 推送到 GitHub
 
-5. **部署网站**（如果是 VitePress 项目）
+5. **部署网站**
    - 执行 `npm run deploy:gh` 构建并部署到 gh-pages
 
 ## 执行前确认
@@ -45,4 +45,4 @@ alwaysApply: true
 - 使用 `block_until_ms: 60000` 或更高等待长时间命令
 - 推送失败时检查网络连接，提示用户稍后重试
 - 部署成功后提供网站访问链接
-- 如果 `.github/workflows/` 中有工作流文件，询问用户使用哪种部署方式（gh-pages 或 GitHub Actions）
+- **永远使用 `npm run deploy:gh` 进行部署，不再询问其他部署方式**
