@@ -65,9 +65,19 @@ async function decryptContent() {
     // 1. 解码 Base64
     const saltBuffer = base64ToBuffer(props.salt)
     const ivBuffer = base64ToBuffer(props.iv)
-    const cipherBuffer = base64ToBuffer(props.ciphertext)
+    const combinedBuffer = base64ToBuffer(props.ciphertext)
 
-    // 2. 使用 PBKDF2 派生密钥
+    // 2. 分离密文和 authTag（最后16字节）
+    const authTagLength = 16
+    const cipherBuffer = combinedBuffer.slice(0, combinedBuffer.byteLength - authTagLength)
+    const authTagBuffer = combinedBuffer.slice(combinedBuffer.byteLength - authTagLength)
+
+    // 3. 重新组合：密文 + authTag（Web Crypto API 需要这种格式）
+    const finalBuffer = new Uint8Array(cipherBuffer.byteLength + authTagBuffer.byteLength)
+    finalBuffer.set(new Uint8Array(cipherBuffer), 0)
+    finalBuffer.set(new Uint8Array(authTagBuffer), cipherBuffer.byteLength)
+
+    // 4. 使用 PBKDF2 派生密钥
     const keyMaterial = await crypto.subtle.importKey(
       'raw',
       new TextEncoder().encode(password.value),
@@ -89,20 +99,20 @@ async function decryptContent() {
       ['decrypt']
     )
 
-    // 3. 解密
+    // 5. 解密
     const decryptedBuffer = await crypto.subtle.decrypt(
       {
         name: 'AES-GCM',
         iv: ivBuffer
       },
       key,
-      cipherBuffer
+      finalBuffer
     )
 
-    // 4. 解码内容
+    // 6. 解码内容
     const content = new TextDecoder().decode(decryptedBuffer)
 
-    // 5. 保存到 sessionStorage（仅在当前会话有效）
+    // 7. 保存到 sessionStorage（仅在当前会话有效）
     sessionStorage.setItem('essays_content', content)
 
     decryptedContent.value = content

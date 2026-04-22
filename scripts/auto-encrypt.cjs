@@ -26,14 +26,14 @@ function encrypt(text, password) {
   
   // 创建 cipher
   const cipher = crypto.createCipheriv('aes-256-gcm', key, iv);
-  let encrypted = cipher.update(text, 'utf8', 'base64');
-  encrypted += cipher.final('base64');
+  let encrypted = cipher.update(text, 'utf8');
+  encrypted = Buffer.concat([encrypted, cipher.final()]);
   
-  // 获取认证标签
+  // 获取认证标签 (16字节)
   const authTag = cipher.getAuthTag();
   
-  // 将 authTag 附加到密文末尾
-  const ciphertext = Buffer.from(encrypted + '.' + authTag.toString('base64')).toString('base64');
+  // 将密文和 authTag 拼接，然后 base64 编码（与 Web Crypto API 兼容）
+  const ciphertext = Buffer.concat([encrypted, authTag]).toString('base64');
   
   return {
     ciphertext: ciphertext,
