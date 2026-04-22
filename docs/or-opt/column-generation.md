@@ -51,18 +51,18 @@
 
 **模型**：
 
-$$z(\text{CSP}) = \min \sum_{k \in K} y_k \tag{13.9}$$
+$$z(\text{CSP}) = \min \sum_{k \in K} y_k \tag{1}$$
 
-$$\text{s.t.} \quad \sum_{k \in K} x_{ik} \geq d_i, \quad \forall i \in I \tag{13.10}$$
+$$\text{s.t.} \quad \sum_{k \in K} x_{ik} \geq d_i, \quad \forall i \in I \tag{2}$$
 
-$$\sum_{i \in I} s_i x_{ik} \leq L y_k, \quad \forall k \in K \tag{13.11}$$
+$$\sum_{i \in I} s_i x_{ik} \leq L y_k, \quad \forall k \in K \tag{3}$$
 
-$$x \in \mathbb{Z}_+^n, \quad y \in \{0, 1\}^{|K|} \tag{13.12}$$
+$$x \in \mathbb{Z}_+^n, \quad y \in \{0, 1\}^{|K|} \tag{4}$$
 
 其中：
-- (13.9) 最小化使用的棒材数量
-- (13.10) 每种需求必须被满足
-- (13.11) 棒材 $k$ 的切割长度之和不超过原棒材长度
+- (1) 最小化使用的棒材数量
+- (2) 每种需求必须被满足
+- (3) 棒材 $k$ 的切割长度之和不超过原棒材长度
 
 ### 2.3 列生成建模
 
@@ -81,27 +81,27 @@ $$x \in \mathbb{Z}_+^n, \quad y \in \{0, 1\}^{|K|} \tag{13.12}$$
 
 **模型**：
 
-$$\min \sum_{p \in P} \lambda_p \tag{13.13}$$
+$$\min \sum_{p \in P} \lambda_p \tag{5}$$
 
-$$\text{s.t.} \quad \sum_{p \in P} a_i^p \lambda_p \geq d_i, \quad \forall i \in I \tag{13.14}$$
+$$\text{s.t.} \quad \sum_{p \in P} a_i^p \lambda_p \geq d_i, \quad \forall i \in I \tag{6}$$
 
-$$\lambda_p \geq 0 \text{ 且为整数}, \quad \forall p \in P \tag{13.15}$$
+$$\lambda_p \geq 0 \text{ 且为整数}, \quad \forall p \in P \tag{7}$$
 
 #### 2.3.2 子问题/定价问题（Pricing Problem）
 
 定价子问题的任务是选出**检验数为负**的切割方案。
 
 **参数**：
-- $\pi_i$：主问题(13.13)中第 $i$ 个约束(13.14)的对偶变量（第 $i$ 种需求的数量约束的对偶变量），在定价子问题中为已知参数
+- $\pi_i$：主问题(5)中第 $i$ 个约束(6)的对偶变量（第 $i$ 种需求的数量约束的对偶变量），在定价子问题中为已知参数
 - $a_i \geq 0$ 且为整数：表示在当前切割方案中第 $i$ 种尺寸的棒材的数量
 
 **模型**：
 
-$$\min \quad 1 - \sum_{i \in I} \pi_i a_i \tag{13.16}$$
+$$\min \quad 1 - \sum_{i \in I} \pi_i a_i \tag{8}$$
 
-$$\text{s.t.} \quad \sum_{i \in I} s_i a_i \leq L \tag{13.17}$$
+$$\text{s.t.} \quad \sum_{i \in I} s_i a_i \leq L \tag{9}$$
 
-$$a_i \geq 0 \text{ 且为整数}, \quad \forall i \in I \tag{13.18}$$
+$$a_i \geq 0 \text{ 且为整数}, \quad \forall i \in I \tag{10}$$
 
 **注意**：子问题的目标函数值 $1 - \sum_{i \in I} \pi_i a_i$ 即为检验数。当该值 $< 0$ 时，表示找到了可以改善主问题的列。
 
@@ -166,9 +166,7 @@ $$a_i \geq 0 \text{ 且为整数}, \quad \forall i \in I \tag{13.18}$$
 
 #### 最优情况
 
-当列生成结束时，如果最终 RMP 的线性松弛问题的最优解**恰好是纯整数解**（所有变量取整数值），那么此时 RMP 的解就是原问题的**全局最优解**。
-
-> 即当前的凸包 $\text{Conv}(\Omega')$ 已经包含了最优解。
+当列生成结束时，如果最终 RMP 的线性松弛问题的最优解**恰好是纯整数解**（所有变量取整数值），那么此时 RMP 的解就是原问题的**全局最优解**。即当前的凸包 $\text{Conv}(\Omega')$ 已经包含了最优解。
 
 #### 非最优情况
 
