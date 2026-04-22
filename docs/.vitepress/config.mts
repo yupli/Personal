@@ -56,7 +56,6 @@ export default defineConfig({
       { text: "首页", link: "/" },
       { text: "运筹优化", link: "/or-opt/", activeMatch: "/or-opt/" },
       { text: "人工智能", link: "/ai/", activeMatch: "/ai/" },
-      { text: "自白记录", link: "/essays/", activeMatch: "/essays/" },
     ],
 
     sidebar: {
@@ -68,20 +67,6 @@ export default defineConfig({
         { text: "拉格朗日", link: "/or-opt/lagrangian" },
       ],
       "/ai/": [{ text: "人工智能", link: "/ai/" }],
-      "/essays/": [
-        { text: "文章列表", link: "/essays/list" },
-        { text: "article-001", link: "/essays/articles/article-001" },
-        { text: "article-002", link: "/essays/articles/article-002" },
-        { text: "article-003", link: "/essays/articles/article-003" },
-        { text: "article-004", link: "/essays/articles/article-004" },
-        { text: "article-005", link: "/essays/articles/article-005" },
-        { text: "article-006", link: "/essays/articles/article-006" },
-        { text: "article-007", link: "/essays/articles/article-007" },
-        { text: "article-008", link: "/essays/articles/article-008" },
-        { text: "article-009", link: "/essays/articles/article-009" },
-        { text: "article-010", link: "/essays/articles/article-010" },
-        { text: "article-011", link: "/essays/articles/article-011" },
-      ],
     },
 
     search: {
