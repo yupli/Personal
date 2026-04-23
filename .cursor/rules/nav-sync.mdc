@@ -1,0 +1,74 @@
+---
+description: 导航同步规则 - 当添加/修改文档时同步更新导航配置
+globs: "docs/**/*.md"
+alwaysApply: true
+---
+
+# 导航同步规则
+
+当在 `docs/or-opt/` 目录下添加、删除或修改文档时，必须同步更新以下位置：
+
+## 必须更新的文件
+
+### 1. 侧边栏导航 (`docs/.vitepress/config.mts`)
+
+位置：`themeConfig.sidebar["/or-opt/"]`
+
+格式：
+```typescript
+"/or-opt/": [
+  { text: "运筹优化", link: "/or-opt/" },
+  { text: "分支定界", link: "/or-opt/branch-and-bound" },
+  { text: "分支切割", link: "/or-opt/branch-and-cut" },
+  { text: "列生成", link: "/or-opt/column-generation" },
+  { text: "分支定价", link: "/or-opt/branch-and-price" },
+  { text: "Dantzig-Wolfe分解", link: "/or-opt/dantzig-wolfe" },
+  { text: "Benders分解", link: "/or-opt/benders" },
+  { text: "拉格朗日", link: "/or-opt/lagrangian" },
+],
+```
+
+### 2. 目录索引页 (`docs/or-opt/index.md`)
+
+必须包含：
+- 完整的算法目录表格
+- 与侧边栏导航顺序一致
+- 每个算法提供简要说明和链接
+
+格式参考：
+```markdown
+## 算法目录
+
+### 精确算法
+
+| 算法 | 说明 | 链接 |
+|------|------|------|
+| **分支定界** | 求解整数规划的经典方法... | [查看](branch-and-bound.md) |
+| ... | ... | ... |
+```
+
+## 同步检查清单
+
+添加新文档时，按以下顺序执行：
+
+- [ ] 1. 创建/修改文档内容
+- [ ] 2. 更新 `docs/.vitepress/config.mts` 中的 sidebar
+- [ ] 3. 更新 `docs/or-opt/index.md` 中的目录表格
+- [ ] 4. 提交代码并部署
+
+## 注意事项
+
+1. **顺序一致**：侧边栏导航与目录表格的顺序应保持一致
+2. **链接正确**：确保 `link` 路径与文件实际路径匹配
+3. **命名统一**：中文显示名称应简洁明了
+4. **分类清晰**：目录表格中应对算法进行合理分类（如精确算法、启发式算法等）
+
+## 触发关键词
+
+用户消息包含以下词汇时，执行同步检查：
+- "添加文档"
+- "删除文档"
+- "修改导航"
+- "同步"
+- "目录"
+- "导航"
