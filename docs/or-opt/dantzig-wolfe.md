@@ -185,18 +185,43 @@ $$\bar{c}_{kj} = c_k^T x_k^{(j)} - \pi^T B_k x_k^{(j)} - \sigma_k$$
 
 ### 5.1 算法伪代码（三线表形式）
 
-**算法 1** Dantzig-Wolfe 分解算法
-
-| 步骤 | 操作内容 | 详细说明 |
-|:---:|:---|:---|
-| **输入** | 块角结构线性规划问题 | 约束矩阵具有 $B_0, B_1, ..., B_K$ 和 $A_1, A_2, ..., A_K$ 的块角结构 |
-| **输出** | 最优解 $x^*$ 和最优值 $z^*$ | 原问题的全局最优解 |
-| **1. 初始化** | 对每个子问题 $k = 1, ..., K$ | 找到初始可行极点 $x_k^{(j_k)}$，其中 $j_k \in J_k$；将极点加入列集合 $J_k' \leftarrow \{j_k\}$；构建初始限制主问题 RMP |
-| **2. 求解主问题** | 求解当前 RMP | 得到最优解 $\lambda_{kj}$（对所有 $k, j \in J_k'$）；获得对偶变量 $\pi$（对应中心约束）和 $\sigma_k$（对应凸约束） |
-| **3. 求解子问题** | 对每个子问题 $k = 1, ..., K$ | 求解定价问题：$\min (c_k^T - \pi^T B_k) x_k - \sigma_k$，s.t. $A_k x_k = b_k, x_k \geq 0$；得到子问题最优值 $z_k^*$ 和最优解 $x_k^*$ |
-| **4. 检验数判断** | 判断所有 $z_k^* \geq 0$ | 若成立：跳转到步骤 6（终止）；否则：将新极点 $x_k^*$ 加入列集合 $J_k' \leftarrow J_k' \cup \{x_k^*\}$，返回步骤 2 |
-| **5. 重构解** | 对每个 $k = 1, ..., K$ | 计算 $x_k^* \leftarrow \sum_{j \in J_k'} \lambda_{kj} x_k^{(j)}$ |
-| **6. 终止** | 返回结果 | 返回最优解 $x^* = (x_1^*, ..., x_K^*)$ 和最优值 $z^*$ |
+$$
+\begin{array}{cl}
+\hline
+\text{算法 1: Dantzig-Wolfe 分解算法} \\
+\hline
+\text{输入:} & \text{块角结构线性规划问题} \\
+\text{输出:} & \text{最优解 } x^* \text{ 和最优值 } z^* \\
+\hline
+\text{步骤 1: 初始化} & \text{对每个子问题 } k = 1, \ldots, K \text{ 执行:} \\
+& \quad \text{找到初始可行极点 } x_k^{(j_k)} \text{，其中 } j_k \in J_k \\
+& \quad \text{将极点加入列集合: } J_k' \leftarrow \{j_k\} \\
+& \text{构建初始限制主问题 RMP} \\
+\hline
+\text{步骤 2: 求解主问题} & \text{求解当前 RMP，得到:} \\
+& \quad \text{最优解 } \lambda_{kj} \text{（对所有 } k, j \in J_k' \text{）} \\
+& \quad \text{对偶变量 } \pi \text{（对应中心约束）} \\
+& \quad \text{对偶变量 } \sigma_k \text{（对应凸约束）} \\
+\hline
+\text{步骤 3: 求解子问题} & \text{对每个子问题 } k = 1, \ldots, K \text{ 执行:} \\
+& \quad \min \; (c_k^T - \pi^T B_k) x_k - \sigma_k \\
+& \quad \text{s.t. } A_k x_k = b_k, \; x_k \geq 0 \\
+& \text{得到子问题最优值 } z_k^* \text{ 和最优解 } x_k^* \\
+\hline
+\text{步骤 4: 检验数判断} & \text{如果所有 } z_k^* \geq 0 \text{（不存在负检验数）:} \\
+& \quad \text{跳转到步骤 6（终止）} \\
+& \text{否则:} \\
+& \quad \text{对于 } z_k^* < 0 \text{ 的子问题:} \\
+& \quad \quad J_k' \leftarrow J_k' \cup \{x_k^*\} \\
+& \quad \text{跳转到步骤 2（继续迭代）} \\
+\hline
+\text{步骤 5: 重构解} & \text{对每个 } k = 1, \ldots, K \text{ 执行:} \\
+& \quad x_k^* \leftarrow \sum_{j \in J_k'} \lambda_{kj} x_k^{(j)} \\
+\hline
+\text{步骤 6: 终止} & \text{返回最优解 } x^* = (x_1^*, \ldots, x_K^*) \text{ 和最优值 } z^* \\
+\hline
+\end{array}
+$$
 
 **注**：步骤 3 中的子问题目标函数 $(c_k^T - \pi^T B_k) x_k - \sigma_k$ 即为检验数，当检验数 $< 0$ 时表示找到可以改善主问题的列。
 
