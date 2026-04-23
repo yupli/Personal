@@ -11,5 +11,5 @@ hero:
 
 ## 分栏
 
-- [运筹优化](/or-opt/)
+- [运筹优化](/or-opt/branch-and-bound)
 - [人工智能](/ai/)
