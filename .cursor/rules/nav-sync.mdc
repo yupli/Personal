@@ -1,41 +1,50 @@
 ---
-description: 导航同步规则 - 当添加/修改文档时同步更新导航配置
+description: 导航同步规则 - 当添加/修改任何知识类型文档时同步更新导航配置
 globs: "docs/**/*.md"
 alwaysApply: true
 ---
 
 # 导航同步规则
 
-当在 `docs/or-opt/` 目录下添加、删除或修改文档时，必须同步更新以下位置：
+当在任何知识目录（如 `docs/or-opt/`、`docs/ai/` 等）下添加、删除或修改文档时，必须同步更新以下位置。
+
+## 适用场景
+
+- **运筹优化** (`docs/or-opt/`)：分支定界、列生成、分解算法等
+- **人工智能** (`docs/ai/`)：机器学习、深度学习、强化学习等
+- **其他知识类型**：未来可能添加的任何知识分类
 
 ## 必须更新的文件
 
 ### 1. 侧边栏导航 (`docs/.vitepress/config.mts`)
 
-位置：`themeConfig.sidebar["/or-opt/"]`
+位置：`themeConfig.sidebar["/{知识目录}/"]`
 
-格式：
+格式示例：
 ```typescript
+// 运筹优化导航
 "/or-opt/": [
   { text: "运筹优化", link: "/or-opt/" },
   { text: "分支定界", link: "/or-opt/branch-and-bound" },
-  { text: "分支切割", link: "/or-opt/branch-and-cut" },
-  { text: "列生成", link: "/or-opt/column-generation" },
-  { text: "分支定价", link: "/or-opt/branch-and-price" },
-  { text: "Dantzig-Wolfe分解", link: "/or-opt/dantzig-wolfe" },
   { text: "Benders分解", link: "/or-opt/benders" },
-  { text: "拉格朗日", link: "/or-opt/lagrangian" },
+],
+
+// 人工智能导航
+"/ai/": [
+  { text: "人工智能", link: "/ai/" },
+  { text: "机器学习", link: "/ai/machine-learning" },
+  { text: "深度学习", link: "/ai/deep-learning" },
 ],
 ```
 
-### 2. 目录索引页 (`docs/or-opt/index.md`)
+### 2. 目录索引页 (`docs/{知识目录}/index.md`)
 
 必须包含：
-- 完整的算法目录表格
+- 完整的知识目录表格或列表
 - 与侧边栏导航顺序一致
-- 每个算法提供简要说明和链接
+- 每个条目提供简要说明和链接
 
-格式参考：
+格式示例（运筹优化）：
 ```markdown
 ## 算法目录
 
@@ -47,21 +56,50 @@ alwaysApply: true
 | ... | ... | ... |
 ```
 
+格式示例（人工智能）：
+```markdown
+## 知识模块
+
+| 主题 | 说明 | 链接 |
+|------|------|------|
+| **机器学习基础** | 监督学习、无监督学习... | [查看](machine-learning.md) |
+| **深度学习** | 神经网络、反向传播... | [查看](deep-learning.md) |
+| ... | ... | ... |
+```
+
+### 3. 顶部导航栏 (`docs/.vitepress/config.mts`)
+
+当添加全新知识大类时，还需要更新顶部导航：
+
+位置：`themeConfig.nav`
+
+格式：
+```typescript
+nav: [
+  { text: "首页", link: "/" },
+  { text: "运筹优化", link: "/or-opt/", activeMatch: "/or-opt/" },
+  { text: "人工智能", link: "/ai/", activeMatch: "/ai/" },
+  { text: "新分类", link: "/new-category/", activeMatch: "/new-category/" },
+],
+```
+
 ## 同步检查清单
 
 添加新文档时，按以下顺序执行：
 
 - [ ] 1. 创建/修改文档内容
-- [ ] 2. 更新 `docs/.vitepress/config.mts` 中的 sidebar
-- [ ] 3. 更新 `docs/or-opt/index.md` 中的目录表格
-- [ ] 4. 提交代码并部署
+- [ ] 2. 更新 `docs/.vitepress/config.mts` 中的 sidebar（对应知识分类）
+- [ ] 3. 更新 `docs/{知识目录}/index.md` 中的目录表格
+- [ ] 4. 如为全新知识大类，更新顶部导航 `nav`
+- [ ] 5. 提交代码并部署
 
 ## 注意事项
 
 1. **顺序一致**：侧边栏导航与目录表格的顺序应保持一致
-2. **链接正确**：确保 `link` 路径与文件实际路径匹配
-3. **命名统一**：中文显示名称应简洁明了
-4. **分类清晰**：目录表格中应对算法进行合理分类（如精确算法、启发式算法等）
+2. **链接正确**：确保 `link` 路径与文件实际路径匹配（不带 `.md` 后缀）
+3. **命名统一**：中文显示名称应简洁明了，与文档标题一致
+4. **分类清晰**：目录表格中应对内容进行合理分类
+5. **路径对应**：文件路径、导航链接、目录链接三者保持一致
 
 ## 触发关键词
 
@@ -72,3 +110,5 @@ alwaysApply: true
 - "同步"
 - "目录"
 - "导航"
+- "添加知识"
+- "更新分类"
