@@ -65,6 +65,7 @@ export default defineConfig({
         { text: "分支切割", link: "/or-opt/branch-and-cut" },
         { text: "列生成", link: "/or-opt/column-generation" },
         { text: "分支定价", link: "/or-opt/branch-and-price" },
+        { text: "Dantzig-Wolfe分解", link: "/or-opt/dantzig-wolfe" },
         { text: "拉格朗日", link: "/or-opt/lagrangian" },
       ],
       "/ai/": [{ text: "人工智能", link: "/ai/" }],
