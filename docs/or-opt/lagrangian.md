@@ -312,7 +312,11 @@ $$
 
 - **有完美凸包多面体时**：若 $X$ 的凸包有显式线性不等式表示 $\mathrm{conv}(X) = \{ \mathbf{x} : \bar{A} \mathbf{x} \le \bar{\mathbf{b}} \}$，则 $\omega_{LD}$ 可写为在 $\bar{A}\mathbf{x} \le \bar{\mathbf{b}}$ 与 $D\mathbf{x} \le \mathbf{d}$ 上极大 $\mathbf{c}^\top\mathbf{x}$ 的**联合**问题。
 
-**对偶函数形状**：$z(\mathbf{u}) = \max_{t} [\mathbf{c}^\top \mathbf{x}^t + \mathbf{u}^\top(\mathbf{d} - D\mathbf{x}^t)]$ 是**凸**的**逐段线性**函数；$w_{LD} = \min_{\mathbf{u} \ge 0} z(\mathbf{u})$ 即在其**图像**上求最小值。若仅有一个乘子**分量**，几何上可画为若干条**直线**（各对应一个活跃极点 $t$）的**上包络**，呈折线；若你提供一维 $\mathbf{u}$ 的示意图，可插在此处。**§7** 接着用**次梯度法**在 $\mathbf{u} \ge \mathbf{0}$ 上求 $w_{LD}$ 的数值近似：对 $z(\mathbf{u})$ 的**一般形式、线性化与迭代、步长**见下。另可选用列生成/割平面、bundle 等，详见运筹优化**专著**与综述。
+**对偶函数形状**：$z(\mathbf{u}) = \max_{t} [\mathbf{c}^\top \mathbf{x}^t + \mathbf{u}^\top(\mathbf{d} - D\mathbf{x}^t)]$ 是**凸**的**逐段线性**函数；$w_{LD} = \min_{\mathbf{u} \ge 0} z(\mathbf{u})$ 即在其**图像**上求最小值。若仅有一个乘子**分量**，可想象为：若干条**仿射直线**（各对应某个极点 $t$ 下的子问题值）的**上包络**，整体呈折线。下图为一维 $u$ 的示意：细线为各分量的线性部分，**粗线**为 $z(u)=\max_t \{\cdots\}$，所求为 $w_{LD}=\min_{u\ge 0} z(u)$ 在大致**最低点**处取得。
+
+![一维对偶函数：仿射分量的上包络（逐段线性的凸 $z(u)$）与 $\min z$ 的示意](./resources/lagrangian-dual-function-1d.png)
+
+**§7** 接着用**次梯度法**在 $\mathbf{u} \ge \mathbf{0}$ 上求 $w_{LD}$ 的数值近似：对 $z(\mathbf{u})$ 的**一般形式、线性化与迭代、步长**见下。另可选用列生成/割平面、bundle 等，详见运筹优化**专著**与综述。
 
 ---
 
