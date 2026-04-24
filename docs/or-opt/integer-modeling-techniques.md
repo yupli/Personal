@@ -12,17 +12,23 @@
 
 设有两条约束：
 
-$$f(x_1, x_2, \ldots, x_n) \leq 0 \tag{3.1}$$
-
-$$g(x_1, x_2, \ldots, x_n) \leq 0 \tag{3.2}$$
+$$
+\begin{align}
+f(x_1, x_2, \ldots, x_n) &\leq 0 \tag{3.1} \\
+g(x_1, x_2, \ldots, x_n) &\leq 0 \tag{3.2}
+\end{align}
+$$
 
 若要求**至少满足其中一条**（逻辑上的“或”），则称为**二选一约束**。
 
 **Big-M 线性化**：引入 $0$–$1$ 变量 $y \in \{0,1\}$ 和充分大的正数 $M$，将条件写为：
 
-$$f(x_1, x_2, \ldots, x_n) \leq M y \tag{3.3}$$
-
-$$g(x_1, x_2, \ldots, x_n) \leq M(1 - y) \tag{3.4}$$
+$$
+\begin{align}
+f(x_1, x_2, \ldots, x_n) &\leq M y \tag{3.3} \\
+g(x_1, x_2, \ldots, x_n) &\leq M(1 - y) \tag{3.4}
+\end{align}
+$$
 
 **直观说明**：
 - 当 $y = 0$ 时：（3.3）为 $f \leq 0$，（3.4）为 $g \leq M$，在 $M$ 足够大时后者基本不收紧，故**强制 $f \leq 0$**。
@@ -42,9 +48,12 @@ $$g(x_1, x_2, \ldots, x_n) \leq M(1 - y) \tag{3.4}$$
 
 引入 $y \in \{0,1\}$ 与充分大的 $M$，可写为：
 
-$$-g(x_1, x_2, \ldots, x_n) \leq M y \tag{3.5}$$
-
-$$f(x_1, x_2, \ldots, x_n) \leq M(1 - y) \tag{3.6}$$
+$$
+\begin{align}
+-g(x_1, x_2, \ldots, x_n) &\leq M y \tag{3.5} \\
+f(x_1, x_2, \ldots, x_n) &\leq M(1 - y) \tag{3.6}
+\end{align}
+$$
 
 其中 $M$ 需取得足够大，使得在可行域内恒有 $f \leq M$、$-g \leq M$（或按问题重新界定更紧的界）。
 
@@ -68,6 +77,57 @@ $$f(x_1, x_2, \ldots, x_n) \leq M(1 - y) \tag{3.6}$$
 | **异或（XOR）** | $y = x_1 \oplus x_2$ | $\begin{cases} y \leq x_1 + x_2 \\ y \geq x_1 - x_2 \\ y \geq x_2 - x_1 \\ y \leq 2 - x_1 - x_2 \end{cases}$ | 两输入**相同则 $y=0$，不同则 $y=1$**（两变量互斥情况）。 |
 | **与非（NAND）** | $y = \neg(x_1 \wedge x_2)$ | $\begin{cases} y \geq 1 - x_1 \\ y \geq 1 - x_2 \\ y \leq 2 - x_1 - x_2 \end{cases}$ | 仅当 $x_1 = x_2 = 1$ 时，上界与下界同时迫使 $y = 0$。 |
 | **或非（NOR）** | $y = \neg(x_1 \vee x_2)$ | $\begin{cases} y \leq 1 - x_1 \\ y \leq 1 - x_2 \\ y \geq 1 - x_1 - x_2 \end{cases}$ | 只要有一个为 $1$，上界使 $y = 0$；**全为 $0$** 时下界使 $y = 1$。 |
+
+上表第三列在格内已分多行；与教材一致时，还可将同一逻辑关系**单独排成竖式**（每条约束一行），例如：
+
+**与（AND）** $y = x_1 \wedge x_2 \wedge \cdots \wedge x_n$：
+
+$$
+\begin{aligned}
+y &\leq x_i, \quad \forall i \\
+y &\geq \sum_{i=1}^n x_i - (n-1)
+\end{aligned}
+$$
+
+**或（OR）** $y = x_1 \vee x_2 \vee \cdots \vee x_n$：
+
+$$
+\begin{aligned}
+y &\geq x_i, \quad \forall i \\
+y &\leq \sum_{i=1}^n x_i
+\end{aligned}
+$$
+
+**异或（XOR）** $y = x_1 \oplus x_2$：
+
+$$
+\begin{aligned}
+y &\leq x_1 + x_2 \\
+y &\geq x_1 - x_2 \\
+y &\geq x_2 - x_1 \\
+y &\leq 2 - x_1 - x_2
+\end{aligned}
+$$
+
+**与非（NAND）** $y = \neg(x_1 \wedge x_2)$：
+
+$$
+\begin{aligned}
+y &\geq 1 - x_1 \\
+y &\geq 1 - x_2 \\
+y &\leq 2 - x_1 - x_2
+\end{aligned}
+$$
+
+**或非（NOR）** $y = \neg(x_1 \vee x_2)$：
+
+$$
+\begin{aligned}
+y &\leq 1 - x_1 \\
+y &\leq 1 - x_2 \\
+y &\geq 1 - x_1 - x_2
+\end{aligned}
+$$
 
 > **注**：上表中 AND/OR 的 $y$ 与多变量 $x_i$ 的联合定义，在 $0$–$1$ 整数规划下与布尔代数一致；XOR 等写法针对**两个**二元变量，推广到多变量需另行构造。
 
@@ -111,19 +171,33 @@ $$
 
 **原问题示例**（非光滑）：
 
-$$\min \quad |x_1| + |x_2|$$
-
-$$\text{s.t.} \quad x_1, x_2 \in \mathbb{R}.$$
+$$
+\begin{aligned}
+\min \quad & |x_1| + |x_2| \\
+\text{s.t.} \quad & x_1, x_2 \in \mathbb{R}.
+\end{aligned}
+$$
 
 **定义**（对每个 $x_i$）：
 
-$$x_i^+ = \max\{0, x_i\}, \qquad x_i^- = \max\{0, -x_i\},$$
+$$
+\begin{aligned}
+x_i^+ &= \max\{0, x_i\}, \\
+x_i^- &= \max\{0, -x_i\},
+\end{aligned}
+$$
 
 则有 $|x_i| = x_i^+ + x_i^-$、$x_i = x_i^+ - x_i^-$。上述问题等价于下列**线性**规划：
 
-$$\min \quad x_1^+ + x_1^- + x_2^+ + x_2^-$$
-
-$$\text{s.t.} \quad x_1 = x_1^+ - x_1^-, \quad x_2 = x_2^+ - x_2^-, \quad x_1, x_2 \in \mathbb{R}, \quad x_1^+, x_1^-, x_2^+, x_2^- \geq 0.$$
+$$
+\begin{aligned}
+\min \quad & x_1^+ + x_1^- + x_2^+ + x_2^- \\
+\text{s.t.} \quad & x_1 = x_1^+ - x_1^-, \\
+& x_2 = x_2^+ - x_2^-, \\
+& x_1, x_2 \in \mathbb{R}, \\
+& x_1^+, x_1^-, x_2^+, x_2^- \geq 0.
+\end{aligned}
+$$
 
 ### 2.3 含乘积形式的线性化
 
@@ -131,23 +205,50 @@ $$\text{s.t.} \quad x_1 = x_1^+ - x_1^-, \quad x_2 = x_2^+ - x_2^-, \quad x_1, x
 
 **情形 1：$x_1, x_2$ 均为 $0$–$1$ 变量**
 
-$$\min \quad x_1 x_2 \qquad \text{s.t.} \quad x_1, x_2 \in \{0,1\}$$
+$$
+\begin{aligned}
+\min \quad & x_1 x_2 \\
+\text{s.t.} \quad & x_1, x_2 \in \{0,1\}.
+\end{aligned}
+$$
 
 等价于对 $y$ 的线性化：
 
-$$\min \quad y$$
-
-$$\text{s.t.} \quad y \leq x_1, \quad y \leq x_2, \quad y \geq x_1 + x_2 - 1, \qquad x_1, x_2, y \in \{0,1\}.$$
+$$
+\begin{aligned}
+\min \quad & y \\
+\text{s.t.} \quad & y \leq x_1, \\
+& y \leq x_2, \\
+& y \geq x_1 + x_2 - 1, \\
+& x_1, x_2, y \in \{0,1\}.
+\end{aligned}
+$$
 
 **情形 2：$x_1 \in \{0,1\}$，$x_2 \in [0, u]$（连续或整数且有上界 $u$）**
 
-$$\min \quad y \qquad \text{s.t.} \quad y \leq u x_1, \quad y \leq x_2, \quad y \geq x_2 - u(1-x_1), \quad x_1 \in \{0,1\}, \; x_2, y \in [0, u].$$
+$$
+\begin{aligned}
+\min \quad & y \\
+\text{s.t.} \quad & y \leq u x_1, \\
+& y \leq x_2, \\
+& y \geq x_2 - u(1-x_1), \\
+& x_1 \in \{0,1\}, \quad x_2, y \in [0, u].
+\end{aligned}
+$$
 
 **情形 3：$x_1 \in \{0,1\}$，$x_2 \in [l, u]$**
 
-$$\min \quad y \qquad \text{s.t.} \quad y \leq x_2, \quad y \geq x_2 - u(1-x_1), \quad l x_1 \leq y \leq u x_1,$$
+$$
+\begin{aligned}
+\min \quad & y \\
+\text{s.t.} \quad & y \leq x_2, \\
+& y \geq x_2 - u(1-x_1), \\
+& l x_1 \leq y \leq u x_1, \\
+& x_1 \in \{0,1\}, \quad x_2 \in [l, u], \quad y \in [0, u]
+\end{aligned}
+$$
 
-其中 $x_1 \in \{0,1\}$，$x_2 \in [l, u]$，$y \in [0, u]$（具体整数/连续与模型其余部分一致即可）。
+（具体整数/连续与模型其余部分一致即可。）
 
 **情形 4：$x_1, x_2$ 均为一般连续变量**时，$x_1 x_2$ 一般**不能**在保持等价的前提下完全线性化；仅能做**紧近似或松弛**（可参见 Sherali & Alameddine, 1992 等文献）。
 
@@ -155,17 +256,27 @@ $$\min \quad y \qquad \text{s.t.} \quad y \leq x_2, \quad y \geq x_2 - u(1-x_1),
 
 以下记法与教材及 Gurobi 文档中常见**分式目标线性化**一致。设原问题为（分母在可行域上为正，记为式 (3.22) 类形式）：
 
-$$\min \quad \frac{\sum_{i} (c_i x_i + \alpha)}{\sum_{i} (d_i x_i) + \beta}$$
+$$
+\begin{aligned}
+\min \quad & \frac{\sum_{i} (c_i x_i + \alpha)}{\sum_{i} (d_i x_i) + \beta} \\[0.4em]
+\text{s.t.} \quad & \sum_i a_{ij} x_i \leq b_j, \quad \forall j \in J, \\
+& \sum_i d_i x_i + \beta > 0, \\
+& x_i \geq 0, \quad \forall i \in I.
+\end{aligned}
+$$
 
-$$\text{s.t.} \quad \sum_i a_{ij} x_i \leq b_j, \; \forall j \in J, \qquad \sum_i d_i x_i + \beta > 0, \qquad x_i \geq 0, \; \forall i \in I.$$
-
-**第 1 步**：令 $y = \dfrac{1}{\sum_i d_i x_i + \beta} > 0$，代入后得到**仍含双线性项** $x_i y$ 的中等形式。
+**第 1 步**：令 $y = \dfrac{1}{\sum_i d_i x_i + \beta} > 0$，代入后得到**仍含双线性项** $x_i y$ 的中等形式（目标与约束略，形式与教材一致）。
 
 **第 2 步**：再令 $z_i = x_i y$，将模型化为**对 $(z, y)$ 线性**的形式：
 
-$$\min \quad \sum_i (c_i z_i + \alpha y)$$
-
-$$\text{s.t.} \quad \sum_i a_{ij} z_i \leq b_j y, \; \forall j \in J, \qquad \sum_i d_i z_i + \beta y = 1, \qquad y > 0, \; z_i \geq 0, \; \forall i \in I.$$
+$$
+\begin{aligned}
+\min \quad & \sum_i (c_i z_i + \alpha y) \\
+\text{s.t.} \quad & \sum_i a_{ij} z_i \leq b_j y, \quad \forall j \in J, \\
+& \sum_i d_i z_i + \beta y = 1, \\
+& y > 0, \quad z_i \geq 0, \quad \forall i \in I.
+\end{aligned}
+$$
 
 （若需严格 LP/MILP 表述，可结合对 $y$ 下界的处理及约束类型按求解器要求微调。）
 
@@ -178,20 +289,30 @@ $$\text{s.t.} \quad \sum_i a_{ij} z_i \leq b_j y, \; \forall j \in J, \qquad \su
 
 $$
 \begin{aligned}
-& x \leq z, \quad y \leq z, \quad 3 \leq z, \\
-& x \geq z - M(1 - u_1), \quad y \geq z - M(1 - u_2), \quad 3 \geq z - M(1 - u_3), \\
-& u_1 + u_2 + u_3 \geq 1.
+& x \leq z, \\
+& y \leq z, \\
+& 3 \leq z, \\
+& x \geq z - M(1 - u_1), \\
+& y \geq z - M(1 - u_2), \\
+& 3 \geq z - M(1 - u_3), \\
+& u_1 + u_2 + u_3 \geq 1, \\
+& u_1, u_2, u_3 \in \{0,1\}.
 \end{aligned}
 $$
 
 **例：$z = \min\{x, y, 3\}$**  
-类似地可写为：
+类似地可写为（每条约束占一行，与教材竖式一致）：
 
 $$
 \begin{aligned}
-& x \geq z, \quad y \geq z, \quad 3 \geq z, \\
-& x \leq z + M(1 - u_1), \quad y \leq z + M(1 - u_2), \quad 3 \leq z + M(1 - u_3), \\
-& u_1 + u_2 + u_3 \geq 1, \qquad u_1, u_2, u_3 \in \{0,1\}.
+& x \geq z, \\
+& y \geq z, \\
+& 3 \geq z, \\
+& x \leq z + M(1 - u_1), \\
+& y \leq z + M(1 - u_2), \\
+& 3 \leq z + M(1 - u_3), \\
+& u_1 + u_2 + u_3 \geq 1, \\
+& u_1, u_2, u_3 \in \{0,1\}.
 \end{aligned}
 $$
 
