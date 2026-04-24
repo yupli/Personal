@@ -1,6 +1,6 @@
 # 整数规划建模技巧
 
-本文整理混合整数规划（MIP）中常用的**建模技巧**，从逻辑约束与线性化开始，后续可逐步补充其他专题。
+本文整理混合整数规划（MIP）中常用的**建模技巧**，主要包括**逻辑约束**与**非线性项的线性化**等，可持续增补其他专题。
 
 ---
 
@@ -73,6 +73,132 @@ $$f(x_1, x_2, \ldots, x_n) \leq M(1 - y) \tag{3.6}$$
 
 ---
 
+## 2. 线性化
+
+当目标或约束中出现**分段线性、绝对值、乘积、分式、$\max$/$\min$** 等**非线性**（或非凸）项时，常通过**引入辅助变量与额外约束**将其改写为线性或混合整数线性形式。下面分述常见情形。
+
+### 2.1 分段线性函数线性化
+
+设 $f(x)$ 为分段线性函数，已知断点 $b_1, b_2, \ldots, b_n$。可用**非负权变量** $z_i$ 与 **$0$–$1$ 区间指示变量** $y_i$ 将 $f(x)$ 与 $x$ 同时线性化。
+
+**第 1 步**：在模型中凡出现 $f(x)$ 之处，用下式替换：
+
+$$z_1 f(b_1) + z_2 f(b_2) + \cdots + z_n f(b_n).$$
+
+**第 2 步**增加以下约束（使 $x$ 落在某一段上，$f$ 为端点值凸组合，即分段线性插值）：
+
+$$
+\begin{aligned}
+& z_1 \leq y_1, \\
+& z_2 \leq y_1 + y_2, \\
+& z_3 \leq y_2 + y_3, \\
+& \qquad \vdots \\
+& z_{n-1} \leq y_{n-2} + y_{n-1}, \\
+& z_n \leq y_{n-1}, \\
+& y_1 + y_2 + \cdots + y_{n-1} = 1, \\
+& z_1 + z_2 + \cdots + z_n = 1, \\
+& x = z_1 b_1 + z_2 b_2 + \cdots + z_n b_n, \\
+& y_i \in \{0,1\}, \quad i=1,\ldots,n-1, \\
+& z_i \geq 0, \quad i=1,\ldots,n.
+\end{aligned}
+$$
+
+**直观理解**：$y$ 的取值**唯一**激活一段区间，$z$ 的系数结构使仅有相邻断点权可同时非零，从而 $x$ 位于某一子区间上，$f(x)$ 为两端点 $f(b_i)$ 的线性插值。许多商业求解器也提供 **SOS2** 等专用结构，可替代上述显式 $y$ 表示。
+
+### 2.2 含绝对值形式的线性化
+
+含绝对值的目标（如 $\min |x_1| + |x_2|$）可通过对每个变量引入**一正一负**辅助量完成线性化。
+
+**原问题示例**（非光滑）：
+
+$$\min \quad |x_1| + |x_2|$$
+
+$$\text{s.t.} \quad x_1, x_2 \in \mathbb{R}.$$
+
+**定义**（对每个 $x_i$）：
+
+$$x_i^+ = \max\{0, x_i\}, \qquad x_i^- = \max\{0, -x_i\},$$
+
+则有 $|x_i| = x_i^+ + x_i^-$、$x_i = x_i^+ - x_i^-$。上述问题等价于下列**线性**规划：
+
+$$\min \quad x_1^+ + x_1^- + x_2^+ + x_2^-$$
+
+$$\text{s.t.} \quad x_1 = x_1^+ - x_1^-, \quad x_2 = x_2^+ - x_2^-, \quad x_1, x_2 \in \mathbb{R}, \quad x_1^+, x_1^-, x_2^+, x_2^- \geq 0.$$
+
+### 2.3 含乘积形式的线性化
+
+若出现 $x_1 x_2$，可引入 $y$ 并令 $y = x_1 x_2$，再按 $x_1$、$x_2$ 类型分别处理。
+
+**情形 1：$x_1, x_2$ 均为 $0$–$1$ 变量**
+
+$$\min \quad x_1 x_2 \qquad \text{s.t.} \quad x_1, x_2 \in \{0,1\}$$
+
+等价于对 $y$ 的线性化：
+
+$$\min \quad y$$
+
+$$\text{s.t.} \quad y \leq x_1, \quad y \leq x_2, \quad y \geq x_1 + x_2 - 1, \qquad x_1, x_2, y \in \{0,1\}.$$
+
+**情形 2：$x_1 \in \{0,1\}$，$x_2 \in [0, u]$（连续或整数且有上界 $u$）**
+
+$$\min \quad y \qquad \text{s.t.} \quad y \leq u x_1, \quad y \leq x_2, \quad y \geq x_2 - u(1-x_1), \quad x_1 \in \{0,1\}, \; x_2, y \in [0, u].$$
+
+**情形 3：$x_1 \in \{0,1\}$，$x_2 \in [l, u]$**
+
+$$\min \quad y \qquad \text{s.t.} \quad y \leq x_2, \quad y \geq x_2 - u(1-x_1), \quad l x_1 \leq y \leq u x_1,$$
+
+其中 $x_1 \in \{0,1\}$，$x_2 \in [l, u]$，$y \in [0, u]$（具体整数/连续与模型其余部分一致即可）。
+
+**情形 4：$x_1, x_2$ 均为一般连续变量**时，$x_1 x_2$ 一般**不能**在保持等价的前提下完全线性化；仅能做**紧近似或松弛**（可参见 Sherali & Alameddine, 1992 等文献）。
+
+### 2.4 含分式形式的线性化
+
+以下记法与教材及 Gurobi 文档中常见**分式目标线性化**一致。设原问题为（分母在可行域上为正，记为式 (3.22) 类形式）：
+
+$$\min \quad \frac{\sum_{i} (c_i x_i + \alpha)}{\sum_{i} (d_i x_i) + \beta}$$
+
+$$\text{s.t.} \quad \sum_i a_{ij} x_i \leq b_j, \; \forall j \in J, \qquad \sum_i d_i x_i + \beta > 0, \qquad x_i \geq 0, \; \forall i \in I.$$
+
+**第 1 步**：令 $y = \dfrac{1}{\sum_i d_i x_i + \beta} > 0$，代入后得到**仍含双线性项** $x_i y$ 的中等形式。
+
+**第 2 步**：再令 $z_i = x_i y$，将模型化为**对 $(z, y)$ 线性**的形式：
+
+$$\min \quad \sum_i (c_i z_i + \alpha y)$$
+
+$$\text{s.t.} \quad \sum_i a_{ij} z_i \leq b_j y, \; \forall j \in J, \qquad \sum_i d_i z_i + \beta y = 1, \qquad y > 0, \; z_i \geq 0, \; \forall i \in I.$$
+
+（若需严格 LP/MILP 表述，可结合对 $y$ 下界的处理及约束类型按求解器要求微调。）
+
+### 2.5 含 $\max$ / $\min$ 形式的线性化
+
+要表达 $z$ 为若干量中的最大或最小时，可配合 **$0$–$1$ 指示变量**与**大 $M$** 写成线性组；也可直接使用 **Gurobi** 等提供的 $\max$/$\min$ 通用约束接口。
+
+**例：$z = \max\{x, y, 3\}$**  
+引入 $u_1, u_2, u_3 \in \{0,1\}$ 与足够大 $M > 0$：
+
+$$
+\begin{aligned}
+& x \leq z, \quad y \leq z, \quad 3 \leq z, \\
+& x \geq z - M(1 - u_1), \quad y \geq z - M(1 - u_2), \quad 3 \geq z - M(1 - u_3), \\
+& u_1 + u_2 + u_3 \geq 1.
+\end{aligned}
+$$
+
+**例：$z = \min\{x, y, 3\}$**  
+类似地可写为：
+
+$$
+\begin{aligned}
+& x \geq z, \quad y \geq z, \quad 3 \geq z, \\
+& x \leq z + M(1 - u_1), \quad y \leq z + M(1 - u_2), \quad 3 \leq z + M(1 - u_3), \\
+& u_1 + u_2 + u_3 \geq 1, \qquad u_1, u_2, u_3 \in \{0,1\}.
+\end{aligned}
+$$
+
+实际建模时若变量有界，应取**尽可能小**的 $M$ 以改善数值性；**Gurobi** 的 `addGenConstrMax` / `addGenConstrMin` 等可免去手写大 $M$。
+
+---
+
 ## 备忘
 
-（在此补充：分段线性、绝对值、 min/max 函数、 乘积项线性化、指示约束在 Gurobi/CPLEX 中的写法等。）
+（在此补充：特殊有序集、多面体松弛、二次规划/二阶锥在 MIP 中的处理，以及 Gurobi/CPLEX 的 API 速查等。）
