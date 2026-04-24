@@ -282,41 +282,57 @@ $$
 
 ### 2.5 含 $\max$ / $\min$ 形式的线性化
 
-要表达 $z$ 为若干量中的最大或最小时，可配合 **$0$–$1$ 指示变量**与**大 $M$** 写成线性组；也可直接使用 **Gurobi** 等提供的 $\max$/$\min$ 通用约束接口。
+要表达 $z$ 为若干**可比数量** $a_1, a_2, \ldots, a_n$（决策变量、线性式或常数）的最大值或最小值，可配合 **$0$–$1$ 指示变量** $u_i$ 与**大 $M$** 写成**通用**的线性组；也可直接使用 **Gurobi** 等提供的 `addGenConstrMax` / `addGenConstrMin` 等接口。下面为与教材一致时常用的 Big-M 竖式，其中 $M$ 应取得足够大，使在可行域上各不等式在逻辑上恒可成立，且有界时**应取尽可能紧的** $M$ 以改善数值性。
 
-**例：$z = \max\{x, y, 3\}$**  
-引入 $u_1, u_2, u_3 \in \{0,1\}$ 与足够大 $M > 0$：
+**通用形式 1：$z = \max\{a_1, a_2, \ldots, a_n\}$**  
+对 $i = 1, \ldots, n$，有 $0$–$1$ 变量 $u_i$ 与常数 $M > 0$：
 
 $$
 \begin{aligned}
-& x \leq z, \\
-& y \leq z, \\
-& 3 \leq z, \\
-& x \geq z - M(1 - u_1), \\
-& y \geq z - M(1 - u_2), \\
-& 3 \geq z - M(1 - u_3), \\
+& a_i \leq z, \qquad i = 1, \ldots, n, \\[0.2em]
+& a_i \geq z - M(1 - u_i), \qquad i = 1, \ldots, n, \\[0.2em]
+& \sum_{i=1}^{n} u_i \geq 1, \\[0.2em]
+& u_i \in \{0,1\}, \qquad i = 1, \ldots, n.
+\end{aligned}
+$$
+
+第一组要求 $z$ **不低于**任一项，第二组在至少一个 $u_i=1$ 时让对应 $a_i$ 从下方“顶住”$z$；与第一组合并得到 $z = \max_i a_i$ 的可行刻画。（若需**恰好**一个指标为 $1$，可将 $\sum u_i \geq 1$ 加强为 $\sum u_i = 1$，视模型与唯一性需要而定。）
+
+**通用形式 2：$z = \min\{a_1, a_2, \ldots, a_n\}$**  
+
+$$
+\begin{aligned}
+& a_i \geq z, \qquad i = 1, \ldots, n, \\[0.2em]
+& a_i \leq z + M(1 - u_i), \qquad i = 1, \ldots, n, \\[0.2em]
+& \sum_{i=1}^{n} u_i \geq 1, \\[0.2em]
+& u_i \in \{0,1\}, \qquad i = 1, \ldots, n.
+\end{aligned}
+$$
+
+第一组要求 $z$ **不高于**任一项，第二组在至少一个 $u_i=1$ 时让对应 $a_i$ 从上方“压住”$z$；合起来刻画 $z = \min_i a_i$。
+
+**例（$n=3$ 的特例）**  
+$z = \max\{x, y, 3\}$ 即 $a_1 = x$、$a_2 = y$、$a_3 = 3$，取 $u_1, u_2, u_3 \in \{0,1\}$ 与足够大 $M$：
+
+$$
+\begin{aligned}
+& x \leq z, \quad y \leq z, \quad 3 \leq z, \\
+& x \geq z - M(1 - u_1), \quad y \geq z - M(1 - u_2), \quad 3 \geq z - M(1 - u_3), \\
 & u_1 + u_2 + u_3 \geq 1, \\
 & u_1, u_2, u_3 \in \{0,1\}.
 \end{aligned}
 $$
 
-**例：$z = \min\{x, y, 3\}$**  
-类似地可写为（每条约束占一行，与教材竖式一致）：
+$z = \min\{x, y, 3\}$ 的写法为通用形式 2 在 $a_1=x$、$a_2=y$、$a_3=3$ 时展开，例如：
 
 $$
 \begin{aligned}
-& x \geq z, \\
-& y \geq z, \\
-& 3 \geq z, \\
-& x \leq z + M(1 - u_1), \\
-& y \leq z + M(1 - u_2), \\
-& 3 \leq z + M(1 - u_3), \\
+& x \geq z, \quad y \geq z, \quad 3 \geq z, \\
+& x \leq z + M(1 - u_1), \quad y \leq z + M(1 - u_2), \quad 3 \leq z + M(1 - u_3), \\
 & u_1 + u_2 + u_3 \geq 1, \\
 & u_1, u_2, u_3 \in \{0,1\}.
 \end{aligned}
 $$
-
-实际建模时若变量有界，应取**尽可能小**的 $M$ 以改善数值性；**Gurobi** 的 `addGenConstrMax` / `addGenConstrMin` 等可免去手写大 $M$。
 
 ---
 
