@@ -81,6 +81,14 @@ export default defineConfig({
             { text: "拉格朗日", link: "/or-opt/lagrangian" },
           ],
         },
+        {
+          text: "图算法",
+          collapsed: false,
+          items: [
+            { text: "Dijkstra", link: "/or-opt/dijkstra" },
+            { text: "Bellman-Ford", link: "/or-opt/bellman-ford" },
+          ],
+        },
       ],
       "/ai/": [{ text: "人工智能", link: "/ai/" }],
     },

@@ -10,7 +10,7 @@ alwaysApply: true
 
 ## 适用场景
 
-- **运筹优化** (`docs/or-opt/`)：分支定界、列生成、分解算法等
+- **运筹优化** (`docs/or-opt/`)：分支定界、列生成、分解算法、图算法等
 - **人工智能** (`docs/ai/`)：机器学习、深度学习、强化学习等
 - **其他知识类型**：未来可能添加的任何知识分类
 
@@ -20,7 +20,7 @@ alwaysApply: true
 
 位置：`themeConfig.sidebar["/{知识目录}/"]`
 
-**平铺**（小栏目可用）与**分组**（与 `index.md` 中「建模方法 / 精确算法」等一致时优先）均可。运筹优化侧栏已采用分组，示例如下：
+**平铺**（小栏目可用）与**分组**（与 `index.md` 中「建模方法 / 精确算法 / 图算法」等一致时优先）均可。运筹优化侧栏已采用分组，示例如下：
 
 ```typescript
 // 运筹优化：首页 + 分组（分类名与 docs/or-opt/index.md 一致）
@@ -39,6 +39,14 @@ alwaysApply: true
     items: [
       { text: "分支定界", link: "/or-opt/branch-and-bound" },
       // ... 其余与 index 表格顺序一致
+    ],
+  },
+  {
+    text: "图算法",
+    collapsed: false,
+    items: [
+      { text: "Dijkstra", link: "/or-opt/dijkstra" },
+      { text: "Bellman-Ford", link: "/or-opt/bellman-ford" },
     ],
   },
 ],
