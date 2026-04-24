@@ -61,14 +61,26 @@ export default defineConfig({
     sidebar: {
       "/or-opt/": [
         { text: "运筹优化", link: "/or-opt/" },
-        { text: "整数规划建模技巧", link: "/or-opt/integer-modeling-techniques" },
-        { text: "分支定界", link: "/or-opt/branch-and-bound" },
-        { text: "分支切割", link: "/or-opt/branch-and-cut" },
-        { text: "列生成", link: "/or-opt/column-generation" },
-        { text: "分支定价", link: "/or-opt/branch-and-price" },
-        { text: "Dantzig-Wolfe分解", link: "/or-opt/dantzig-wolfe" },
-        { text: "Benders分解", link: "/or-opt/benders" },
-        { text: "拉格朗日", link: "/or-opt/lagrangian" },
+        {
+          text: "建模方法",
+          collapsed: false,
+          items: [
+            { text: "整数规划建模技巧", link: "/or-opt/integer-modeling-techniques" },
+          ],
+        },
+        {
+          text: "精确算法",
+          collapsed: false,
+          items: [
+            { text: "分支定界", link: "/or-opt/branch-and-bound" },
+            { text: "分支切割", link: "/or-opt/branch-and-cut" },
+            { text: "列生成", link: "/or-opt/column-generation" },
+            { text: "分支定价", link: "/or-opt/branch-and-price" },
+            { text: "Dantzig-Wolfe分解", link: "/or-opt/dantzig-wolfe" },
+            { text: "Benders分解", link: "/or-opt/benders" },
+            { text: "拉格朗日", link: "/or-opt/lagrangian" },
+          ],
+        },
       ],
       "/ai/": [{ text: "人工智能", link: "/ai/" }],
     },

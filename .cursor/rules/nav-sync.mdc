@@ -20,22 +20,37 @@ alwaysApply: true
 
 位置：`themeConfig.sidebar["/{知识目录}/"]`
 
-格式示例：
+**平铺**（小栏目可用）与**分组**（与 `index.md` 中「建模方法 / 精确算法」等一致时优先）均可。运筹优化侧栏已采用分组，示例如下：
+
 ```typescript
-// 运筹优化导航
+// 运筹优化：首页 + 分组（分类名与 docs/or-opt/index.md 一致）
 "/or-opt/": [
   { text: "运筹优化", link: "/or-opt/" },
-  { text: "分支定界", link: "/or-opt/branch-and-bound" },
-  { text: "Benders分解", link: "/or-opt/benders" },
+  {
+    text: "建模方法",
+    collapsed: false,
+    items: [
+      { text: "整数规划建模技巧", link: "/or-opt/integer-modeling-techniques" },
+    ],
+  },
+  {
+    text: "精确算法",
+    collapsed: false,
+    items: [
+      { text: "分支定界", link: "/or-opt/branch-and-bound" },
+      // ... 其余与 index 表格顺序一致
+    ],
+  },
 ],
 
-// 人工智能导航
+// 人工智能等：也可按「基础 / 进阶」等分组，结构同上
 "/ai/": [
   { text: "人工智能", link: "/ai/" },
-  { text: "机器学习", link: "/ai/machine-learning" },
-  { text: "深度学习", link: "/ai/deep-learning" },
+  { text: "子页", link: "/ai/..." }, // 或 { text, items: [...] } 分组
 ],
 ```
+
+新增/删除 `docs/or-opt/` 下页面时，应把对应 `{ text, link }` 放进**正确分组**的 `items` 中，并同步 `index.md` 的二级标题与表格。
 
 ### 2. 目录索引页 (`docs/{知识目录}/index.md`)
 
@@ -98,7 +113,7 @@ nav: [
 1. **顺序一致**：侧边栏导航与目录表格的顺序应保持一致
 2. **链接正确**：确保 `link` 路径与文件实际路径匹配（不带 `.md` 后缀）
 3. **命名统一**：中文显示名称应简洁明了，与文档标题一致
-4. **分类清晰**：目录表格中应对内容进行合理分类
+4. **分类清晰**：目录表格中应对内容进行合理分类；**侧栏与 `index.md` 的分类名称、从属关系一致**（如「建模方法」「精确算法」）
 5. **路径对应**：文件路径、导航链接、目录链接三者保持一致
 
 ## 触发关键词
