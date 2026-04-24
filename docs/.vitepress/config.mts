@@ -61,6 +61,7 @@ export default defineConfig({
     sidebar: {
       "/or-opt/": [
         { text: "运筹优化", link: "/or-opt/" },
+        { text: "整数规划建模技巧", link: "/or-opt/integer-modeling-techniques" },
         { text: "分支定界", link: "/or-opt/branch-and-bound" },
         { text: "分支切割", link: "/or-opt/branch-and-cut" },
         { text: "列生成", link: "/or-opt/column-generation" },
