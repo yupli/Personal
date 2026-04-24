@@ -312,10 +312,107 @@ $$
 
 - **定理 12.4.2（Wolsey, 1998）**（符号略）：若 $X$ 有显式**完美表述**的凸包 $\mathrm{conv}(X) = \{ \mathbf{x} : \bar{A} \mathbf{x} \le \bar{\mathbf{b}} \}$，则 $\omega_{LD}$ 可视为在 $\bar{A}\mathbf{x} \le \bar{\mathbf{b}}$ 与 $D\mathbf{x} \le \mathbf{d}$ 上极大 $\mathbf{c}^\top\mathbf{x}$ 的**联合**问题。
 
-**对偶函数形状**：$z(\mathbf{u}) = \max_{t} [\mathbf{c}^\top \mathbf{x}^t + \mathbf{u}^\top(\mathbf{d} - D\mathbf{x}^t)]$ 是**凸**的**逐段线性**函数；$w_{LD} = \min_{\mathbf{u} \ge 0} z(\mathbf{u})$ 即在其图像（若干仿射函数的上包络）上求**最小值**，极值点可能使“活跃”极点 $\mathbf{x}^t$ 发生切换。教材图 12.2 一维 $\mathbf{u}$ 的示意图中，$z(\mathbf{u})$ 为粗折线，由多条细直线**取大**后形成。实际计算中常配合**次梯度法**、列生成/割平面、或 bundle 方法近似求解 (LD)，此处不展开实现细节。
+**对偶函数形状**：$z(\mathbf{u}) = \max_{t} [\mathbf{c}^\top \mathbf{x}^t + \mathbf{u}^\top(\mathbf{d} - D\mathbf{x}^t)]$ 是**凸**的**逐段线性**函数；$w_{LD} = \min_{\mathbf{u} \ge 0} z(\mathbf{u})$ 即在其图像（若干仿射函数的上包络）上求**最小值**，极值点可能使“活跃”极点 $\mathbf{x}^t$ 发生切换。教材图 12.2 一维 $\mathbf{u}$ 的示意图中，$z(\mathbf{u})$ 为粗折线，由多条细直线**取大**后形成。下面**§7**给出与教材 §12.5.1 一致的**次梯度**迭代及步长。其他途径（如列生成/割平面、bundle 方法）可参见专著。
+
+---
+
+## 7. 对偶 $z(\mathbf{u})$ 的一般形式、线性化与次梯度算法
+
+### 7.1 极小化“极大族仿射”的凸函数
+
+考虑**逐段线性凸函数** $f$ 的极小，一般可写为
+
+$$
+\begin{aligned}
+& \min_{\mathbf{u} \ge \mathbf{0}} \quad f(\mathbf{u}) & (12.28) \\[0.3em]
+& f(\mathbf{u}) = \max_{j=1,\ldots,J} \left[
+(\mathbf{a}^j)^\top \mathbf{u} - b_j
+\right] & (12.29)
+\end{aligned}
+$$
+
+拉格朗日对偶的求值
+
+$$
+\begin{aligned}
+& w_{LD} = \min_{\mathbf{u} \ge \mathbf{0}} \; z(\mathbf{u}) & (12.30) \\[0.3em]
+& z(\mathbf{u}) = \max_{j=1,\ldots,T} \left[
+\mathbf{c}^\top \mathbf{x}^j + \mathbf{u}^\top(\mathbf{d} - D\mathbf{x}^j)
+\right] & (12.31)
+\end{aligned}
+$$
+
+与 (12.28)–(12.29) **同构**（$f$ 是若干以 $\mathbf{u}$ 为自变量的**仿射函数**的逐点**最大**）。因此 (LD) 的求解与对一般的 $f$ 的极小属同一类**凸—非光滑**优化。
+
+### 7.2 与上包络的“线性化”（引入辅助标量 $\eta$）
+
+在有限项 $\max$ 时，(12.28)–(12.29) 可等价写成**在 $\eta$ 与 $\mathbf{u}$ 上**的线性目标与线性不等式，即**上境图 (epigraph)** 技巧：
+
+$$
+\begin{aligned}
+\min \quad & \eta \\
+\text{s.t.} \quad & \eta \ge (\mathbf{a}^j)^\top \mathbf{u} - b_j, \qquad j = 1, \ldots, J, \\
+& \mathbf{u} \ge \mathbf{0},
+\end{aligned}
+$$
+
+与 §6 中 (12.17)–(12.18) 的写法为同一思想。对 $z(\mathbf{u})$ 在极点集 $\{ \mathbf{x}^j\}$ 上取 $\max$ 时，可同样用 $\eta \ge \mathbf{c}^\top \mathbf{x}^j + \mathbf{u}^\top(\mathbf{d} - D\mathbf{x}^j)$ 把“$\min_\mathbf{u} \max$”变形成带 $\eta$ 的**凸约束**；若 $T$ 很大，在算法上往往**不显式**枚举全部不等式，而用**次梯度**或割平面**逐步**逼近。
+
+### 7.3 次梯度（Definition 12.5.1）
+
+对凸函数 $f: \mathbb{R}^m \to \mathbb{R}$，称向量 $\boldsymbol{\gamma}(\mathbf{u}) \in \mathbb{R}^m$ 是 $f$ 在 $\mathbf{u}$ 处的一个**次梯度**（subgradient），若
+
+$$
+f(\mathbf{v}) \ge f(\mathbf{u}) + \boldsymbol{\gamma}(\mathbf{u})^\top(\mathbf{v} - \mathbf{u}), \qquad \forall \mathbf{v} \in \mathbb{R}^m.
+$$
+
+当 $f$ 在 $\mathbf{u}$ 处**可微**时，次梯度与梯度相同：$\boldsymbol{\gamma}(\mathbf{u}) = \nabla f(\mathbf{u})$。对 (12.31) 的 $z(\mathbf{u})$，在固定 $\mathbf{u}^k$ 下求解子问题得最优解 $\mathbf{x}(\mathbf{u}^k)$ 时，有
+
+$$
+\boldsymbol{\gamma}^k = \mathbf{d} - D\mathbf{x}(\mathbf{u}^k),
+$$
+
+可视为 $z$ 在 $\mathbf{u}^k$ 处的一个**次梯度**（教材约定）。
+
+### 7.4 算法 8：拉格朗日对偶的次梯度迭代
+
+在 $\mathbf{u} \ge \mathbf{0}$ 上**投影次梯度**更新（分量取非负）：
+
+1. 初始化：$\mathbf{u} \leftarrow \mathbf{u}^0$，$k \leftarrow 0$。  
+2. **当** $k < \text{maxIter}$ **时**循环：  
+   - 解 $\mathrm{IP}(\mathbf{u}^k)$，得最优解 $\mathbf{x}(\mathbf{u}^k)$；  
+   - 计算次梯度：$\boldsymbol{\gamma}^k \leftarrow \mathbf{d} - D\mathbf{x}(\mathbf{u}^k)$；  
+   - 取步长 $\rho^k$（见下节）；  
+   - 乘子更新（向非负正交象限**投影**）  
+     $$\mathbf{u}^{k+1} \leftarrow \max\bigl\{
+     \mathbf{u}^k - \rho^k \bigl( \mathbf{d} - D\mathbf{x}(\mathbf{u}^k) \bigr), \; \mathbf{0}
+     \bigr\}$$  
+     这里 $\max$ 为**按分量**取 $\max(\cdot, 0)$；  
+   - $k \leftarrow k+1$。  
+3. **结束**（常配合启发式**可行化**、对偶/原始界记录等工程技巧）。
+
+该框架与 (12.30) 一致：在每一迭代用当前 $\mathbf{u}^k$ 的松弛值 $z(\mathbf{u}^k)$ 与次梯度信息沿“下降”方向**试探** $w_{LD}$。收敛性需对 $f$ 的假设与**步长规则**作约束，教材多给出**充分**条件，此处从略。
+
+### 7.5 步长 $\rho^k$ 的常用取法
+
+1. **递减步长**  
+   要求 $\sum_{k=1}^\infty \rho^k = +\infty$ 且 $\rho^k \to 0$（$k \to \infty$）。**例**：$\rho^k = 1/k$。  
+
+2. **几何衰减**  
+   $\rho^k = \mu^0 \alpha^k$，其中 $0 < \alpha < 1$，$\mu^0$ 为初值参数。  
+
+3. **Polyak 型步长**（若可估计**最优对偶值**的近似）  
+   $$
+   \rho^k
+   = \epsilon_k \; \frac{z(\mathbf{u}^k) - \hat{w}_{LD}}{\lVert \mathbf{d} - D\mathbf{x}(\mathbf{u}^k) \rVert^2},
+   \qquad 0 < \epsilon_k < 2,
+   $$  
+   其中 $\hat{w}_{LD}$ 为 $w_{LD}$ 的**某估计**（如分支定界中已知的**最好原始可行值**对应的对偶目标下界/上界等，依符号约定而变；教材常在对偶**间隙**的语境下给具体形式）。
+
+实现时还需**数值截断、最大迭代数、对偶/原始**隙监控与**重启动**等，以稳定 $\mathbf{u}$ 的搜索。
 
 ---
 
 ## 备忘
 
-（可在此补：**次梯度**更新 $\mathbf{u}$ 的步长、**枝定界/分支**中拉格朗日界的使用、与 Dantzig–Wolfe / Benders 的对比、Gurobi 中相应接口等。）
+（可在此补：**枝定界/分支**中拉格朗日界的使用、与 Dantzig–Wolfe / Benders 的对比、Gurobi 中相应接口、bundle/割平面**替代**次梯度的情形等。）
