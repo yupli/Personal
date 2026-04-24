@@ -312,11 +312,11 @@ $$
 
 - **定理 12.4.2（Wolsey, 1998）**（符号略）：若 $X$ 有显式**完美表述**的凸包 $\mathrm{conv}(X) = \{ \mathbf{x} : \bar{A} \mathbf{x} \le \bar{\mathbf{b}} \}$，则 $\omega_{LD}$ 可视为在 $\bar{A}\mathbf{x} \le \bar{\mathbf{b}}$ 与 $D\mathbf{x} \le \mathbf{d}$ 上极大 $\mathbf{c}^\top\mathbf{x}$ 的**联合**问题。
 
-**对偶函数形状**：$z(\mathbf{u}) = \max_{t} [\mathbf{c}^\top \mathbf{x}^t + \mathbf{u}^\top(\mathbf{d} - D\mathbf{x}^t)]$ 是**凸**的**逐段线性**函数；$w_{LD} = \min_{\mathbf{u} \ge 0} z(\mathbf{u})$ 即在其图像（若干仿射函数的上包络）上求**最小值**，极值点可能使“活跃”极点 $\mathbf{x}^t$ 发生切换。教材图 12.2 一维 $\mathbf{u}$ 的示意图中，$z(\mathbf{u})$ 为粗折线，由多条细直线**取大**后形成。下面**§7**给出与教材 §12.5.1 一致的**次梯度**迭代及步长。其他途径（如列生成/割平面、bundle 方法）可参见专著。
+**对偶函数形状**：$z(\mathbf{u}) = \max_{t} [\mathbf{c}^\top \mathbf{x}^t + \mathbf{u}^\top(\mathbf{d} - D\mathbf{x}^t)]$ 是**凸**的**逐段线性**函数；$w_{LD} = \min_{\mathbf{u} \ge 0} z(\mathbf{u})$ 即在其图像（若干仿射函数的上包络）上求**最小值**，极值点可能使“活跃”极点 $\mathbf{x}^t$ 发生切换。教材图 12.2 一维 $\mathbf{u}$ 的示意图中，$z(\mathbf{u})$ 为粗折线，由多条细直线**取大**后形成。下面**§7（如何求解拉格朗日松弛，次梯度法）**中给出与教材 §12.5.1 一致的对偶 $z(\mathbf{u})$ 的一般形式、线性化及**次梯度**迭代、步长。其他途径（如列生成/割平面、bundle 方法）可参见专著。
 
 ---
 
-## 7. 对偶 $z(\mathbf{u})$ 的一般形式、线性化与次梯度算法
+## 7. 如何求解拉格朗日松弛（次梯度法）
 
 ### 7.1 极小化“极大族仿射”的凸函数
 
