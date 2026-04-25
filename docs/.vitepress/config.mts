@@ -14,7 +14,8 @@ export default defineConfig({
   lastUpdated: true,
 
   head: [
-    ["link", { rel: "icon", href: "/logo.svg", type: "image/svg+xml" }],
+    ["link", { rel: "icon", href: `${BASE}logo.svg`, type: "image/svg+xml" }],
+    ["link", { rel: "apple-touch-icon", href: `${BASE}logo.svg` }],
     ["meta", { name: "theme-color", content: "#1976d2" }],
   ],
 
