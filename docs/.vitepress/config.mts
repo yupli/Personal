@@ -99,6 +99,7 @@ export default defineConfig({
               items: [
                 { text: "模拟退火（SA）", link: "/or-opt/simulated-annealing" },
                 { text: "禁忌搜索（Tabu Search）", link: "/or-opt/tabu-search" },
+                { text: "遗传算法（GA）", link: "/or-opt/genetic-algorithm" },
               ],
             },
             { text: "超启发式（Hyper-heuristics）", link: "/or-opt/hyper-heuristics" },
