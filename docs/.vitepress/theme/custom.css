@@ -1,6 +1,5 @@
 /* VitePress 主题覆写：字体、色板、首页与文档页排版 */
-
-@import url("https://cdn.jsdelivr.net/npm/lxgw-wenkai-screen-webfont@1.1.0/style.css");
+/* 正文字体：宋体系（不加载网络字体，用系统/思源衬线回退） */
 
 /* ----- 品牌色：Material Teal 系 ----- */
 :root {
@@ -21,8 +20,9 @@
   --vp-c-text-2: #3f3f3f;
   --vp-c-text-3: #737373;
 
-  --vp-font-family-base: "LXGW WenKai Screen", "PingFang SC",
-    "Microsoft YaHei UI", "Microsoft YaHei", system-ui, sans-serif;
+  /* 宋体：Win SimSun，macOS Songti ST，无则思源宋体 */
+  --vp-font-family-base: "SimSun", "NSimSun", "Songti SC", "STSong",
+    "Noto Serif CJK SC", "Source Han Serif SC", "宋体", serif;
   --vp-font-family-mono: ui-monospace, "Cascadia Code", "SFMono-Regular",
     Consolas, monospace;
 
@@ -281,19 +281,22 @@ html:not(.dark) .VPDoc .aside-curtain {
   margin-top: 0.35rem;
 }
 
+/* 三级标题：节；宋体下略加字重，层次清晰 */
 .vp-doc h3 {
   margin-top: 1.65rem;
   margin-bottom: 0.55rem;
-  font-weight: 600;
-  letter-spacing: -0.01em;
+  font-weight: 700;
+  letter-spacing: 0.01em;
   line-height: 1.4;
   color: var(--vp-c-text-1);
 }
 
+/* 四级标题：密集长文内「小标题」，扫读时比正文更醒目 */
 .vp-doc h4 {
-  margin-top: 1.35rem;
-  margin-bottom: 0.45rem;
-  font-weight: 600;
+  margin-top: 1.25rem;
+  margin-bottom: 0.4rem;
+  font-weight: 700;
+  font-size: 1.05em;
   line-height: 1.45;
   color: var(--vp-c-text-1);
 }
@@ -322,10 +325,18 @@ html:not(.dark) .VPDoc .aside-curtain {
   margin: 0.35em 0;
 }
 
-/* 强调比正文略重，避免 700+ 糊成块（与 Material 的 medium/strong 层次接近） */
+/* 宋体：行内加粗用 700，与正文对比清楚 */
 .vp-doc strong {
-  font-weight: 600;
+  font-weight: 700;
   color: var(--vp-c-text-1);
+}
+
+/* 代码块仍用等宽，避免继承宋体 */
+.vp-doc code,
+.vp-doc kbd,
+.vp-doc pre,
+.vp-doc .vp-code {
+  font-family: var(--vp-font-family-mono) !important;
 }
 
 .vp-doc hr {
