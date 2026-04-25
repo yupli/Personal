@@ -3,6 +3,8 @@ import mathjax3 from "markdown-it-mathjax3";
 import container from "markdown-it-container";
 
 const BASE = "/Personal/";
+/** 与换色/换标后递增，破 favicon/导航 logo 的强缓存 */
+const LOGO_ASSET = `${BASE}logo.svg?v=2`;
 
 export default defineConfig({
   title: "个人知识库",
@@ -14,8 +16,8 @@ export default defineConfig({
   lastUpdated: true,
 
   head: [
-    ["link", { rel: "icon", href: `${BASE}logo.svg`, type: "image/svg+xml" }],
-    ["link", { rel: "apple-touch-icon", href: `${BASE}logo.svg` }],
+    ["link", { rel: "icon", href: LOGO_ASSET, type: "image/svg+xml" }],
+    ["link", { rel: "apple-touch-icon", href: LOGO_ASSET }],
     ["meta", { name: "theme-color", content: "#1976d2" }],
   ],
 
@@ -41,7 +43,7 @@ export default defineConfig({
   },
 
   themeConfig: {
-    logo: { src: "/logo.svg", alt: "知识库" },
+    logo: { src: "/logo.svg?v=2", alt: "知识库" },
 
     editLink: {
       pattern: "https://github.com/yupli/Personal/edit/main/docs/:path",
