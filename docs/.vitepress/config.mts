@@ -116,7 +116,8 @@ export default defineConfig({
       },
     },
 
-    outline: { label: "本页目录", level: [2, 3] },
+    /* h2–h4 纳入侧栏目录，长文好跳转 */
+    outline: { label: "本页目录", level: [2, 4] },
 
     docFooter: { prev: "上一篇", next: "下一篇" },
 

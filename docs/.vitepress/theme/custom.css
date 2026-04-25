@@ -226,26 +226,95 @@
 }
 
 .VPContent:not(.is-home) .content-container {
-  max-width: 52rem;
+  /* 略收窄主栏，控制行长，利于中文长文阅读 */
+  max-width: 46rem;
 }
 
 .vp-doc h1 {
   font-weight: 750;
   letter-spacing: -0.03em;
+  line-height: 1.28;
+  margin-bottom: 0.75rem;
 }
 
 .vp-doc h2 {
-  margin-top: 2.35rem;
+  margin-top: 2.5rem;
+  margin-bottom: 0.75rem;
   padding-top: 0.15rem;
   border-top: none;
   font-weight: 700;
   letter-spacing: -0.02em;
+  line-height: 1.35;
+}
+
+.vp-doc h3 {
+  margin-top: 1.85rem;
+  margin-bottom: 0.65rem;
+  font-weight: 650;
+  letter-spacing: -0.015em;
+  line-height: 1.4;
+}
+
+.vp-doc h4 {
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  line-height: 1.45;
 }
 
 .vp-doc p,
 .vp-doc li {
-  line-height: 1.85;
+  line-height: 1.92;
   color: var(--vp-c-text-2);
+}
+
+.vp-doc p {
+  margin: 1em 0;
+}
+
+.vp-doc ul,
+.vp-doc ol {
+  margin: 1em 0 1.15em;
+  padding-left: 1.35em;
+}
+
+.vp-doc li {
+  margin: 0.5em 0;
+}
+
+/* 列表内多段时避免挤在一起 */
+.vp-doc li > p {
+  margin: 0.45em 0;
+}
+
+/* 减轻「满篇加粗」：略降字重，与正文对比更柔和 */
+.vp-doc strong {
+  font-weight: 600;
+  color: var(--vp-c-text-1);
+}
+
+.vp-doc hr {
+  margin: 2.25rem 0;
+  border: none;
+  border-top: 1px solid var(--vp-c-divider);
+}
+
+/* 行内/块级公式与长公式横向滚动，避免顶破版心 */
+.vp-doc mjx-container[display="true"] {
+  display: block;
+  margin: 1.1em 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.vp-doc blockquote {
+  margin: 1.1em 0;
+  padding: 0.5em 0 0.5em 1.1em;
+  border-left: 3px solid
+    color-mix(in srgb, var(--vp-c-brand-2) 45%, var(--vp-c-border));
+  color: var(--vp-c-text-2);
+  background: color-mix(in srgb, var(--vp-c-bg-soft) 50%, transparent);
+  border-radius: 0 10px 10px 0;
 }
 
 .vp-doc a {
@@ -304,7 +373,17 @@ div[class*="language-"] {
 
 .vp-doc th,
 .vp-doc td {
-  padding: 0.7rem 1.1rem;
+  padding: 0.75rem 1rem;
+  line-height: 1.65;
+  vertical-align: top;
+}
+
+.vp-doc tbody tr:nth-child(even) {
+  background: color-mix(in srgb, var(--vp-c-bg-soft) 70%, transparent);
+}
+
+.dark .vp-doc tbody tr:nth-child(even) {
+  background: color-mix(in srgb, var(--vp-c-bg-soft) 45%, transparent);
 }
 
 /* ----- 大纲 / 编辑链接 / 更新于 ----- */
