@@ -1,5 +1,6 @@
 /* VitePress 主题覆写：字体、色板、首页与文档页排版 */
-/* 正文字体：宋体系（不加载网络字体，用系统/思源衬线回退） */
+/* 正文：思源宋/宋体系 + 西文 Times，接近教材/印刷体（与系统 SimSun 等回退） */
+@import url("https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&display=swap");
 
 /* ----- 品牌色：Material Teal 系 ----- */
 :root {
@@ -20,11 +21,11 @@
   --vp-c-text-2: #3f3f3f;
   --vp-c-text-3: #737373;
 
-  /* 宋体：Win SimSun，macOS Songti ST，无则思源宋体 */
-  --vp-font-family-base: "SimSun", "NSimSun", "Songti SC", "STSong",
-    "Noto Serif CJK SC", "Source Han Serif SC", "宋体", serif;
+  --vp-font-family-base: "Noto Serif SC", "Source Han Serif SC", "STSong",
+    "SimSun", "NSimSun", "Songti SC", "Times New Roman", "Times", serif;
+  /* 代码、伪代码仍用等宽 */
   --vp-font-family-mono: ui-monospace, "Cascadia Code", "SFMono-Regular",
-    Consolas, monospace;
+    Consolas, "Noto Sans Mono CJK SC", monospace;
 
   --vp-layout-max-width: 1220px;
   --vp-sidebar-width: 300px;
@@ -63,6 +64,14 @@
   --vp-shadow-2: 0 16px 48px rgba(0, 0, 0, 0.55);
 
   --doc-prose-color: color-mix(in srgb, var(--vp-c-text-2) 70%, var(--vp-c-text-1));
+}
+
+/* 顶栏、侧栏、本地导航：无衬线，小字号与交互区更易读 */
+.VPNav,
+.VPSidebar,
+.VPLocalNav {
+  font-family: "PingFang SC", "Microsoft YaHei UI", "Microsoft YaHei",
+    system-ui, sans-serif;
 }
 
 /* ----- 顶栏 ----- */
@@ -248,11 +257,23 @@ html:not(.dark) .VPDoc .aside-curtain {
   max-width: var(--doc-prose-max);
 }
 
-/* 正文字体与渲染：接近期刊/Material 文档页，而非「大字海报」感 */
+/* 正文字体与渲染：宋/思源宋 + Times，印刷教材感 */
 .vp-doc {
   font-size: 1rem;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
+  font-family: var(--vp-font-family-base);
+}
+
+.vp-doc :is(code, kbd),
+.vp-doc pre,
+.vp-doc pre code {
+  font-family: var(--vp-font-family-mono);
+}
+
+/* 西文、术语用斜体时与教材一致（中文引号内英文等） */
+.vp-doc em {
+  font-style: italic;
 }
 
 .vp-doc h1 {
@@ -281,22 +302,19 @@ html:not(.dark) .VPDoc .aside-curtain {
   margin-top: 0.35rem;
 }
 
-/* 三级标题：节；宋体下略加字重，层次清晰 */
 .vp-doc h3 {
   margin-top: 1.65rem;
   margin-bottom: 0.55rem;
-  font-weight: 700;
-  letter-spacing: 0.01em;
+  font-weight: 600;
+  letter-spacing: -0.01em;
   line-height: 1.4;
   color: var(--vp-c-text-1);
 }
 
-/* 四级标题：密集长文内「小标题」，扫读时比正文更醒目 */
 .vp-doc h4 {
-  margin-top: 1.25rem;
-  margin-bottom: 0.4rem;
-  font-weight: 700;
-  font-size: 1.05em;
+  margin-top: 1.35rem;
+  margin-bottom: 0.45rem;
+  font-weight: 600;
   line-height: 1.45;
   color: var(--vp-c-text-1);
 }
@@ -325,18 +343,19 @@ html:not(.dark) .VPDoc .aside-curtain {
   margin: 0.35em 0;
 }
 
-/* 宋体：行内加粗用 700，与正文对比清楚 */
-.vp-doc strong {
+/* 宋体系加粗：用 700，与正文 400 区分明显（教材式强调） */
+.vp-doc strong,
+.vp-doc b {
   font-weight: 700;
   color: var(--vp-c-text-1);
 }
 
-/* 代码块仍用等宽，避免继承宋体 */
-.vp-doc code,
-.vp-doc kbd,
-.vp-doc pre,
-.vp-doc .vp-code {
-  font-family: var(--vp-font-family-mono) !important;
+/* 稍宽屏起两端对齐，长段更「成块」；窄屏仍左对齐免出格 */
+@media (min-width: 640px) {
+  .vp-doc p {
+    text-align: justify;
+    text-justify: inter-ideograph;
+  }
 }
 
 .vp-doc hr {

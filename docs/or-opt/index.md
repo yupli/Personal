@@ -1,6 +1,6 @@
 # 运筹优化
 
-运筹优化（Operations Research & Optimization）是研究如何在有限资源下做出最优决策的学科。
+运筹优化（**Operations Research & Optimization**）是研究如何在**有限资源**下做出**最优决策**的学科。
 
 ---
 
