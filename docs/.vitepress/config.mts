@@ -76,6 +76,7 @@ export default defineConfig({
             { text: "分支切割（Branch and Cut）", link: "/or-opt/branch-and-cut" },
             { text: "列生成（Column Generation）", link: "/or-opt/column-generation" },
             { text: "分支定价（Branch-and-Price）", link: "/or-opt/branch-and-price" },
+            { text: "分支定价切割（Branch-Price-and-Cut）", link: "/or-opt/branch-price-and-cut" },
             { text: "Dantzig-Wolfe分解（Dantzig–Wolfe Decomposition）", link: "/or-opt/dantzig-wolfe" },
             { text: "Benders分解（Benders Decomposition）", link: "/or-opt/benders" },
             { text: "拉格朗日（Lagrangian Relaxation）", link: "/or-opt/lagrangian" },
