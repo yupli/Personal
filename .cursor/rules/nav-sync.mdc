@@ -37,7 +37,7 @@ alwaysApply: true
     text: "精确算法",
     collapsed: false,
     items: [
-      { text: "分支定界", link: "/or-opt/branch-and-bound" },
+      { text: "分支定界（Branch and Bound）", link: "/or-opt/branch-and-bound" },
       // ... 其余与 index 表格顺序一致
     ],
   },
@@ -75,7 +75,7 @@ alwaysApply: true
 
 | 算法 | 说明 | 链接 |
 |------|------|------|
-| **分支定界** | 求解整数规划的经典方法... | [查看](branch-and-bound.md) |
+| **分支定界**（Branch and Bound） | 求解整数规划的经典方法... | [查看](branch-and-bound.md) |
 | ... | ... | ... |
 ```
 

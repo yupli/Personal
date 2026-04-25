@@ -16,13 +16,13 @@
 
 | 算法 | 说明 | 链接 |
 |------|------|------|
-| **分支定界** | 求解整数规划的经典方法，通过分支和定界剪枝搜索解空间 | [查看](branch-and-bound.md) |
-| **分支切割** | 在分支定界基础上加入割平面，加速收敛 | [查看](branch-and-cut.md) |
-| **列生成** | 求解大规模线性规划，按需生成变量列 | [查看](column-generation.md) |
-| **分支定价** | 分支定界与列生成的结合，求解大规模整数规划 | [查看](branch-and-price.md) |
-| **Dantzig-Wolfe分解** | 将问题分解为主问题和子问题，利用块角结构 | [查看](dantzig-wolfe.md) |
-| **Benders分解** | 将混合整数规划分解为主问题和子问题，通过割平面迭代 | [查看](benders.md) |
-| **拉格朗日松弛** | 通过松弛复杂约束，将问题分解为易求解的子问题 | [查看](lagrangian.md) |
+| **分支定界**（Branch and Bound） | 求解整数规划的经典方法，通过分支和定界剪枝搜索解空间 | [查看](branch-and-bound.md) |
+| **分支切割**（Branch and Cut） | 在分支定界基础上加入割平面，加速收敛 | [查看](branch-and-cut.md) |
+| **列生成**（Column Generation） | 求解大规模线性规划，按需生成变量列 | [查看](column-generation.md) |
+| **分支定价**（Branch-and-Price） | 分支定界与列生成的结合，求解大规模整数规划 | [查看](branch-and-price.md) |
+| **Dantzig-Wolfe 分解**（Dantzig–Wolfe Decomposition） | 将问题分解为主问题和子问题，利用块角结构 | [查看](dantzig-wolfe.md) |
+| **Benders 分解**（Benders Decomposition） | 将混合整数规划分解为主问题和子问题，通过割平面迭代 | [查看](benders.md) |
+| **拉格朗日**（Lagrangian Relaxation） | 通过松弛复杂约束，将问题分解为易求解的子问题 | [查看](lagrangian.md) |
 
 ### 图算法
 
