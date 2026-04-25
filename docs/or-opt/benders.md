@@ -1,6 +1,6 @@
 # Benders 分解
 
-Benders 分解（Benders Decomposition）是一种将混合整数规划问题分解为主问题和子问题的算法，特别适用于具有**可分解结构**的大规模优化问题。
+Benders 分解（Benders Decomposition）是一种将混合整数规划问题分解为主问题和子问题的算法，特别适用于具有可分解结构的大规模优化问题。
 
 ---
 
@@ -20,7 +20,7 @@ $$\text{s.t.} \quad A\boldsymbol{x} \leq \boldsymbol{b} - B\boldsymbol{y}$$
 
 $$\boldsymbol{x} \geq \boldsymbol{0}$$
 
-**问题特点**：
+问题特点：
 - $\boldsymbol{y}$：整数决策变量（复杂变量）
 - $\boldsymbol{x}$：连续决策变量
 - 当 $\boldsymbol{y}$ 固定后，子问题变为关于 $\boldsymbol{x}$ 的线性规划问题
@@ -49,8 +49,8 @@ $$\text{s.t.} \quad A^T \boldsymbol{\alpha} \leq \boldsymbol{c}$$
 
 $$\boldsymbol{\alpha} \text{ free}$$
 
-**求解结果分析**：
-- 得到 Subproblem-Dual 的**极点** $\boldsymbol{\alpha}_r^j$（$j = 1, 2, \ldots, J$）和**极射线** $\boldsymbol{\alpha}_p^i$（$i = 1, 2, \ldots, I$）
+求解结果分析：
+- 得到 Subproblem-Dual 的极点 $\boldsymbol{\alpha}_r^j$（$j = 1, 2, \ldots, J$）和极射线 $\boldsymbol{\alpha}_p^i$（$i = 1, 2, \ldots, I$）
 - 如果有最优解，获得其目标值 $q(\boldsymbol{y}^*) = \boldsymbol{\alpha}^{T^*}(\boldsymbol{b} - B\bar{\boldsymbol{y}})$
 - 因为 Subproblem 和 Subproblem-Dual 互为对偶，故目标值相同
 
@@ -66,17 +66,17 @@ $$(\boldsymbol{\alpha}_p^i)^T (\boldsymbol{b} - B\boldsymbol{y}) \leq q, \quad \
 
 $$\boldsymbol{y} \in Y, \quad q \text{ free}$$
 
-**约束说明**：
-- **极射线约束**（可行性割）：$(\boldsymbol{\alpha}_r^j)^T (\boldsymbol{b} - B\boldsymbol{y}) \leq 0$
+约束说明：
+- 极射线约束（可行性割）：$(\boldsymbol{\alpha}_r^j)^T (\boldsymbol{b} - B\boldsymbol{y}) \leq 0$
   - 保证子问题有可行解
-- **极点约束**（最优性割）：$(\boldsymbol{\alpha}_p^i)^T (\boldsymbol{b} - B\boldsymbol{y}) \leq q$
+- 极点约束（最优性割）：$(\boldsymbol{\alpha}_p^i)^T (\boldsymbol{b} - B\boldsymbol{y}) \leq q$
   - 提供子问题的下界信息
 
 ### 2.4 第四步：迭代与终止
 
 求解更新后的主问题，获得目标值中 $q$ 的值 $q^*$。
 
-**终止条件**：
+终止条件：
 - 直到 $q(\boldsymbol{y}^*) = q^*$，算法停止，得到最优解
 - 或者从全局上界 UB 和全局下界 LB 判断：
   - 全局 LB：$\boldsymbol{f}^T \boldsymbol{y} + q$
@@ -132,29 +132,29 @@ $$\boldsymbol{y} \in Y, \quad q \text{ free}$$
 
 | 割平面类型 | 触发条件 | 数学形式 | 作用 |
 |-----------|---------|---------|------|
-| **最优性割** | 子问题有最优解 | $(\boldsymbol{\alpha}_p^i)^T (\boldsymbol{b} - B\boldsymbol{y}) \leq q$ | 逼近目标函数下界 |
-| **可行性割** | 子问题无可行解 | $(\boldsymbol{\alpha}_r^j)^T (\boldsymbol{b} - B\boldsymbol{y}) \leq 0$ | 排除不可行解 |
+| 最优性割 | 子问题有最优解 | $(\boldsymbol{\alpha}_p^i)^T (\boldsymbol{b} - B\boldsymbol{y}) \leq q$ | 逼近目标函数下界 |
+| 可行性割 | 子问题无可行解 | $(\boldsymbol{\alpha}_r^j)^T (\boldsymbol{b} - B\boldsymbol{y}) \leq 0$ | 排除不可行解 |
 
 ---
 
 ## 4. 与 Dantzig-Wolfe 分解的关系
 
-Benders 分解与 Dantzig-Wolfe 分解是**对偶关系**：
+Benders 分解与 Dantzig-Wolfe 分解是对偶关系：
 
 | 特性 | Benders 分解 | Dantzig-Wolfe 分解 |
 |------|-------------|-------------------|
-| **分解对象** | 混合整数规划 | 大规模线性规划 |
-| **主问题** | 整数变量 + 辅助变量 $q$ | 极点的凸组合系数 $\lambda$ |
-| **子问题** | 关于连续变量的线性规划 | 关于局部变量的子问题 |
-| **生成方式** | 生成割平面（行生成） | 生成列（列生成） |
-| **对偶关系** | 子问题的对偶提供割 | 子问题生成新列 |
+| 分解对象 | 混合整数规划 | 大规模线性规划 |
+| 主问题 | 整数变量 + 辅助变量 $q$ | 极点的凸组合系数 $\lambda$ |
+| 子问题 | 关于连续变量的线性规划 | 关于局部变量的子问题 |
+| 生成方式 | 生成割平面（行生成） | 生成列（列生成） |
+| 对偶关系 | 子问题的对偶提供割 | 子问题生成新列 |
 
 :::tip 核心理解
 
-- **Benders 分解**：通过割平面逐步逼近原问题，每次迭代添加**行约束**
-- **Dantzig-Wolfe 分解**：通过列生成逐步构建原问题，每次迭代添加**列变量**
+- Benders 分解：通过割平面逐步逼近原问题，每次迭代添加行约束
+- Dantzig-Wolfe 分解：通过列生成逐步构建原问题，每次迭代添加列变量
 
-两者本质上是**同一个问题的不同视角**——Benders 是在对偶空间操作，DW 是在原始空间操作。
+两者本质上是同一个问题的不同视角——Benders 是在对偶空间操作，DW 是在原始空间操作。
 
 :::
 
@@ -164,10 +164,10 @@ Benders 分解与 Dantzig-Wolfe 分解是**对偶关系**：
 
 Benders 分解特别适用于以下场景：
 
-1. **两阶段随机规划**：第一阶段决策（整数）+ 第二阶段情景（连续）
-2. **设施选址问题**：选址决策（整数）+ 运输/分配（连续）
-3. **网络设计**：拓扑设计（整数）+ 流量分配（连续）
-4. **生产计划**：产能决策（整数）+ 生产调度（连续）
+1. 两阶段随机规划：第一阶段决策（整数）+ 第二阶段情景（连续）
+2. 设施选址问题：选址决策（整数）+ 运输/分配（连续）
+3. 网络设计：拓扑设计（整数）+ 流量分配（连续）
+4. 生产计划：产能决策（整数）+ 生产调度（连续）
 
 ---
 
@@ -181,9 +181,9 @@ Benders 分解特别适用于以下场景：
 
 ### 6.2 强化 Benders 割
 
-- **Pareto-optimal 割**：从多个最优割中选择最强的割
-- **多割方法**：每个情景生成独立的割平面
-- **似然割**：基于概率的割平面选择策略
+- Pareto-optimal 割：从多个最优割中选择最强的割
+- 多割方法：每个情景生成独立的割平面
+- 似然割：基于概率的割平面选择策略
 
 ---
 
