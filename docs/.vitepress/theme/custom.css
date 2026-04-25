@@ -502,12 +502,16 @@ div[class*="language-"] {
 }
 
 /* ----- 算法流程框 ----- */
+/* 与文档页 1rem 正文对齐，避免框内被继承为偏小字号；步骤 h3 仅略大 */
 .custom-block.algorithm {
   border: 2px solid var(--vp-c-brand-2);
   border-radius: var(--vp-radius);
   background: color-mix(in srgb, var(--vp-c-brand-soft) 30%, var(--vp-c-bg-alt));
   padding: 16px 20px;
   margin: 16px 0;
+  font-size: 1.0625rem;
+  line-height: 1.7;
+  --alg-step-margin-top: 0.75rem;
 }
 
 .custom-block.algorithm .custom-block-title {
@@ -515,14 +519,45 @@ div[class*="language-"] {
   font-weight: 700;
   font-size: 1.1rem;
   margin: 0 0 12px 0;
+  line-height: 1.45;
 }
 
 .custom-block.algorithm p {
   margin: 8px 0;
+  font-size: 1em;
+  line-height: 1.7;
+}
+
+/* 步骤行（### 1. 初始化 等）：略大于框内正文，避免「标题巨大、说明像脚注」 */
+.custom-block.algorithm h3 {
+  font-size: 1.1em;
+  font-weight: 600;
+  margin: var(--alg-step-margin-top) 0 0.35em;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+  color: var(--vp-c-text-1);
+  border: none;
+  padding: 0;
+}
+
+.custom-block.algorithm h3:first-of-type {
+  margin-top: 0;
 }
 
 .custom-block.algorithm ol,
 .custom-block.algorithm ul {
   margin: 8px 0;
   padding-left: 1.5em;
+  font-size: 1em;
+  line-height: 1.7;
+}
+
+.custom-block.algorithm li {
+  font-size: 1em;
+  line-height: 1.7;
+}
+
+.custom-block.algorithm :is(ol, ul) li p {
+  font-size: 1em;
+  line-height: 1.7;
 }
