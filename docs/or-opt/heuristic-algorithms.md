@@ -16,12 +16,12 @@
 
 三类的边界并非绝对：元启发式里也可嵌套问题特化算子；超启发式所选对象本身常是基础启发式或小粒度元策略。写作时以「主要贡献在那一层」为准即可。
 
-以下三节与上表一一对应，**默认折叠**；点击展开阅读各类定义与说明。
+以下三节与上表一一对应，默认折叠；点击展开阅读各类定义与说明。
 
 ---
 
 <details>
-<summary>一、<strong>基础启发式</strong> (Simple Heuristics)</summary>
+<summary>一、基础启发式 (Simple Heuristics)</summary>
 
 - **对象**：问题结构上特化的构造规则、贪心、优先序、一阶段局部搜索等。  
 - **特点**：实现直接、可解释，常作为第一解、上界/可行解供精确算法热启动或剪枝使用；也可在分解法（如列生成/分支定价）中提供好的初始列或子问题解。  
@@ -30,7 +30,7 @@
 </details>
 
 <details>
-<summary>二、<strong>元启发式</strong> (Metaheuristics)</summary>
+<summary>二、元启发式 (Metaheuristics)</summary>
 
 - **对象**：在编码后的解表示上，用通用迭代机制在探索（exploration）与利用（exploitation）间平衡。  
 - **代表谱系**（本库会逐步展开，此处仅举例）：[模拟退火](simulated-annealing.md)、[禁忌搜索](tabu-search.md)、[遗传算法](genetic-algorithm.md) 与更广进化类、变邻域、粒子群、蚁群、差分进化等。  
@@ -39,7 +39,7 @@
 </details>
 
 <details>
-<summary>三、<strong>超启发式</strong> (Hyper-heuristics)</summary>
+<summary>三、超启发式 (Hyper-heuristics)</summary>
 
 - **对象**：不（主要）在全解空间上直接操作，而在低层启发式/邻域/扰动/交叉算子的池上学习或搜索：何时用哪种算子、以何顺序组合、或生成新低层规则。  
 - **常见分法**（文献中多交叉使用）：选择型（基于规则、强化学习、贝叶斯等，从现成算子中选序列）、生成型（以语法或学习模型生成新的启发式或邻域）等。  
