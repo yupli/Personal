@@ -217,6 +217,16 @@
 }
 
 /* ----- 文档页布局 ----- */
+/* 浅色：主阅读区（含正文与底部留白）白底，与左侧侧栏区灰底区分 */
+html:not(.dark) .VPDoc {
+  background: #ffffff;
+}
+
+/* 右侧大纲底部渐变，与主栏白底一致（原主题用 --vp-c-bg 易露灰边） */
+html:not(.dark) .VPDoc .aside-curtain {
+  background: linear-gradient(transparent, #ffffff 70%);
+}
+
 .VPSidebar {
   border-right: 1px solid var(--vp-c-border);
   background: var(--vp-c-bg);
