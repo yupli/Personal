@@ -34,7 +34,7 @@
 | 子类 | 说明 | 链接 |
 |------|------|------|
 | 基础启发式（Simple Heuristics） | 问题特化的构造/贪心/单阶段局部搜索等，常作初始解与热启动 | [查看](simple-heuristics.md) |
-| 元启发式（Metaheuristics） | 通用高层迭代框架；已写 [模拟退火](simulated-annealing.md)、[禁忌搜索](tabu-search.md)、[遗传算法](genetic-algorithm.md)，其余见元启发式页 | [查看](metaheuristics.md) |
+| 元启发式（Metaheuristics） | 通用高层迭代框架；已写 [模拟退火](simulated-annealing.md)、[禁忌搜索](tabu-search.md)、[遗传算法](genetic-algorithm.md)、[变邻域搜索](vns.md)，其余见元启发式页 | [查看](metaheuristics.md) |
 | 超启发式（Hyper-heuristics） | 在启发式算子/邻域层做选择或生成，强调与问题解耦、可迁移 | [查看](hyper-heuristics.md) |
 
 ### 图算法
