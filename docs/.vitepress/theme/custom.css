@@ -502,15 +502,15 @@ div[class*="language-"] {
 }
 
 /* ----- 算法流程框 ----- */
-/* 与文档页 1rem 正文对齐，避免框内被继承为偏小字号；步骤 h3 仅略大 */
+/* 字号与行高、段色与 .vp-doc 正文一致；步骤 h3 仅略大于 1em */
 .custom-block.algorithm {
   border: 2px solid var(--vp-c-brand-2);
   border-radius: var(--vp-radius);
   background: color-mix(in srgb, var(--vp-c-brand-soft) 30%, var(--vp-c-bg-alt));
   padding: 16px 20px;
   margin: 16px 0;
-  font-size: 1.0625rem;
-  line-height: 1.7;
+  font-size: 1rem;
+  line-height: var(--doc-prose-lh);
   --alg-step-margin-top: 0.75rem;
 }
 
@@ -523,9 +523,10 @@ div[class*="language-"] {
 }
 
 .custom-block.algorithm p {
-  margin: 8px 0;
+  margin: var(--doc-prose-p-gap) 0;
   font-size: 1em;
-  line-height: 1.7;
+  line-height: var(--doc-prose-lh);
+  color: var(--doc-prose-color);
 }
 
 /* 步骤行（### 1. 初始化 等）：略大于框内正文，避免「标题巨大、说明像脚注」 */
@@ -546,18 +547,21 @@ div[class*="language-"] {
 
 .custom-block.algorithm ol,
 .custom-block.algorithm ul {
-  margin: 8px 0;
-  padding-left: 1.5em;
+  margin: 0.75em 0 0.9em;
+  padding-left: 1.2em;
   font-size: 1em;
-  line-height: 1.7;
+  line-height: var(--doc-prose-lh);
+  color: var(--doc-prose-color);
 }
 
 .custom-block.algorithm li {
   font-size: 1em;
-  line-height: 1.7;
+  line-height: var(--doc-prose-lh);
+  color: var(--doc-prose-color);
 }
 
 .custom-block.algorithm :is(ol, ul) li p {
   font-size: 1em;
-  line-height: 1.7;
+  line-height: var(--doc-prose-lh);
+  color: var(--doc-prose-color);
 }
