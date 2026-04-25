@@ -32,6 +32,13 @@
   --vp-radius: 14px;
   --vp-shadow-1: 0 1px 3px rgba(0, 0, 0, 0.06);
   --vp-shadow-2: 0 12px 40px rgba(0, 0, 0, 0.08);
+
+  /* 正文区：靠拢 Material for MkDocs（如 https://smilingwayne.github.io/me/OROpt/ ） */
+  --doc-prose-max: 48rem; /* ≈768px@16px，与 MkDocs Material 主内容区常见宽度一致 */
+  --doc-prose-lh: 1.7; /* Material 正文字行高约 1.6~1.7，中文略松 */
+  --doc-prose-p-gap: 0.82em; /* 段间距略紧、更像「成段叙述」 */
+  /* 正文主色：Material 用约 0.85~0.87 黑，略柔于纯 #333 */
+  --doc-prose-color: color-mix(in srgb, var(--vp-c-text-1) 88%, #666);
 }
 
 .dark {
@@ -54,6 +61,8 @@
 
   --vp-shadow-1: 0 1px 3px rgba(0, 0, 0, 0.45);
   --vp-shadow-2: 0 16px 48px rgba(0, 0, 0, 0.55);
+
+  --doc-prose-color: color-mix(in srgb, var(--vp-c-text-2) 70%, var(--vp-c-text-1));
 }
 
 /* ----- 顶栏 ----- */
@@ -226,77 +235,94 @@
 }
 
 .VPContent:not(.is-home) .content-container {
-  /* 略收窄主栏，控制行长，利于中文长文阅读 */
-  max-width: 46rem;
+  max-width: var(--doc-prose-max);
+}
+
+/* 正文字体与渲染：接近期刊/Material 文档页，而非「大字海报」感 */
+.vp-doc {
+  font-size: 1rem;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
 }
 
 .vp-doc h1 {
-  font-weight: 750;
-  letter-spacing: -0.03em;
-  line-height: 1.28;
-  margin-bottom: 0.75rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.3;
+  margin-bottom: 0.65rem;
+  color: var(--vp-c-text-1);
 }
 
+/* Material 式 h2：下边框分隔节，不依赖过多上边距 */
 .vp-doc h2 {
-  margin-top: 2.5rem;
-  margin-bottom: 0.75rem;
-  padding-top: 0.15rem;
+  margin-top: 2.1rem;
+  margin-bottom: 0.7rem;
+  padding-top: 0;
+  padding-bottom: 0.35rem;
   border-top: none;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  line-height: 1.35;
+  border-bottom: 1px solid var(--vp-c-divider);
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  line-height: 1.4;
+  color: var(--vp-c-text-1);
+}
+
+.vp-doc h2:first-of-type {
+  margin-top: 0.35rem;
 }
 
 .vp-doc h3 {
-  margin-top: 1.85rem;
-  margin-bottom: 0.65rem;
-  font-weight: 650;
-  letter-spacing: -0.015em;
+  margin-top: 1.65rem;
+  margin-bottom: 0.55rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
   line-height: 1.4;
+  color: var(--vp-c-text-1);
 }
 
 .vp-doc h4 {
-  margin-top: 1.5rem;
-  margin-bottom: 0.5rem;
+  margin-top: 1.35rem;
+  margin-bottom: 0.45rem;
   font-weight: 600;
   line-height: 1.45;
+  color: var(--vp-c-text-1);
 }
 
 .vp-doc p,
 .vp-doc li {
-  line-height: 1.92;
-  color: var(--vp-c-text-2);
+  line-height: var(--doc-prose-lh);
+  color: var(--doc-prose-color);
 }
 
 .vp-doc p {
-  margin: 1em 0;
+  margin: var(--doc-prose-p-gap) 0;
 }
 
 .vp-doc ul,
 .vp-doc ol {
-  margin: 1em 0 1.15em;
-  padding-left: 1.35em;
+  margin: 0.75em 0 0.9em;
+  padding-left: 1.2em;
 }
 
 .vp-doc li {
-  margin: 0.5em 0;
+  margin: 0.35em 0;
 }
 
-/* 列表内多段时避免挤在一起 */
 .vp-doc li > p {
-  margin: 0.45em 0;
+  margin: 0.35em 0;
 }
 
-/* 减轻「满篇加粗」：略降字重，与正文对比更柔和 */
+/* 强调比正文略重，避免 700+ 糊成块（与 Material 的 medium/strong 层次接近） */
 .vp-doc strong {
   font-weight: 600;
   color: var(--vp-c-text-1);
 }
 
 .vp-doc hr {
-  margin: 2.25rem 0;
+  margin: 1.75rem 0;
   border: none;
   border-top: 1px solid var(--vp-c-divider);
+  /* 与 MkDocs 里 `---` 分隔段落块的感觉接近 */
 }
 
 /* 行内/块级公式与长公式横向滚动，避免顶破版心 */
@@ -307,20 +333,26 @@
   overflow-y: hidden;
 }
 
+/* 引用：Material 常见为左侧色条 + 略浅底，不抢正文 */
 .vp-doc blockquote {
-  margin: 1.1em 0;
-  padding: 0.5em 0 0.5em 1.1em;
-  border-left: 3px solid
-    color-mix(in srgb, var(--vp-c-brand-2) 45%, var(--vp-c-border));
-  color: var(--vp-c-text-2);
-  background: color-mix(in srgb, var(--vp-c-bg-soft) 50%, transparent);
-  border-radius: 0 10px 10px 0;
+  margin: 1em 0;
+  padding: 0.4em 0.5em 0.4em 1em;
+  border-left: 4px solid
+    color-mix(in srgb, var(--vp-c-brand-2) 40%, var(--vp-c-border));
+  color: var(--doc-prose-color);
+  background: color-mix(in srgb, var(--vp-c-bg-soft) 55%, var(--vp-c-bg-alt));
+  border-radius: 0 4px 4px 0;
 }
 
 .vp-doc a {
   text-decoration-thickness: 1px;
-  text-underline-offset: 3px;
-  font-weight: 500;
+  text-underline-offset: 2px;
+  font-weight: 400;
+  color: var(--vp-c-brand-1);
+}
+
+.vp-doc a:hover {
+  text-decoration-thickness: 2px;
 }
 
 /* ----- 提示块（Material 式） ----- */
