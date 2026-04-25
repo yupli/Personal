@@ -92,7 +92,14 @@ export default defineConfig({
           collapsed: false,
           items: [
             { text: "基础启发式（Simple Heuristics）", link: "/or-opt/simple-heuristics" },
-            { text: "元启发式（Metaheuristics）", link: "/or-opt/metaheuristics" },
+            {
+              text: "元启发式（Metaheuristics）",
+              link: "/or-opt/metaheuristics",
+              collapsed: false,
+              items: [
+                { text: "模拟退火（SA）", link: "/or-opt/simulated-annealing" },
+              ],
+            },
             { text: "超启发式（Hyper-heuristics）", link: "/or-opt/hyper-heuristics" },
           ],
         },
