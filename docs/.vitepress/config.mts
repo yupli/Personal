@@ -73,6 +73,7 @@ export default defineConfig({
         },
         {
           text: "精确算法",
+          link: "/or-opt/exact-algorithms",
           collapsed: false,
           items: [
             { text: "分支定界（Branch and Bound）", link: "/or-opt/branch-and-bound" },
