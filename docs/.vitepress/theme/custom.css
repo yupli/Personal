@@ -2,17 +2,17 @@
 /* 正文：思源宋/宋体系 + 西文 Times，接近教材/印刷体（与系统 SimSun 等回退） */
 @import url("https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&display=swap");
 
-/* ----- 品牌色：Material Teal 系 ----- */
+/* ----- 品牌色：Material Blue 系 ----- */
 :root {
-  --vp-c-brand-1: #00796b;
-  --vp-c-brand-2: #00897b;
-  --vp-c-brand-3: #26a69a;
-  --vp-c-brand-soft: rgba(0, 137, 123, 0.14);
+  --vp-c-brand-1: #1565c0;
+  --vp-c-brand-2: #1976d2;
+  --vp-c-brand-3: #42a5f5;
+  --vp-c-brand-soft: rgba(25, 118, 210, 0.14);
 
-  --vp-c-bg: #f5f6f4;
+  --vp-c-bg: #f4f7fb;
   --vp-c-bg-alt: #ffffff;
   --vp-c-bg-elv: #ffffff;
-  --vp-c-bg-soft: #eceee9;
+  --vp-c-bg-soft: #e8eef5;
 
   --vp-c-border: rgba(25, 25, 25, 0.1);
   --vp-c-divider: rgba(25, 25, 25, 0.06);
@@ -42,27 +42,26 @@
   --doc-prose-color: color-mix(in srgb, var(--vp-c-text-1) 88%, #666);
 }
 
-/* 暗色：浅蓝系（冷蓝底 + 天蓝品牌），与浅色 Teal 区分层 */
 .dark {
   --vp-c-brand-1: #64b5f6;
   --vp-c-brand-2: #42a5f5;
-  --vp-c-brand-3: #1e88e5;
+  --vp-c-brand-3: #1976d2;
   --vp-c-brand-soft: rgba(100, 181, 246, 0.18);
 
-  --vp-c-bg: #0b1120;
-  --vp-c-bg-alt: #111b2e;
-  --vp-c-bg-elv: #152338;
-  --vp-c-bg-soft: #0a0f1a;
+  --vp-c-bg: #0c1018;
+  --vp-c-bg-alt: #121a24;
+  --vp-c-bg-elv: #152028;
+  --vp-c-bg-soft: #0e141c;
 
-  --vp-c-border: rgba(140, 180, 235, 0.14);
-  --vp-c-divider: rgba(120, 165, 220, 0.09);
+  --vp-c-border: rgba(255, 255, 255, 0.09);
+  --vp-c-divider: rgba(255, 255, 255, 0.06);
 
-  --vp-c-text-1: #e7eef8;
-  --vp-c-text-2: #aec0d6;
-  --vp-c-text-3: #7a90ab;
+  --vp-c-text-1: #eef2f0;
+  --vp-c-text-2: #c9d0cd;
+  --vp-c-text-3: #8f9894;
 
-  --vp-shadow-1: 0 1px 3px rgba(0, 25, 55, 0.45);
-  --vp-shadow-2: 0 16px 48px rgba(0, 20, 45, 0.55);
+  --vp-shadow-1: 0 1px 3px rgba(0, 0, 0, 0.45);
+  --vp-shadow-2: 0 16px 48px rgba(0, 0, 0, 0.55);
 
   --doc-prose-color: color-mix(in srgb, var(--vp-c-text-2) 70%, var(--vp-c-text-1));
 }
@@ -110,7 +109,7 @@
     ),
     radial-gradient(
       600px 320px at 85% 10%,
-      rgba(99, 102, 241, 0.07),
+      rgba(66, 165, 245, 0.09),
       transparent 55%
     );
   pointer-events: none;
