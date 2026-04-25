@@ -343,10 +343,10 @@ html:not(.dark) .VPDoc .aside-curtain {
   margin: 0.35em 0;
 }
 
-/* 宋体系加粗：用 700，与正文 400 区分明显（教材式强调） */
+/* 强调比正文略重，与正文层次区分 */
 .vp-doc strong,
 .vp-doc b {
-  font-weight: 700;
+  font-weight: 600;
   color: var(--vp-c-text-1);
 }
 
