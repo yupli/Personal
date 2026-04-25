@@ -87,6 +87,16 @@ export default defineConfig({
           ],
         },
         {
+          text: "启发式算法",
+          link: "/or-opt/heuristic-algorithms",
+          collapsed: false,
+          items: [
+            { text: "基础启发式（Simple Heuristics）", link: "/or-opt/simple-heuristics" },
+            { text: "元启发式（Metaheuristics）", link: "/or-opt/metaheuristics" },
+            { text: "超启发式（Hyper-heuristics）", link: "/or-opt/hyper-heuristics" },
+          ],
+        },
+        {
           text: "图算法",
           collapsed: false,
           items: [
