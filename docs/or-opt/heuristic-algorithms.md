@@ -35,7 +35,7 @@
 <summary>二、元启发式 (Metaheuristics)</summary>
 
 - **对象**：在编码后的解表示上，用通用迭代机制在探索（exploration）与利用（exploitation）间平衡。  
-- **代表谱系**（本库会逐步展开，此处仅举例）：[模拟退火](simulated-annealing.md)、[禁忌搜索](tabu-search.md)、[遗传算法](genetic-algorithm.md)、[变邻域搜索](vns.md)、[粒子群](particle-swarm-optimization.md)、[蚁群](ant-colony-optimization.md) 与更广进化类、差分进化等。  
+- **代表谱系**（本库会逐步展开，此处仅举例）：[模拟退火](simulated-annealing.md)、[禁忌搜索](tabu-search.md)、[遗传算法](genetic-algorithm.md)、[变邻域搜索](vns.md)、[粒子群](particle-swarm-optimization.md)、[蚁群](ant-colony-optimization.md)、[自适应大邻域](alns.md) 与更广进化类、差分进化等。  
 - **特点**：问题无关性强（同框架换编码与适应度即适用多类问题）；参数与算子对效果影响大，常与调参/自适应、混合精确子程序一起出现。
 
 </details>

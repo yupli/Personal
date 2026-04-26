@@ -103,6 +103,7 @@ export default defineConfig({
                 { text: "变邻域搜索（VNS）", link: "/or-opt/vns" },
                 { text: "粒子群（PSO）", link: "/or-opt/particle-swarm-optimization" },
                 { text: "蚁群（ACO）", link: "/or-opt/ant-colony-optimization" },
+                { text: "自适应大邻域（ALNS）", link: "/or-opt/alns" },
               ],
             },
             { text: "超启发式（Hyper-heuristics）", link: "/or-opt/hyper-heuristics" },
