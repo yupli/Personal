@@ -24,7 +24,7 @@
 | 多商品流运输问题 | MCNF 在直接配送、二部 $S$–$C$ 上的退化；LP (1)–(5)；去容量、单商品则退化为运输问题 TP (6)–(9) | [查看](classic-models/multicommodity-transportation.md) |
 | 设施选址问题 | 选址-分配；图 2.17 多/少设施权衡；UFLP 目标 (1) 与约束 (2)–(4) | [查看](classic-models/facility-location.md) |
 | 旅行商问题 | 问题陈述与 TSP 建模方法 1–3；SEC (1)–(5)、MTZ (6)–(8)、拆点 (9)–(13)、1-tree+STSP (14)–(18) | [查看](classic-models/traveling-salesman-problem.md) |
-| 车辆路径问题 | 背景、变体与 VRPTW 三指标 MILP (1)–(10)（$x_{ijk}$、$s_{ik}$、容量与时间窗、$M_{ij}$） | [查看](classic-models/vehicle-routing-problem.md) |
+| 车辆路径问题 | 背景；CVRP 三指标 (1)–(7)；VRPTW 在 (1)–(7) 上叠加 (8)–(10)（$s_{ik}$、时间窗、$M_{ij}$） | [查看](classic-models/vehicle-routing-problem.md) |
 
 ### 精确算法
 
