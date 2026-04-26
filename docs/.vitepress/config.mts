@@ -101,6 +101,7 @@ export default defineConfig({
                 { text: "禁忌搜索（TS）", link: "/or-opt/tabu-search" },
                 { text: "遗传算法（GA）", link: "/or-opt/genetic-algorithm" },
                 { text: "变邻域搜索（VNS）", link: "/or-opt/vns" },
+                { text: "迭代局部搜索（ILS）", link: "/or-opt/iterated-local-search" },
                 { text: "粒子群（PSO）", link: "/or-opt/particle-swarm-optimization" },
                 { text: "蚁群（ACO）", link: "/or-opt/ant-colony-optimization" },
                 { text: "自适应大邻域（ALNS）", link: "/or-opt/alns" },

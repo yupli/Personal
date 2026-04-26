@@ -10,7 +10,7 @@ alwaysApply: false
 
 ## 适用范围
 
-- 元启发式各算法子页：如 `simulated-annealing.md`、`tabu-search.md`、`genetic-algorithm.md`、`vns.md`、`particle-swarm-optimization.md`、`ant-colony-optimization.md`、`alns.md` 等（带主循环框的同类新篇亦同）。
+- 元启发式各算法子页：如 `simulated-annealing.md`、`tabu-search.md`、`genetic-algorithm.md`、`vns.md`、`iterated-local-search.md`、`particle-swarm-optimization.md`、`ant-colony-optimization.md`、`alns.md` 等（带主循环框的同类新篇亦同）。
 - 总览页：`heuristic-algorithms.md`（启发式三类分类）、`metaheuristics.md`（元启发式篇目表）仅作分类、导航与一句话说明，**不**嵌入完整体例条文。
 
 ## 元启发式算法子页
