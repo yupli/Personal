@@ -19,7 +19,7 @@
 | 指派问题 | N 对 N 一一指派；二部图匹配、0–1 线性整数模型 (2.1)–(2.4) | [查看](classic-models/assignment-problem.md) |
 | 最短路问题 | $G=(V,E)$、$s$–$t$ 最短路；IP (2.5)–(2.7)、(2.8) 与 LP (2.9)–(2.11)；整数最优解性质 | [查看](classic-models/shortest-path-problem.md) |
 | 最大流问题 | 源汇网络、表 2.1 油运例；(2.12)–(2.26) 与 (2.27)–(2.29) 一般形 | [查看](classic-models/max-flow-problem.md) |
-| 最优整数解特性与幺模矩阵 | （待写） | [查看](classic-models/integer-solutions-unimodular-matrices.md) |
+| 最优整数解特性与幺模矩阵 | (2.39)(2.40) 与凸包；(2.41)–(2.42) 与定义 2.4.1–2.4.3、定理 2.4.1–2.4.3 | [查看](classic-models/integer-solutions-unimodular-matrices.md) |
 | 多商品网络流问题 | （待写） | [查看](classic-models/multicommodity-network-flow.md) |
 | 多商品流运输问题 | （待写） | [查看](classic-models/multicommodity-transportation.md) |
 | 设施选址问题 | （待写） | [查看](classic-models/facility-location.md) |
