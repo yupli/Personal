@@ -16,7 +16,10 @@
 
 **解与目标**：$s$ 为可行解，$f(s)$ 为待优化目标；最小化叙述。
 
-**破坏与修复**：设破坏算子集合 $\mathcal{D}=\{d_1,\ldots\}$。每个 $d$ 把 $s$ 映为部分解/松弛解 $s^{\mathrm{part}}=d(s)$。设修复算子集合 $\mathcal{R}=\{r_1,\ldots\}$。每个 $r$ 把在 $\mathcal D$ 意义下可修复的对象映回可行解 $s'=r(s^{\mathrm{part}})$。常见选择方式：在 $\mathcal D$ 上按权抽 $d$、在 $\mathcal R$ 上再抽 $r$；或先在乘积结构 $(d,r)\in\mathcal P\subseteq\mathcal D\times\mathcal R$ 上归一化权重后一起抽一对 $(d,r)$（与实现一致即可）。
+**破坏与修复**：设破坏算子集合 $\mathcal{D}=\{d_1,\ldots\}$。每个 $d$ 把 $s$ 映为部分解/松弛解 $s^{\mathrm{part}}=d(s)$。设修复算子集合 $\mathcal{R}=\{r_1,\ldots\}$。每个 $r$ 把在 $\mathcal D$ 意义下可修复的对象映回可行解 $s'=r(s^{\mathrm{part}})$。从 $\mathcal{D}$ 与 $\mathcal{R}$ 里如何抽到一对 $(d,r)$，实现里定一种并写进复现说明即可，常见有：
+
+- 先在 $\mathcal{D}$ 上按权抽 $d$，再在 $\mathcal{R}$ 上按权（可与 $d$ 相关）抽 $r$。  
+- 在乘积结构 $\mathcal{P}\subseteq\mathcal{D}\times\mathcal{R}$ 上为各对 $(d,r)$ 设权，一次抽中一对。  
 
 **权重与抽样概率**：为每个参与选择的实体（如每个 $d$、或每个 $r$、或每对 $(d,r)$，索引在有限集 $I$ 上记为 $h$）维护非负权 $w_h>0$。轮盘赌下的选取概率、段末如何由段内统计重算 $w_h$，在下一节用公式写清。初值常取均匀或先验偏置，必要时混合少量均匀探索（见下）。
 
