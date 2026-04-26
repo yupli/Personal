@@ -59,6 +59,18 @@ $$
 
 在 (1)–(4) 上并列加入全部所需的 (5)，即完整的、以弧变量 $x_{ij}$ 表述的有向 TSP 整数规划：目标 (1) + 度约束 (2)(3) + 0–1 (4) + 子环消去族 (5)。常见排法是在「min / s.t. /」下**分条**给出：先目标与入出度 (2)(3)，再 (5) 的割族，最后 (4)；读者可按同一顺序与代码实现一一对应。
 
+下面将 (1)–(5) **合写**为单块，避免只出现「见上」而留空（$S$ 取遍 $V$ 的全真子集，$2 \le |S| \le n-1$；实现中可懒分离而不预枚举）：
+
+$$
+\begin{aligned}
+\min\quad & \sum_{i \in V} \sum_{\substack{j \in V\\ j \neq i}} c_{ij} x_{ij} \\[0.35em]
+\text{s.t.}\quad & \sum_{i \in V,\, i \neq j} x_{ij} = 1, \quad \forall j \in V, \\[0.25em]
+& \sum_{j \in V,\, j \neq i} x_{ij} = 1, \quad \forall i \in V, \\[0.25em]
+& \sum_{i \in S} \sum_{\substack{j \in S\\ j \neq i}} x_{ij} \le |S| - 1, \quad \forall S \subset V,\; 2 \le |S| \le n-1, \\[0.25em]
+& x_{ij} \in \{0,1\}, \quad \forall i, j \in V,\; i \neq j.
+\end{aligned}
+$$
+
 ### TSP 建模方法 2：MTZ 约束
 
 除「列举 (5)」外，Miller–Tucker–Zemlin 在**文献**与**实现**中常更紧凑：引入辅助变量、用多项式条线性式排除子环，常不依赖在求解中写 callback 来加割（依具体求解器与建模习惯）。固定一个「仓库」或参考点（常记节点 0；若编号从 1 起，则排除 0 的 $i$、$j$ 参与下式）：
@@ -81,7 +93,20 @@ $$
 \mu_i - \mu_j + 1 - n(1 - x_{ij}) \le 0 \tag{8}
 $$
 
-的写法等价。若将目标 (1) 与 (2)–(4) 与 (6) 或 (7) 并写，并列出 $\mu$ 的域（如 $\mu_i \in \mathbb{R}$、$\mu_i \ge 0$ 等），即**一套完整的** MTZ 型有向 TSP 表述。约束条数约为 $O(n^2)$，辅助变量约为 $O(n)$，与 (5) 的指数多种子集相比，写码上往往更直接。本段式号 (6)–(8) 专指 MTZ 主族，与 1.1 的 (1)–(4) 的 $x$ 在同一条有向建模样式中配套，实现时仍只保留一套 $x$ 与一套 $\mu$。
+的写法等价。将目标 (1)、度约束 (2)–(4)、$M = n$ 时的 (7)、以及**参考点** $0$ 的 $\mu$ 上下界与 (6) 的指标范围一并对齐，可合写为**一套不依赖「见上」的** MTZ 型有向 TSP（记 $n = |V|$，$\mu_0$ 固定为 $0$，$\mu$ 在其余点上界定；若你的编号自 $1$ 起无 $0$，将「$0$」改为你所选的仓库点即可，以下结构不变）：
+
+$$
+\begin{aligned}
+\min\quad & \sum_{i \in V} \sum_{\substack{j \in V\\ j \neq i}} c_{ij} x_{ij} \\[0.35em]
+\text{s.t.}\quad & \sum_{i \in V,\, i \neq j} x_{ij} = 1, \quad \forall j \in V, \\
+& \sum_{j \in V,\, j \neq i} x_{ij} = 1, \quad \forall i \in V, \\
+& \mu_0 = 0, \quad 1 \le \mu_i \le n - 1, \quad \forall i \in V \setminus \{0\}, \\
+& \mu_i - \mu_j + n\, x_{ij} \le n - 1, \quad \forall i, j \in V \setminus \{0\},\; i \neq j, \\
+& x_{ij} \in \{0,1\}, \quad \forall i, j \in V,\; i \neq j.
+\end{aligned}
+$$
+
+约束条数约为 $O(n^2)$，辅助变量约为 $O(n)$，与 (5) 的指数多种子集相比，写码上往往更直接。行内 (6)–(8) 的等价变形仍适用于局部分块引用；**合写块**与 1.1 的 (1)–(4) 的 $x$ 在同一条有向建模样式中配套，实现时只保留一套 $x$ 与一套 $\mu$。
 
 #### 2.1 起点与终点不重合的写法（虚拟拆点、式 (9)–(13)）
 
@@ -167,6 +192,17 @@ $$
 
 $$
 x_e \in \{0,1\}, \quad \forall e \in E \tag{17}
+$$
+
+与有向 (1)–(5) 合写节相同，无向 STSP 也可**不依赖「见上」**地合写为一块（$E(S)$ 表示两端均在 $S$ 内的边；$2 \le |S| \le n-1$ 与 (16) 同）：
+
+$$
+\begin{aligned}
+\min\quad & \sum_{e \in E} c_e x_e \\[0.35em]
+\text{s.t.}\quad & \sum_{e \in E(i)} x_e = 2, \quad \forall i \in V, \\[0.25em]
+& \sum_{e \in E(S)} x_e \le |S| - 1, \quad \forall S \subset V,\; 2 \le |S| \le n-1, \\[0.25em]
+& x_e \in \{0,1\}, \quad \forall e \in E.
+\end{aligned}
 $$
 
 将 (15) 对全体 $i \in V$ 求和：每条被选边在左端计两次（两端各计一次），故对任意可行 TSP 解有

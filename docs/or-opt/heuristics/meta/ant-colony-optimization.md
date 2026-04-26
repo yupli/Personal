@@ -23,7 +23,7 @@ $$P\bigl(e=(u,v)\mid u\bigr)=\frac{\bigl[\tau_e\bigr]^{\alpha}\,\bigl[\eta_e\big
 $$p_{ij}=\frac{\bigl[\tau_{ij}\bigr]^{\alpha}\,\bigl[\eta_{ij}\bigr]^{\beta}}{\sum_{\ell\in N_i}\bigl[\tau_{i\ell}\bigr]^{\alpha}\,\bigl[\eta_{i\ell}\bigr]^{\beta}},\qquad j\in N_i,$$
 其中 $N_i$ 为当前步下从 $i$ 可一步到达的可行城市集合。TSP 中常设 $\eta_{ij}=1/d_{ij}$（$d_{ij}$ 为距离）。
 
-**注**：蚁群系统（ACS）等会再用伪随机比例规则（带参数 $q_0$ 先贪心再按上式等），与上式在「每步按何分布抽样」上略有不同，以你采用的文献/代码版本为准。
+**注**：**蚁群系统**（ACS）的**伪随机比例**规则是：在位于 $i$ 时，以概率 $q_0$ 选使 $\arg\max_{\ell \in N_i} \bigl[\tau_{i\ell}\bigr]^{\alpha} \bigl[\eta_{i\ell}\bigr]^{\beta}$ 的下一城 $\ell$；以概率 $1-q_0$ 仍按上式 $p_{ij}$ 做随机成比例抽样。$q_0 \in [0,1]$ 控制「贪心一步」与「随分布探索」的混合。具体细节以所采用文献/代码版本为准。
 
 **挥发与加量（每外轮/每步的抽象）**：
 
@@ -49,7 +49,19 @@ $$p_{ij}=\frac{\bigl[\tau_{ij}\bigr]^{\alpha}\,\bigl[\eta_{ij}\bigr]^{\beta}}{\s
 对全体相关弧 $e$，$\tau_e \leftarrow (1 - \rho)\, \tau_e$，标量 $\rho \in (0,1)$ 为挥发率；若某变体对 $\tau$ 有上/下界，在挥发后截断到允许区间（如 MMAS）。
 
 ### 4. 信息素增量
-按本轮蚂蚁构造的路径或仅取最优解对应路径，对路经弧 $e$ 上 $\tau_e$ 加 $\Delta \tau_e$。$\Delta$ 常与 $1/f(s)$ 或单调变换有关；ACS 等可能另含局部、全局双层更新，此处不展开为单一公式。
+**Ant System**（多蚂蚁、全局更新）的常用显式写法是：设第 $k$ 只蚂蚁在本轮走闭合回路，路径长为 $L_k$。挥发之后，对弧 $(i,j)$ 有
+
+$$
+\tau_{ij} \;{\leftarrow}\; (1-\rho)\, \tau_{ij} + \sum_{k=1}^{m} \Delta \tau_{ij}^{k},
+$$
+
+其中常取
+
+$$
+\Delta \tau_{ij}^{k} = \begin{cases} Q / L_k, & (i,j) \text{ 在第 } k \text{ 只蚂蚁的回路中}, \\[0.35em] 0, & \text{否则,} \end{cases}
+$$
+
+$Q>0$ 为常数（多取 $1$ 或与规模相关）。**精英 AS** 仅对**本轮或历史最优**路径加量；**ACS** 等则另设**局部**（蚂蚁每走一步）与**全局**（回合末按最优或迭代最优）两种 $\Delta$ 的施加时机与公式，上式是其中「全局、全体蚂蚁」一式的代表；MMAS 等再对 $\tau$ 作上下界截断（见上节第 3 步）。
 
 ### 5. 终止
 若已满足外轮总迭代、时间、无改进等则停，输出 $s^\star$；否则回到步骤 2 进入下一轮（蚂蚁重新构造时可共用更新后的 $\tau$）。

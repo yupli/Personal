@@ -5,11 +5,25 @@
 ## 有效不等式与凸包
 
 ### 问题描述
-首先考虑整数规划（IP）问题：
+首先考虑整数规划（IP）问题。记**显式**可行域
+
 $$
-IP \quad \max\{c^T x : x \in X\}
+X = \{\,x \in \mathbb{R}^n : Ax \le b,\; x \in \mathbb{Z}_+^n\,\},
 $$
-其中，$X = \{x : Ax \leq b, x \in \mathbb{Z}_+^n\}$ 表示该整数规划的可行域。这里的写法是为了简略，省去繁琐的约束表达式，直接用 $X$ 表示该整数规划的可行域。而 $x \in X$ 则是该可行域内的任意可行解。
+
+则 IP 可写为**集合形式**
+
+$$
+IP \quad \max\{c^T x : x \in X\},
+$$
+
+或与上**等价**的**展开形式**
+
+$$
+\max\quad c^T x \quad \text{s.t.}\quad Ax \le b,\; x \in \mathbb{Z}_+^n.
+$$
+
+下文在分支、割平面与凸包等叙述中，为简短仍多用 $X$ 指代该域（及其在分支节点上的交、限制）。$x \in X$ 表示 $Ax \le b$ 且分量为非负整数的**任一**可行解。
 
 ### 凸包定理（Wolsey, 1998）
 **定理**：IP 的所有整数可行解构成的可行域（离散的点）的凸包 $Conv(X) = \{x : \tilde{A}x \leq \tilde{b}, x \geq 0\}$ 是一个多面体。其中，$Conv(X)$ 表示可行域 $X$ 的凸包（Convex Hull）。$\tilde{A}x \leq \tilde{b}$ 精确地刻画出了可行域 $X$ 的凸包。

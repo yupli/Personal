@@ -265,7 +265,21 @@ $$
 \end{aligned}
 $$
 
-第 1 步：令 $y = \dfrac{1}{\sum_i d_i x_i + \beta} > 0$，代入后得到仍含双线性项 $x_i y$ 的中等形式（目标与约束略，属经典中间步骤）。
+第 1 步：令 $y = \dfrac{1}{\sum_i d_i x_i + \beta} > 0$，原目标可写为关于 $(x, y)$ 的双线性目标；与 $y = 1/(\sum_i d_i x_i + \beta)$ 联立。此时仍**未**对原线性约束作 Charnes–Cooper 式改写，可显式写为
+
+$$
+\begin{aligned}
+\min \quad & \sum_{i} (c_i x_i + \alpha)\, y
+= \sum_i c_i x_i y + \alpha y \\[0.3em]
+\text{s.t.} \quad & \sum_i a_{ij} x_i \le b_j, \quad \forall j \in J, \\
+& y \left(\sum_i d_i x_i + \beta\right) = 1, 
+\quad \text{即} \quad \sum_i d_i x_i y + \beta y = 1, \\
+& \sum_i d_i x_i + \beta > 0, \\
+& x_i \ge 0,\; y > 0, \quad \forall i \in I.
+\end{aligned}
+$$
+
+上式在目标与「归一化」行上含 $x_i y$；在尚未引入 $z_i = x_i y$ 时，即通常所说的**含双线性项的中间形式**（未把 $\sum_i a_{ij} x_i \le b_j$ 改写成对 $z$ 的线性行；该改写见下一步）。
 
 第 2 步：再令 $z_i = x_i y$，将模型化为对 $(z, y)$ 线性的形式：
 
