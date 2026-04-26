@@ -72,6 +72,24 @@ export default defineConfig({
           ],
         },
         {
+          text: "经典问题数学模型",
+          collapsed: false,
+          items: [
+            { text: "指派问题", link: "/or-opt/classic-models/assignment-problem" },
+            { text: "最短路问题", link: "/or-opt/classic-models/shortest-path-problem" },
+            { text: "最大流问题", link: "/or-opt/classic-models/max-flow-problem" },
+            {
+              text: "最优整数解特性与幺模矩阵",
+              link: "/or-opt/classic-models/integer-solutions-unimodular-matrices",
+            },
+            { text: "多商品网络流问题", link: "/or-opt/classic-models/multicommodity-network-flow" },
+            { text: "多商品流运输问题", link: "/or-opt/classic-models/multicommodity-transportation" },
+            { text: "设施选址问题", link: "/or-opt/classic-models/facility-location" },
+            { text: "旅行商问题", link: "/or-opt/classic-models/traveling-salesman-problem" },
+            { text: "车辆路径规划问题", link: "/or-opt/classic-models/vehicle-routing-problem" },
+          ],
+        },
+        {
           text: "精确算法",
           link: "/or-opt/exact/exact-algorithms",
           collapsed: false,

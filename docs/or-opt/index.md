@@ -12,6 +12,20 @@
 |------|------|------|
 | 整数规划建模技巧 | 逻辑约束、二选一、指示约束、布尔运算的线性化等 | [查看](modeling/integer-modeling-techniques.md) |
 
+### 经典问题数学模型
+
+| 问题 | 说明 | 链接 |
+|------|------|------|
+| 指派问题 | （待写） | [查看](classic-models/assignment-problem.md) |
+| 最短路问题 | （待写） | [查看](classic-models/shortest-path-problem.md) |
+| 最大流问题 | （待写） | [查看](classic-models/max-flow-problem.md) |
+| 最优整数解特性与幺模矩阵 | （待写） | [查看](classic-models/integer-solutions-unimodular-matrices.md) |
+| 多商品网络流问题 | （待写） | [查看](classic-models/multicommodity-network-flow.md) |
+| 多商品流运输问题 | （待写） | [查看](classic-models/multicommodity-transportation.md) |
+| 设施选址问题 | （待写） | [查看](classic-models/facility-location.md) |
+| 旅行商问题 | （待写） | [查看](classic-models/traveling-salesman-problem.md) |
+| 车辆路径规划问题 | （待写） | [查看](classic-models/vehicle-routing-problem.md) |
+
 ### 精确算法
 
 [总览：方法关系与阅读顺序 →](exact/exact-algorithms.md)
@@ -52,6 +66,6 @@
 | Dijkstra | 非负权图上的单源最短路，贪心+优先队列 | [查看](graph/dijkstra.md) |
 | Bellman-Ford | 一般边权单源最短路、负边与负圈检测 | [查看](graph/bellman-ford.md) |
 
-**注**：为与侧栏一致，`docs/or-opt/` 下已按 `modeling`（建模）、`exact`（精确算法）、`heuristics`（启发式，内含 `simple` / `meta`）、`graph`（图算法）分文件夹存放，便于在仓库中浏览。
+**注**：为与侧栏一致，`docs/or-opt/` 下已按 `modeling`（建模）、`classic-models`（经典问题数学模型）、`exact`（精确算法）、`heuristics`（启发式，内含 `simple` / `meta`）、`graph`（图算法）分文件夹存放，便于在仓库中浏览。
 
 ---
