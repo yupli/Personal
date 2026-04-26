@@ -2,11 +2,6 @@
 
 在 [多商品网络流](multicommodity-network-flow.md)（MCNF）中，若每一类商品都**要求**从发点**直接**配送到收点、不经中间节点转运，则 MCNF 在结构上退化为**多商品流运输问题**（Multi-commodity Transportation Problem，MCTP）。换言之：MCNF 与 MCTP 的差异在于，MCTP 中各类货物不在网络中间节点之间做一般意义上的「中转」，而是由**供应点**直接运向**客户点**，弧集常取为二部结构 $S \times C$ 上的边。
 
-<figure>
-<img src="../resources/fig-mctp-2-6-intro.png" width="100%" style="max-width:680px;height:auto" alt="教材 2.6 节多商品流运输问题开篇" />
-<figcaption style="font-size:0.9em;color:#555;margin-top:0.3em">教材节录：MCTP 与 MCNF 的关系及集合、参数、决策变量定义（与打印版一致）。</figcaption>
-</figure>
-
 设供应商集合为 $S$，客户集合为 $C$，弧集为
 
 $$
@@ -39,11 +34,6 @@ $$
 
 **注**：(1)–(5) 与教材式 (2.51)–(2.55) 同型；(2)(3) 为按供应点、按客户点的供需平衡，(4) 为弧上多商品合计容量。
 
-<figure>
-<img src="../resources/fig-mctp-lp-2-51-2-55.png" width="100%" style="max-width:720px;height:auto" alt="教材中 MCTP 线性规划 2.51-2.55" />
-<figcaption style="font-size:0.9em;color:#555;margin-top:0.3em">教材影印：目标与约束 (2.51)–(2.55)，可与上文 (1)–(5) 对照。</figcaption>
-</figure>
-
 ## 退化为运输问题（TP）
 
 若不考虑容量约束（相当于去掉 (4)  / 原书 (2.54)），且全网络**只有一种**商品，则 MCTP 退化为经典的**运输问题**（Transportation Problem，TP）。其线性规划常写为
@@ -67,8 +57,3 @@ $$
 其中 $x_{ij}$ 为单商品在弧 $(i,j)$ 上的运量，$c_{ij}$ 为单位成本，$s_i$、$d_j$ 为发、收量（与总平衡、可行情形等经典讨论见运筹教材）。
 
 **注**：(6)–(9) 与教材式 (2.56)–(2.59) 同型。
-
-<figure>
-<img src="../resources/fig-tp-from-mctp-2-56-2-59.png" width="100%" style="max-width:720px;height:auto" alt="由 MCTP 退化到运输问题 TP 的教材页 2.56-2.59" />
-<figcaption style="font-size:0.9em;color:#555;margin-top:0.3em">教材影印：由 MCTP 到 TP 的文字与式 (2.56)–(2.59)。</figcaption>
-</figure>

@@ -3,11 +3,6 @@
 **设施选址问题**（Facility Location Problem, FLP）是运筹优化中的一类重要模型：企业要在何处建设仓库、门店、分拨中心等设施、各设施服务哪些客户，往往属于长期战略决策。文献（如 Snyder and Shen, 2019）强调的核心权衡是：**在固定开设成本**（建维费用）**与服务可达性/运输成本**之间取得平衡。开设设施越多，通常客户离设施更近、服务水平更高，但固定支出越大；只开少量枢纽设施则省固定费，但客户平均距离变长、运输侧负担加重。下列示意（方格为设施、圆点为客户、连线为分配关系）在地图尺度上呈现了这一对比：图 2.17 左为多设施、右为少设施，来源见教材所引 Snyder and Shen (2019)。
 
 <figure>
-<img src="../resources/fig-flp-2-7-intro.png" width="100%" style="max-width:700px;height:auto" alt="教材 2.7 节 设施选址问题 开篇" />
-<figcaption style="font-size:0.9em;color:#555;margin-top:0.3em">教材节录：2.7 节设施选址、战略意义与「开设成本—服务质量」权衡（与打印版一致）。</figcaption>
-</figure>
-
-<figure>
 <img src="../resources/fig-flp-2-17-snyder-shen-2019.png" width="100%" style="max-width:860px;height:auto" alt="图 2.17 美国地图多设施与少设施选址示意" />
 <figcaption style="font-size:0.9em;color:#555;margin-top:0.3em">左：开通大量设施；右：开通少量设施。方格为设施，圆点为客户；图源 Snyder and Shen、教材转引。</figcaption>
 </figure>
@@ -44,10 +39,5 @@ $$
 （2）表示每个客户被完全分配；（3）为**开闭-分配联动**：只有已开设的 $j$ 才能承接正的 $x_{ij}$。若需求为一般正数 $d_i$，目标中常出现 $c_{ij} d_i x_{ij}$ 或将 (2) 写为流守恒形式，本页与教材一致采用比例 $x_{ij}$。
 
 **注**：（1）–（4）与常见教材中 UFLP 的式 (2.60)–(2.63) 同型；部分写法将 (4) 中 $x$ 的域记为实矩阵、$y$ 为二元向量，与上式等价。
-
-<figure>
-<img src="../resources/fig-uflp-2-60-2-63.png" width="100%" style="max-width:700px;height:auto" alt="教材中 UFLP 模型 2.60-2.63" />
-<figcaption style="font-size:0.9em;color:#555;margin-top:0.3em">教材影印：UFLP 目标与约束、变量定义（2.60–2.63），可与上文 (1)–(4) 对照。</figcaption>
-</figure>
 
 UFLP 是 NP-难的组合优化问题，实践中除分支定界、割平面与各类分解外，亦广泛使用启发式、元启发式与基于邻域的改进算法；**带容量、随机需求、多阶段动态选址**等扩展在应用文献中极多，可视为在 (1)–(4) 上增加线性与整数约束或随机参数。
