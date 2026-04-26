@@ -22,7 +22,7 @@
 | 最优整数解特性与幺模矩阵 | 凸包与整数性；幺模/全幺模定义与定理 2.4.1–2.4.3 | [查看](classic-models/integer-solutions-unimodular-matrices.md) |
 | 多商品网络流问题 | $G=(V,A)$、$K$ 与 $d_k$、$u_{ij}$、$c_{ij}^k$；LP (1)–(4)；图 2.13 与教材影印 | [查看](classic-models/multicommodity-network-flow.md) |
 | 多商品流运输问题 | MCNF 在直接配送、二部 $S$–$C$ 上的退化；LP (1)–(5)；去容量、单商品则退化为运输问题 TP (6)–(9) | [查看](classic-models/multicommodity-transportation.md) |
-| 设施选址问题 | （待写） | [查看](classic-models/facility-location.md) |
+| 设施选址问题 | 选址-分配；图 2.17 多/少设施权衡；UFLP，目标 (1) 与约束 (2)–(4)，教材 2.60–2.63 同型 | [查看](classic-models/facility-location.md) |
 | 旅行商问题 | （待写） | [查看](classic-models/traveling-salesman-problem.md) |
 | 车辆路径规划问题 | （待写） | [查看](classic-models/vehicle-routing-problem.md) |
 
