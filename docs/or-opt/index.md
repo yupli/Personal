@@ -20,7 +20,7 @@
 | 最短路问题 | $G=(V,E)$、$s$–$t$ 最短路；IP/LP 模型与整数最优解性质 | [查看](classic-models/shortest-path-problem.md) |
 | 最大流问题 | 源汇网络、表 2.1 油运例；图 2.4/2.5；LP 与一般形 | [查看](classic-models/max-flow-problem.md) |
 | 最优整数解特性与幺模矩阵 | 凸包与整数性；幺模/全幺模定义与定理 2.4.1–2.4.3 | [查看](classic-models/integer-solutions-unimodular-matrices.md) |
-| 多商品网络流问题 | （待写） | [查看](classic-models/multicommodity-network-flow.md) |
+| 多商品网络流问题 | $G=(V,A)$、$K$ 与 $d_k$、$u_{ij}$、$c_{ij}^k$；LP (1)–(4)；图 2.13 与教材影印 | [查看](classic-models/multicommodity-network-flow.md) |
 | 多商品流运输问题 | （待写） | [查看](classic-models/multicommodity-transportation.md) |
 | 设施选址问题 | （待写） | [查看](classic-models/facility-location.md) |
 | 旅行商问题 | （待写） | [查看](classic-models/traveling-salesman-problem.md) |
