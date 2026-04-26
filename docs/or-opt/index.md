@@ -22,8 +22,8 @@
 | 最优整数解特性与幺模矩阵 | 凸包与整数性；幺模/全幺模定义与定理 2.4.1–2.4.3 | [查看](classic-models/integer-solutions-unimodular-matrices.md) |
 | 多商品网络流问题 | $G=(V,A)$、$K$ 与 $d_k$、$u_{ij}$、$c_{ij}^k$；LP (1)–(4)；图 2.13 示例网络 | [查看](classic-models/multicommodity-network-flow.md) |
 | 多商品流运输问题 | MCNF 在直接配送、二部 $S$–$C$ 上的退化；LP (1)–(5)；去容量、单商品则退化为运输问题 TP (6)–(9) | [查看](classic-models/multicommodity-transportation.md) |
-| 设施选址问题 | 选址-分配；图 2.17 多/少设施权衡；UFLP，目标 (1) 与约束 (2)–(4)，教材 2.60–2.63 同型 | [查看](classic-models/facility-location.md) |
-| 旅行商问题 | 2.8；TSP 建模方法 1–3：SEC (1)–(5)、MTZ (6)–(8)、拆点 (9)–(13)、1-tree+STSP (14)–(18) | [查看](classic-models/traveling-salesman-problem.md) |
+| 设施选址问题 | 选址-分配；图 2.17 多/少设施权衡；UFLP 目标 (1) 与约束 (2)–(4) | [查看](classic-models/facility-location.md) |
+| 旅行商问题 | 问题陈述与 TSP 建模方法 1–3；SEC (1)–(5)、MTZ (6)–(8)、拆点 (9)–(13)、1-tree+STSP (14)–(18) | [查看](classic-models/traveling-salesman-problem.md) |
 | 车辆路径规划问题 | （待写） | [查看](classic-models/vehicle-routing-problem.md) |
 
 ### 精确算法
@@ -70,6 +70,6 @@
 
 ## 主要参考文献
 
-本站「运筹优化」栏目（`docs/or-opt/`）中许多条目的**概念界定、记号称谓与式号/图号**在整理时参考了《**运筹优化常用模型、算法及案例实战**》一书；**正文中的叙述与公式由本站自撰、可搜索与可访问**，与书中式号、图号在适当时可互查。若你自行引用本站笔记，请同时尊重原书版权与引注规范，并以正式出版物为准作学术引用。
+《运筹优化常用模型、算法及案例实战》可作为**扩展阅读**与部分记号称谓、图号的来源之一。**本站 `docs/or-opt/` 内各页叙述与公式以自洽、可单页阅读为优先**；不依赖对某一本书的式号、图号才能理解正文。若引用本站内容作学术输出，请按你所在单位要求标注出处，并尊重他人著作与版权。
 
 ---

@@ -1,5 +1,5 @@
 /* VitePress 主题覆写：字体、色板、首页与文档页排版 */
-/* 正文：思源宋/宋体系 + 西文 Times，接近教材/印刷体（与系统 SimSun 等回退） */
+/* 正文：思源宋/宋体系 + 西文 Times，偏印刷体（与系统 SimSun 等回退） */
 @import url("https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&display=swap");
 
 /* ----- 品牌色：Material Blue 系 ----- */
@@ -257,7 +257,7 @@ html:not(.dark) .VPDoc .aside-curtain {
   max-width: var(--doc-prose-max);
 }
 
-/* 正文字体与渲染：宋/思源宋 + Times，印刷教材感 */
+/* 正文字体与渲染：宋/思源宋 + Times，偏印刷体风格 */
 .vp-doc {
   font-size: 1rem;
   text-rendering: optimizeLegibility;
@@ -271,7 +271,7 @@ html:not(.dark) .VPDoc .aside-curtain {
   font-family: var(--vp-font-family-mono);
 }
 
-/* 西文、术语用斜体时与教材一致（中文引号内英文等） */
+/* 西文、术语用斜体时保持常见排印习惯（中文引号内英文等） */
 .vp-doc em {
   font-style: italic;
 }
