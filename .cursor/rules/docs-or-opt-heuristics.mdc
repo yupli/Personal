@@ -25,6 +25,13 @@ alwaysApply: false
 - **`heuristics/heuristic-algorithms.md`**：三类划分、表与链接、折叠说明；可写知识性「边界」句，**不**写「写作体例」长段。
 - **`heuristics/metaheuristics.md`**：一段定位 + 篇目表；**不**复述上条子页结构规范（链到 `heuristic-algorithms` 即可）。
 
+## 单算法子页的叙事范式（教材感、易理解、不跑题）
+
+- 目的：`docs/or-opt/` 下以讲清「当前条目的算法」为主（2-opt、插入、C-W 节约、元启发式子页等；总览/索引可略宽）。
+- 结构：先定义「一步/邻域在做什么」→ 需要时用 SVG（页内可渲染）或 Mermaid 备稿讲结构 → 最后用 `::: algorithm` 只写本算法主循环；algorithm 不代替定义与图。
+- 不跑题：避免在同页长篇展开 ILS/SA/PSO 等外层框架，需要时用一句话链到对应子页与 `heuristics.md` 类总览。
+- 用户可见 Markdown 的加粗仍见 `docs-style.mdc`；本条为协作约定，不复制进 `docs/**/*.md` 正文。
+
 ## 正文可读性
 
 - 同一段里若并列**多种**策略、情形、或「甲或乙或丙」式选项，用**无序列表**分条写清；少用分号、破折号把多件事挤成一句。  
