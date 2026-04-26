@@ -87,18 +87,6 @@
 <figcaption style="font-size:0.9em;color:#555;margin-top:0.25em">左：在一条弧上把 k 插入的抽象（上下两行表示插入前后）。右：三角子环在 AB 上「开口」接 k；闭合路径中还需保持与其余边的衔接。</figcaption>
 </figure>
 
-在支持 Mermaid 的环境可用下面流程作对照；本站未接 Mermaid 时显示为代码块。
-
-```mermaid
-flowchart LR
-  subgraph b1["插入前"]
-    i1((i)) --> j1((j))
-  end
-  subgraph b2["插入后"]
-    i2((i)) --> k2((k)) --> j2((j))
-  end
-```
-
 ---
 
 ## 三、四种常见变体

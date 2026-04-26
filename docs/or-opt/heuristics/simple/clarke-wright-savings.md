@@ -87,30 +87,6 @@ S(i,j) = d(0, i) + d(0, j) - d(i, j).
 <figcaption style="font-size:0.9em;color:#555;margin-top:0.3em">左：0→i 与 0→j 各成往返小回路。右：合并为 0→i→j→0；虚线/多余径向在合并时被删除，i–j 段（绿）是新增直连。</figcaption>
 </figure>
 
-可选：在支持 Mermaid 的本地编辑器中，也可用下列源码渲染「合并前/后」流程关系（本站点若未接 Mermaid 插件，则作备用）。
-
-```mermaid
-%% 合并前：两条 0-往返；合并后：单条 0→i→j→0
-flowchart TB
-  subgraph B["合并前"]
-    O1((0 车场))
-    I1[i]
-    J1[j]
-    O1 --> I1
-    I1 --> O1
-    O1 --> J1
-    J1 --> O1
-  end
-  subgraph A["合并后"]
-    O2((0 车场))
-    I2[i]
-    J2[j]
-    O2 --> I2
-    I2 --> J2
-    J2 --> O2
-  end
-```
-
 ---
 
 ## 二、并线主流程：并行 C-W（文献与实现中最常写的版本之一）
@@ -145,7 +121,7 @@ flowchart TB
 
 ## 三、变体、性质与可复现
 
-上节内嵌的 SVG 为页面内可读的静态图；你若有教材或课件截图，也可放入 `docs/or-opt/resources/` 并在本页以 `![说明](../../resources/xxx.png)` 引用。可选 Mermaid 块供本地支持 Mermaid 的编辑器渲染。有向、多车场、时间窗时，节约式与端点/可接规则要按题设写清。算法不保证 CVRP 全局最优，但实现快、常与 [k-opt 系列](k-opt.md) 或元启发式搭配，或作初始上界。
+上节内嵌的 SVG 为页面内可读的静态图；你若有教材或课件截图，也可放入 `docs/or-opt/resources/` 并在本页以 `![说明](../../resources/xxx.png)` 引用。有向、多车场、时间窗时，节约式与端点/可接规则要按题设写清。算法不保证 CVRP 全局最优，但实现快、常与 [k-opt 系列](k-opt.md) 或元启发式搭配，或作初始上界。
 
 **注**：TSP 与带车场、多约束的 CVRP 不划等号。车数有上界、需求异质等时，以所用文献的 λ、μ 修正或并行/串行混合版为准。  
 **注（路径）**：`resources` 相对本文件 `heuristics/simple/clarke-wright-savings.md` 为 `../../resources/`；若你习惯把图放在与 `or-opt` 同级的别目录，请改链接。
