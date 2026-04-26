@@ -23,7 +23,7 @@
 | 多商品网络流问题 | $G=(V,A)$、$K$ 与 $d_k$、$u_{ij}$、$c_{ij}^k$；LP (1)–(4)；图 2.13 示例网络 | [查看](classic-models/multicommodity-network-flow.md) |
 | 多商品流运输问题 | MCNF 在直接配送、二部 $S$–$C$ 上的退化；LP (1)–(5)；去容量、单商品则退化为运输问题 TP (6)–(9) | [查看](classic-models/multicommodity-transportation.md) |
 | 设施选址问题 | 选址-分配；图 2.17 多/少设施权衡；UFLP，目标 (1) 与约束 (2)–(4)，教材 2.60–2.63 同型 | [查看](classic-models/facility-location.md) |
-| 旅行商问题 | 2.8 节体例；TSP 建模方法 1/2/3 对应 SEC、MTZ、1-tree+STSP；(1)–(12) | [查看](classic-models/traveling-salesman-problem.md) |
+| 旅行商问题 | 2.8；TSP 建模方法 1–3：SEC (1)–(5)、MTZ (6)–(8)、拆点 (9)–(13)、1-tree+STSP (14)–(18) | [查看](classic-models/traveling-salesman-problem.md) |
 | 车辆路径规划问题 | （待写） | [查看](classic-models/vehicle-routing-problem.md) |
 
 ### 精确算法
