@@ -57,7 +57,12 @@ alwaysApply: false
 - 凡算法主流程/步骤的内容，必须用专属容器包裹。  
 - 使用 `::: algorithm 算法名称` 开头，容器内用 `###` 与编号步骤，以 `:::` 结束。  
 - 步骤行用 `### 1. 名称` 即可，不要对步骤名使用 `**` 加粗（无「标签+冒号」则不加粗）。  
-- **数学 / LaTeX / MathJax 定界、CommonMark 与 `\[ \]` `\(` `\)` 的坑、行内/块级写法、算法框内公式**：一律按专门规则 **`.cursor/rules/docs-math-mathjax.mdc`** 执行；与加粗/标题等冲突时，以 `docs-math-mathjax` 中定界与渲染为准。
+- **数学 / LaTeX / MathJax 定界、式号、CommonMark 与 `\[ \]` `\(` `\)` 的坑、行内/块级写法、算法框内公式**：一律按 **`.cursor/rules/docs-math-mathjax.mdc`** 执行；**不要**在正文里用 **注** 向读者解释「本文件单独编号」等——该约定只写在 `docs-math-mathjax` 中。
+
+## 附图与教材截图
+
+- 若用户随对话**附上**教材或课件截图、扫描图，且用 SVG/代码**难以**达到同等信息密度、版式或易画错，应**直接**将图片存入库内（如 `docs/{知识目录}/resources/`，与现有 `fig-*.png` 同型），在正文中用 `<figure>` + `<img src="...">` 引用，并加简短 `figcaption` 说明图意即可。  
+- **不要**为「能自画」而勉强用简陋 SVG 顶替清晰原图；也**不要**在正文用 **注** 重复 `docs-math-mathjax` 里已写的式号规则。
 
 ## 可折叠块（`details` / `summary`）
 
