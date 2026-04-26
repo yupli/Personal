@@ -1,5 +1,7 @@
 # 最大流问题
 
+**注**：本页显式式号自 (1) 起、仅本页内连续；与教材第 2 章式 (2.12)–(2.29) 互查时以原书为准。
+
 很多生产、物流类场景都可以建成弧上带流量上界的网络：在源点有供应、在汇点有需求或接收，希望在满足弧容量与平衡条件的前提下，从源到汇输送尽可能多的流量。这就是经典的最大流问题（Maximum Flow Problem, MFP）。
 
 ## 2.3.1 问题描述
@@ -20,38 +22,8 @@
 | $(2,\mathrm{si})$ | 2 |
 
 <figure>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 200" width="100%" max-width="420" aria-label="图 2.4 石油运输网络，弧上数字为容量">
-  <text x="0" y="16" font-size="13" fill="#333">图 2.4 石油运输网络图（弧上数字为容量；底部虚线为回流示意）</text>
-  <defs>
-    <marker id="mfl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
-      <path d="M0,0 L10,5 L0,10 z" fill="#1976d2" />
-    </marker>
-  </defs>
-  <g transform="translate(0, 24)" font-size="12" text-anchor="middle" fill="#333">
-    <circle cx="40" cy="110" r="12" fill="#5c5c5c" /><text x="40" y="115" font-size="11" fill="#fff" font-weight="600">so</text>
-    <circle cx="120" cy="110" r="12" fill="#5c5c5c" /><text x="120" y="115" font-size="11" fill="#fff" font-weight="600">1</text>
-    <circle cx="220" cy="110" r="12" fill="#5c5c5c" /><text x="220" y="115" font-size="11" fill="#fff" font-weight="600">2</text>
-    <circle cx="160" cy="40" r="12" fill="#5c5c5c" /><text x="160" y="45" font-size="11" fill="#fff" font-weight="600">3</text>
-    <circle cx="360" cy="110" r="12" fill="#5c5c5c" /><text x="360" y="115" font-size="11" fill="#fff" font-weight="600">si</text>
-  </g>
-  <g transform="translate(0, 24)" fill="none" stroke="#1976d2" stroke-width="1.6" font-size="11" fill-opacity="1">
-    <line x1="52" y1="110" x2="108" y2="110" marker-end="url(#mfl)" />
-    <text x="80" y="102" text-anchor="middle" fill="#c62828" font-size="12">2</text>
-    <path d="M52,100 Q110,0 220,100" marker-end="url(#mfl)" />
-    <text x="150" y="24" text-anchor="middle" fill="#c62828" font-size="12">3</text>
-    <line x1="130" y1="46" x2="152" y2="100" marker-end="url(#mfl)" />
-    <text x="128" y="80" text-anchor="middle" fill="#c62828" font-size="12">4</text>
-    <line x1="132" y1="110" x2="208" y2="110" marker-end="url(#mfl)" />
-    <text x="170" y="102" text-anchor="middle" fill="#c62828" font-size="12">3</text>
-    <line x1="170" y1="52" x2="350" y2="100" marker-end="url(#mfl)" />
-    <text x="255" y="64" text-anchor="middle" fill="#c62828" font-size="12">1</text>
-    <line x1="232" y1="110" x2="348" y2="110" marker-end="url(#mfl)" />
-    <text x="290" y="102" text-anchor="middle" fill="#c62828" font-size="12">2</text>
-    <path d="M360,120 Q200,200 40,120" stroke-dasharray="5 4" stroke="#888" fill="none" />
-    <text x="200" y="196" text-anchor="middle" fill="#555" font-size="12">a₀（总流量；建模见 2.3.2）</text>
-  </g>
-</svg>
-<figcaption style="font-size:0.9em;color:#555;margin-top:0.3em">与教材图 2.4 同构；底部回流弧在模型里用 $x_0$（或记 $a_0$）与人工弧配合实现平衡。</figcaption>
+<img src="../resources/fig-oil-network-2-4.png" width="100%" style="max-width:560px;height:auto" alt="图 2.4 石油运输网络图" />
+<figcaption style="font-size:0.9em;color:#555;margin-top:0.3em">图 2.4（与教材同图）。弧上为容量；底部 si→so 的回流在模型里用 $x_0$（或记 $a_0$）与人工弧配合实现平衡。见 2.3.2。</figcaption>
 </figure>
 
 ## 2.3.2 问题建模及最优解
@@ -68,70 +40,40 @@
 此配置下，网络最大流量为 2（百万桶/时）。
 
 <figure>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 200" width="100%" max-width="420" aria-label="图 2.5 石油运输可行流，弧上 (流量) 容量">
-  <text x="0" y="16" font-size="13" fill="#333">图 2.5 石油运输问题的一个可行解（弧上格式：(流量) 容量）</text>
-  <g transform="translate(0, 24)">
-  <defs>
-    <marker id="mfl2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
-      <path d="M0,0 L10,5 L0,10 z" fill="#2e7d32" />
-    </marker>
-  </defs>
-  <g font-size="12" text-anchor="middle" fill="#333">
-    <circle cx="40" cy="110" r="12" fill="#5c5c5c" /><text x="40" y="115" font-size="11" fill="#fff" font-weight="600">so</text>
-    <circle cx="120" cy="110" r="12" fill="#5c5c5c" /><text x="120" y="115" font-size="11" fill="#fff" font-weight="600">1</text>
-    <circle cx="220" cy="110" r="12" fill="#5c5c5c" /><text x="220" y="115" font-size="11" fill="#fff" font-weight="600">2</text>
-    <circle cx="160" cy="40" r="12" fill="#5c5c5c" /><text x="160" y="45" font-size="11" fill="#fff" font-weight="600">3</text>
-    <circle cx="360" cy="110" r="12" fill="#5c5c5c" /><text x="360" y="115" font-size="11" fill="#fff" font-weight="600">si</text>
-  </g>
-  <g fill="none" stroke="#2e7d32" stroke-width="1.6">
-    <line x1="52" y1="110" x2="108" y2="110" marker-end="url(#mfl2)" />
-    <text x="80" y="100" text-anchor="middle" fill="#333" font-size="11">(2)2</text>
-    <line x1="130" y1="50" x2="152" y2="100" marker-end="url(#mfl2)" />
-    <text x="130" y="80" text-anchor="middle" fill="#333" font-size="11">(0)4</text>
-    <line x1="132" y1="110" x2="208" y2="110" marker-end="url(#mfl2)" />
-    <text x="170" y="100" text-anchor="middle" fill="#333" font-size="11">(2)3</text>
-    <line x1="170" y1="52" x2="350" y2="100" marker-end="url(#mfl2)" />
-    <text x="255" y="64" text-anchor="middle" fill="#333" font-size="11">(0)1</text>
-    <line x1="232" y1="110" x2="348" y2="110" marker-end="url(#mfl2)" />
-    <text x="290" y="100" text-anchor="middle" fill="#333" font-size="11">(2)2</text>
-    <path d="M360,120 Q200,200 40,120" stroke-dasharray="4 3" stroke="#666" fill="none" />
-    <text x="200" y="198" text-anchor="middle" fill="#333" font-size="12">x₀(2)</text>
-  </g>
-  </g>
-</svg>
-<figcaption style="font-size:0.9em;color:#555;margin-top:0.3em">与教材图 2.5 同构，总流值为 2；与上段给出一组解一致。弧 (so,2) 上流量为 0，故图中从 so 到 2 的管段在可行解中无流，可不必单独画标签。</figcaption>
+<img src="../resources/fig-oil-feasible-2-5.png" width="100%" style="max-width:560px;height:auto" alt="图 2.5 石油运输问题的一个可行解" />
+<figcaption style="font-size:0.9em;color:#555;margin-top:0.3em">图 2.5（与教材同图）。弧上为流量与容量标注。与上段给出一组可行解、总流 2 一致。教材中 1 与 2 之间若画双线表示平行弧，以对应不同流量分解。</figcaption>
 </figure>
 
-**注**：一般情形的弧与节点平衡见下两节；教材《运筹优化常用模型、算法及案例实战：Python+Java 实现》第 14 页附近给出下述 (2.12)–(2.26) 的线性规划形式。
+**注**：一般情形的弧与节点平衡见下两节；教材《运筹优化常用模型、算法及案例实战：Python+Java 实现》第 14 页附近给出下述 (1)–(15) 对应内容的线性规划形式（原书式 (2.12)–(2.26)）。
 
 ### 一般约束形式
 
 可行流需满足容量与流平衡：
 
 $$
-0 \le x_{ij} \le \text{弧 } (i, j) \text{ 的容量}, \quad \forall (i, j) \tag{2.12}
+0 \le x_{ij} \le \text{弧 } (i, j) \text{ 的容量}, \quad \forall (i, j) \tag{1}
 $$
 
 $$
-\text{流入点 } i \text{ 的流量} = \text{流出点 } i \text{ 的流量}, \quad \forall i \tag{2.13}
+\text{流入点 } i \text{ 的流量} = \text{流出点 } i \text{ 的流量}, \quad \forall i \tag{2}
 $$
 
 将人工弧 $(\mathrm{si},\mathrm{so})$ 及其流量 $x_0$ 显式放入模型，则极大化 $x_0$ 就等价于极大化从 $\mathrm{so}$ 到 $\mathrm{si}$ 的可行输送量。对本例，得到如下 LP（$z=x_0$ 为目标）。
 
 $$
-\max \quad z = x_0 \tag{2.14}
+\max \quad z = x_0 \tag{3}
 $$
 
 弧容量（与表 2.1 一致）：
 
 $$
 \begin{aligned}
-& x_{\mathrm{so},1} \le 2 \tag{2.15} \\
-& x_{\mathrm{so},2} \le 3 \tag{2.16} \\
-& x_{12} \le 3 \tag{2.17} \\
-& x_{2,\mathrm{si}} \le 2 \tag{2.18} \\
-& x_{13} \le 4 \tag{2.19} \\
-& x_{3,\mathrm{si}} \le 1 \tag{2.20}
+& x_{\mathrm{so},1} \le 2 \tag{4} \\
+& x_{\mathrm{so},2} \le 3 \tag{5} \\
+& x_{12} \le 3 \tag{6} \\
+& x_{2,\mathrm{si}} \le 2 \tag{7} \\
+& x_{13} \le 4 \tag{8} \\
+& x_{3,\mathrm{si}} \le 1 \tag{9}
 \end{aligned}
 $$
 
@@ -139,19 +81,19 @@ $$
 
 $$
 \begin{aligned}
-& x_0 = x_{\mathrm{so},1} + x_{\mathrm{so},2} \tag{2.21} \\
-& x_{\mathrm{so},1} = x_{12} + x_{13} \tag{2.22} \\
-& x_{\mathrm{so},2} + x_{12} = x_{2,\mathrm{si}} \tag{2.23} \\
-& x_{13} = x_{3,\mathrm{si}} \tag{2.24} \\
-& x_{3,\mathrm{si}} + x_{2,\mathrm{si}} = x_0 \tag{2.25}
+& x_0 = x_{\mathrm{so},1} + x_{\mathrm{so},2} \tag{10} \\
+& x_{\mathrm{so},1} = x_{12} + x_{13} \tag{11} \\
+& x_{\mathrm{so},2} + x_{12} = x_{2,\mathrm{si}} \tag{12} \\
+& x_{13} = x_{3,\mathrm{si}} \tag{13} \\
+& x_{3,\mathrm{si}} + x_{2,\mathrm{si}} = x_0 \tag{14}
 \end{aligned}
 $$
 
 $$
-x_{ij} \ge 0, \quad \text{对图中出现的弧 } (i,j) \tag{2.26}
+x_{ij} \ge 0, \quad \text{对图中出现的弧 } (i,j) \tag{15}
 $$
 
-**注**：(2.15)–(2.20) 为弧上容量；(2.21)–(2.25) 为在添加人工弧后的节点平衡；模型搭好后可用任意 LP 软件求解。上一段给出的数值解使 $x_0=2$，与「最大 2 百万桶/时」一致。
+**注**：(4)–(9) 为弧上容量；(10)–(14) 为在添加人工弧后的节点平衡；模型搭好后可用任意 LP 软件求解。上一段给出的数值解使 $x_0=2$，与「最大 2 百万桶/时」一致（原书式 (2.15)–(2.25)）。
 
 ## 2.3.3 最大流问题的一般模型
 
@@ -163,17 +105,17 @@ $$
 在流守恒表述下，可写为
 
 $$
-\max \quad f \tag{2.27}
+\max \quad f \tag{16}
 $$
 
 $$
-\sum_{e \in \text{Out}(i)} x_e - \sum_{e \in \text{In}(i)} x_e = b_i, \quad \forall i \in V \tag{2.28}
+\sum_{e \in \text{Out}(i)} x_e - \sum_{e \in \text{In}(i)} x_e = b_i, \quad \forall i \in V \tag{17}
 $$
 
 $$
-0 \le x_e \le u_{ij}, \quad \forall e = (i,j) \in E \tag{2.29}
+0 \le x_e \le u_{ij}, \quad \forall e = (i,j) \in E \tag{18}
 $$
 
 其中 $b_i$ 的取值为：$i = \mathrm{so}$ 时 $b_i = f$；$i = \mathrm{si}$ 时 $b_i = -f$；其余中间节点上 $b_i = 0$。若采用与 2.3.2 相同的人工回流弧技巧，把 $f$ 与某条 $x_0$ 或等价标量对应起来，则一般模型与具体 LP 实现可一一对应。
 
-**注**：(2.28) 中 $\text{Out}(i)$、$\text{In}(i)$ 分别表示离开、进入 $i$ 的弧的集合，与[最短路问题](shortest-path-problem.md) 中的 $\text{out}/\text{in}$ 写法同型，仅记法在教材中可能大小写不统一。最大流是网络流与组合优化的核心模型之一，可用专门算法或 LP/ILP 求解器计算。
+**注**：(17) 中 $\text{Out}(i)$、$\text{In}(i)$ 分别表示离开、进入 $i$ 的弧的集合，与[最短路问题](shortest-path-problem.md) 中的 $\text{out}/\text{in}$ 写法同型，仅记法在教材中可能大小写不统一；原书式 (2.28)。最大流是网络流与组合优化的核心模型之一，可用专门算法或 LP/ILP 求解器计算。

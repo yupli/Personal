@@ -1,5 +1,7 @@
 # 最短路问题
 
+**注**：本页显式式号自 (1) 起、仅本页内连续；与教材第 2 章式 (2.5)–(2.11) 互查时以原书为准。
+
 最短路问题（Shortest Path Problem, SPP）是一类非常经典的问题。最短路问题可以描述为：给定一个有向图（或无向图）$G = (V, E)$，$V$ 是图中点的集合，$E$ 是图中边的集合。图中的每条边 $(i, j) \in E$ 都对应一个权重 $c_{ij}$。给定一个起点 $s$（$s \in V$）和一个终点 $t$（$t \in V$），最短路问题就是要找一条从 $s$ 出发、到达 $t$ 的、总距离或总成本最小的路径。最基本的最短路问题并不是 NP-hard 问题，可以用 Dijkstra 等算法在多项式时间内求得最优解（Dijkstra et al., 1959），Dijkstra 算法的复杂度为 $\mathcal{O}(|V|^2)$，并且在不同数据结构下，复杂度会略有不同。
 
 **注**：图算法视角的实现与变体可参见本站 [Dijkstra](../graph/dijkstra.md)；本页仅写数学模型与 LP 松弛形式。
@@ -19,27 +21,27 @@ $$
 目标为选取一条从 $s$ 到 $t$ 的 $s$–$t$ 路，使所经过边的 $d_e$ 之和最小：
 
 $$
-\min \sum_{e \in E} d_e x_e \tag{2.5}
+\min \sum_{e \in E} d_e x_e \tag{1}
 $$
 
 流量守恒（源汇型）为：对每个节点 $i$，流出减流入在 $i=s$ 处为 1、在 $i=t$ 处为 -1、对其余节点为 0。
 
 $$
-\sum_{e \in \text{out}(i)} x_e - \sum_{e \in \text{in}(i)} x_e = \begin{cases} 1, & i = s \\[0.3em] -1, & i = t \\[0.3em] 0, & \text{其他} \end{cases} \tag{2.6}
+\sum_{e \in \text{out}(i)} x_e - \sum_{e \in \text{in}(i)} x_e = \begin{cases} 1, & i = s \\[0.3em] -1, & i = t \\[0.3em] 0, & \text{其他} \end{cases} \tag{2}
 $$
 
 **注**：上式中 $\text{out}(i)$ 表示自节点 $i$ 出发的边 $e$ 的全体，$\text{in}(i)$ 表示进入 $i$ 的边 $e$ 的全体（与教材中离开 / 进入边的约定一致；无向边可在建模时拆成两条有向弧或采用别种写法，此处不展开）。
 
 $$
-x_e \in \{0, 1\}, \quad \forall e \in E \tag{2.7}
+x_e \in \{0, 1\}, \quad \forall e \in E \tag{3}
 $$
 
-## 三、约束的等价写法 (2.8)
+## 三、约束的等价写法
 
-(2.6) 也可写为带统一右端 $b_i$ 的净供给形式（便于与网络流、LP 标准形对照）：
+(2) 也可写为带统一右端 $b_i$ 的净供给形式（便于与网络流、LP 标准形对照）：
 
 $$
-\sum_{e \in \text{out}(i)} x_e - \sum_{e \in \text{in}(i)} x_e = b_i, \quad \forall i \in V \tag{2.8}
+\sum_{e \in \text{out}(i)} x_e - \sum_{e \in \text{in}(i)} x_e = b_i, \quad \forall i \in V \tag{4}
 $$
 
 其中
@@ -58,22 +60,22 @@ $$
 
 ），在适当条件下仍存在整数最优解，因而整数规划与盒约束下线性规划在最优解意义上可讨论等价性。教材中可与 2.4 节 [最优整数解特性与幺模矩阵](integer-solutions-unimodular-matrices.md) 的论述对照阅读。
 
-## 五、等价的线性规划形式 (2.9)–(2.11)
+## 五、等价的线性规划形式
 
-由上述性质，在「考虑 LP 解仍为整数最优点」的语境下，可将模型写为下述线性规划（目标与 (2.5) 相同、约束为 (2.8) 与 $0 \le x_e \le 1$）：
-
-$$
-\min \sum_{e \in E} d_e x_e \tag{2.9}
-$$
+由上述性质，在「考虑 LP 解仍为整数最优点」的语境下，可将模型写为下述线性规划（目标与 (1) 相同、约束为 (4) 与 $0 \le x_e \le 1$）：
 
 $$
-\sum_{e \in \text{out}(i)} x_e - \sum_{e \in \text{in}(i)} x_e = b_i, \quad \forall i \in V \tag{2.10}
+\min \sum_{e \in E} d_e x_e \tag{5}
 $$
 
 $$
-0 \le x_e \le 1, \quad \forall e \in E \tag{2.11}
+\sum_{e \in \text{out}(i)} x_e - \sum_{e \in \text{in}(i)} x_e = b_i, \quad \forall i \in V \tag{6}
 $$
 
-其中 $b_i$ 与 (2.8) 中相同：$b_s=1$、$b_t=-1$、其余为 0。
+$$
+0 \le x_e \le 1, \quad \forall e \in E \tag{7}
+$$
 
-**注**：上列 (2.5)–(2.11) 与《运筹优化常用模型、算法及案例实战：Python+Java 实现》等教材体系一致，编号便于与印刷版互查。实现时需注意有向边方向与 $\text{in}/\text{out}$ 的唯一定义，以保证可复现性。
+其中 $b_i$ 与 (4) 中相同：$b_s=1$、$b_t=-1$、其余为 0。
+
+**注**：上列 (1)–(7) 与教材中最短路 LP 叙述同构，原书式号约为 (2.5)–(2.11)。实现时需注意有向边方向与 $\text{in}/\text{out}$ 的唯一定义，以保证可复现性。
