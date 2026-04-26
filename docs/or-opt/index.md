@@ -17,7 +17,7 @@
 | 问题 | 说明 | 链接 |
 |------|------|------|
 | 指派问题 | N 对 N 一一指派；二部图匹配、0–1 线性整数模型 (2.1)–(2.4) | [查看](classic-models/assignment-problem.md) |
-| 最短路问题 | （待写） | [查看](classic-models/shortest-path-problem.md) |
+| 最短路问题 | $G=(V,E)$、$s$–$t$ 最短路；IP (2.5)–(2.7)、(2.8) 与 LP (2.9)–(2.11)；整数最优解性质 | [查看](classic-models/shortest-path-problem.md) |
 | 最大流问题 | （待写） | [查看](classic-models/max-flow-problem.md) |
 | 最优整数解特性与幺模矩阵 | （待写） | [查看](classic-models/integer-solutions-unimodular-matrices.md) |
 | 多商品网络流问题 | （待写） | [查看](classic-models/multicommodity-network-flow.md) |
