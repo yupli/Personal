@@ -33,9 +33,17 @@
 
 | 子类 | 说明 | 链接 |
 |------|------|------|
-| 基础启发式（Simple Heuristics） | 问题特化的构造/贪心/单阶段局部搜索等，常作初始解与热启动 | [查看](simple-heuristics.md) |
+| 基础启发式（Simple Heuristics） | 问题特化的构造/贪心/单阶段局部搜索等，常作初始解与热启动；子篇见下表 | [总览](simple-heuristics.md) |
 | 元启发式（Metaheuristics） | 通用高层迭代框架；已写 [模拟退火](simulated-annealing.md)、[禁忌搜索](tabu-search.md)、[遗传算法](genetic-algorithm.md)、[变邻域搜索](vns.md)、[ILS/迭代局搜](iterated-local-search.md)、[贪婪随机自适应搜索过程（GRASP）](grasp.md)、[粒子群](particle-swarm-optimization.md)、[蚁群](ant-colony-optimization.md)、[ALNS/自适应大邻域](alns.md)，其余见元启发式页 | [查看](metaheuristics.md) |
 | 超启发式（Hyper-heuristics） | 在启发式算子/邻域层做选择或生成，强调与问题解耦、可迁移 | [查看](hyper-heuristics.md) |
+
+| 子篇（基础启发式） | 说明 | 链接 |
+|-------------------|------|------|
+| 贪心（构造式） | 逐步取当前最好一步的构造，不回溯 | [查看](greedy-algorithm.md) |
+| 插入启发式 | 将客户逐点插入弧上，兼容 TSP/带约束 VRP | [查看](insertion-heuristics.md) |
+| Clarke–Wright 节约 | CVRP 边合并、按 savings 从大到小并线 | [查看](clarke-wright-savings.md) |
+| 爬山 | 邻域内只接受改进、至局部最优 | [查看](hill-climbing.md) |
+| 2-opt / 3-opt / k-opt | 路径边交换邻域，常用局搜子过程 | [查看](k-opt.md) |
 
 ### 图算法
 

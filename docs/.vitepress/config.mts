@@ -91,7 +91,18 @@ export default defineConfig({
           link: "/or-opt/heuristic-algorithms",
           collapsed: false,
           items: [
-            { text: "基础启发式（Simple Heuristics）", link: "/or-opt/simple-heuristics" },
+            {
+              text: "基础启发式（Simple Heuristics）",
+              link: "/or-opt/simple-heuristics",
+              collapsed: false,
+              items: [
+                { text: "贪心（构造式）", link: "/or-opt/greedy-algorithm" },
+                { text: "插入启发式", link: "/or-opt/insertion-heuristics" },
+                { text: "Clarke–Wright 节约", link: "/or-opt/clarke-wright-savings" },
+                { text: "爬山（Hill Climbing）", link: "/or-opt/hill-climbing" },
+                { text: "2-opt / 3-opt / k-opt", link: "/or-opt/k-opt" },
+              ],
+            },
             {
               text: "元启发式（Metaheuristics）",
               link: "/or-opt/metaheuristics",

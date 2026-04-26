@@ -31,7 +31,7 @@
 <summary>（1）构造式（Constructive / construction heuristics）</summary>
 
 - **对象**：在空解或部分可行构型上，按规则逐步追加决策（加边、点、工序、物品等）直至完整可行解；或一步生成（少数问题有闭式或随机一次性构造）。  
-- **代表**：TSP/路由里最近邻、节约法（savings）思想；装箱里首次适应（FF）、最宽活跃（BWF）等；调度里 EDD、LPT 作优先序的列表调度等。  
+- **代表**：TSP/路由里最近邻、节约法（savings）思想；装箱里首次适应（FF）、最宽活跃（BWF）等；调度里 EDD、LPT 作优先序的列表调度等。本库子篇：[贪心](greedy-algorithm.md)、[插入](insertion-heuristics.md)、[Clarke–Wright](clarke-wright-savings.md)。  
 - **作用**：出第一解、可行上界、为精确法或 [GRASP](grasp.md) 等提供起点；在列生成/分支定价中给初始列常属构造。  
 - **与改进式衔接**：多实践上先构造再改进；单独一轮构造也可视为无随机化的起点生成。
 
@@ -41,7 +41,7 @@
 <summary>（2）改进式（Improvement / local search 类低层算子）</summary>
 
 - **对象**：已有一个完全可行解 $s$，在邻域 $N(s)$ 或若干邻域中单轮或有限步换边、换序、2-opt/插入等，使 $f$ 不增（最小化时）或接受有限次劣化。  
-- **代表**：对换/插入一步、直至局部最优的 hill climbing 短跑、VNS/局搜里的子过程、调度里邻域内 swap。  
+- **代表**：对换/插入一步、直至局部最优的 hill climbing 短跑、VNS/局搜里的子过程、调度里邻域内 swap。本库子篇：[爬山](hill-climbing.md)、[2-opt / 3-opt / k-opt](k-opt.md)。  
 - **与元启发式关系**：其本身是算子或短链；不自称第几代主循环时，即基础启发式。一旦外包进固定降温、扰动+局搜等通用外层，就归入 [元启发式总览](metaheuristics.md) 的框架侧。  
 - **与精确法协作**：在分支定界子结点热启动、或作轻量改修可行解，很常见。
 
