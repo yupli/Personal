@@ -21,7 +21,7 @@
 
 <figure>
 <img src="../resources/fig-oil-network-2-4.png" width="100%" style="max-width:560px;height:auto" alt="图 2.4 石油运输网络图" />
-<figcaption style="font-size:0.9em;color:#555;margin-top:0.3em">图 2.4（与教材同图）。弧上为容量；底部 si→so 的回流在模型里用 $x_0$（或记 $a_0$）与人工弧配合实现平衡。见 2.3.2。</figcaption>
+<figcaption style="font-size:0.9em;color:#555;margin-top:0.3em">图 2.4（与教材同图）。弧上为容量；底部 si→so 的回流在模型里用 x₀（或记 a₀）与人工弧配合实现平衡。见 2.3.2。</figcaption>
 </figure>
 
 ## 2.3.2 问题建模及最优解
