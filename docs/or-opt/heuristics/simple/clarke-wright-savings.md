@@ -1,6 +1,6 @@
 # Clarke–Wright 节约算法（Savings, CVRP 经典构造）
 
-Clarke 与 Wright（1964）为有容量的车辆路径（CVRP）提出：先令每客户各自由车场往返的小回路出发，再按「若把两客户接到同一条从车场出发的线路上能省多少路」的节约值 s 从大到小尝试合并路径，在容量等约束允许时把两条可对接的片段并成更长的一段，直至难以再合。是 [基础启发式](simple-heuristics.md) 中边合并系构造的代表；与 [插入启发式](insertion-heuristics.md) 逐步在弧上插客户的步态不同。见 [启发式算法总览](heuristic-algorithms.md)。
+Clarke 与 Wright（1964）为有容量的车辆路径（CVRP）提出：先令每客户各自由车场往返的小回路出发，再按「若把两客户接到同一条从车场出发的线路上能省多少路」的节约值 s 从大到小尝试合并路径，在容量等约束允许时把两条可对接的片段并成更长的一段，直至难以再合。是 [基础启发式](simple-heuristics.md) 中边合并系构造的代表；与 [插入启发式](insertion-heuristics.md) 逐步在弧上插客户的步态不同。见 [启发式算法总览](../heuristic-algorithms.md)。
 
 ---
 

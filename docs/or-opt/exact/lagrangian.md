@@ -314,7 +314,7 @@ $$
 
 对偶函数形状：$z(\mathbf{u}) = \max_{t} [\mathbf{c}^\top \mathbf{x}^t + \mathbf{u}^\top(\mathbf{d} - D\mathbf{x}^t)]$ 是凸的逐段线性函数；$w_{LD} = \min_{\mathbf{u} \ge 0} z(\mathbf{u})$ 即在其图像上求最小值。若仅有一个乘子分量，可想象为：若干条仿射直线（各对应某个极点 $t$ 下的子问题值）的上包络，整体呈折线。下图为一维 $u$ 的示意：细线为各分量的线性部分，粗线为 $z(u)=\max_t \{\cdots\}$，所求为 $w_{LD}=\min_{u\ge 0} z(u)$ 在大致最低点处取得。
 
-![一维对偶函数：仿射分量的上包络（逐段线性的凸 $z(u)$）与 $\min z$ 的示意](./resources/lagrangian-dual-function-1d.png)
+![一维对偶函数：仿射分量的上包络（逐段线性的凸 $z(u)$）与 $\min z$ 的示意](../resources/lagrangian-dual-function-1d.png)
 
 
 ---

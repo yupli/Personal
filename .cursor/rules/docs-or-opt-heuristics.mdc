@@ -10,20 +10,20 @@ alwaysApply: false
 
 ## 适用范围
 
-- 元启发式各算法子页：如 `simulated-annealing.md`、`tabu-search.md`、`genetic-algorithm.md`、`vns.md`、`iterated-local-search.md`、`grasp.md`、`particle-swarm-optimization.md`、`ant-colony-optimization.md`、`alns.md` 等（带主循环框的同类新篇亦同）。
+- 元启发式各算法子页：如 `heuristics/meta/simulated-annealing.md`、`heuristics/meta/tabu-search.md` 等（带主循环框的同类新篇亦同，均在 `docs/or-opt/heuristics/meta/`）。
 - 总览页：`heuristic-algorithms.md`（启发式三类分类）、`metaheuristics.md`（元启发式篇目表）仅作分类、导航与一句话说明，**不**嵌入完整体例条文。
 
 ## 元启发式算法子页
 
-- **开篇**：仅保留**一段**连续总述（背景、属于哪类方法、链到 `docs/or-opt/metaheuristics.md`）。**不要**在文首设置「**适用**：」「**核心**：」等独立标签段（要点放入后文各节）。
+- **开篇**：仅保留**一段**连续总述（背景、属于哪类方法、链到 `docs/or-opt/heuristics/metaheuristics.md`）。**不要**在文首设置「**适用**：」「**核心**：」等独立标签段（要点放入后文各节）。
 - **正文顺序**：先写记号、机制、邻域/算子/参数、接受与调参要点等；**最后**用 `::: algorithm ... :::` 收束**对外的整体主循环**（与全站 `docs-style.mdc` 中 algorithm 容器规则一致）。
 - **内层子过程**：若存在嵌套流程（如 VNS 中的 VND），子过程可先用独立段落或小 `algorithm` 收束；**整篇对外的「主」`algorithm` 块须排在子过程说明之后**，读者先懂子模块再对照最外层循环。
 - **主循环之前**：用常规小节写清调参、实现注意、与精确子问题/子 MIP 的衔接等，勿依赖文首「适用/核心」代替。
 
 ## 总览页分工
 
-- **`heuristic-algorithms.md`**：三类划分、表与链接、折叠说明；可写知识性「边界」句，**不**写「写作体例」长段。
-- **`metaheuristics.md`**：一段定位 + 篇目表；**不**复述上条子页结构规范（链到 `heuristic-algorithms` 即可）。
+- **`heuristics/heuristic-algorithms.md`**：三类划分、表与链接、折叠说明；可写知识性「边界」句，**不**写「写作体例」长段。
+- **`heuristics/metaheuristics.md`**：一段定位 + 篇目表；**不**复述上条子页结构规范（链到 `heuristic-algorithms` 即可）。
 
 ## 正文可读性
 

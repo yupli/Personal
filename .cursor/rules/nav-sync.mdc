@@ -10,7 +10,7 @@ alwaysApply: true
 
 ## 适用场景
 
-- **运筹优化** (`docs/or-opt/`)：分支定界、列生成、分解算法、图算法等
+- **运筹优化** (`docs/or-opt/`)：仓库内与侧栏一致分子目录，如 `modeling/`（建模方法）、`exact/`（精确算法）、`heuristics/`（总览、基础篇 `simple/`、元启发式 `meta/` 等）、`graph/`（图算法）等
 - **人工智能** (`docs/ai/`)：机器学习、深度学习、强化学习等
 - **其他知识类型**：未来可能添加的任何知识分类
 
@@ -30,23 +30,23 @@ alwaysApply: true
     text: "建模方法",
     collapsed: false,
     items: [
-      { text: "整数规划建模技巧", link: "/or-opt/integer-modeling-techniques" },
+      { text: "整数规划建模技巧", link: "/or-opt/modeling/integer-modeling-techniques" },
     ],
   },
   {
     text: "精确算法",
     collapsed: false,
     items: [
-      { text: "分支定界（Branch and Bound）", link: "/or-opt/branch-and-bound" },
-      // ... 其余与 index 表格顺序一致
+      { text: "分支定界（Branch and Bound）", link: "/or-opt/exact/branch-and-bound" },
+      // ... 其余与 index 表格顺序一致；文件在 docs/or-opt/exact/ 下
     ],
   },
   {
     text: "图算法",
     collapsed: false,
     items: [
-      { text: "Dijkstra", link: "/or-opt/dijkstra" },
-      { text: "Bellman-Ford", link: "/or-opt/bellman-ford" },
+      { text: "Dijkstra", link: "/or-opt/graph/dijkstra" },
+      { text: "Bellman-Ford", link: "/or-opt/graph/bellman-ford" },
     ],
   },
 ],
@@ -75,7 +75,7 @@ alwaysApply: true
 
 | 算法 | 说明 | 链接 |
 |------|------|------|
-| **分支定界**（Branch and Bound） | 求解整数规划的经典方法... | [查看](branch-and-bound.md) |
+| **分支定界**（Branch and Bound） | 求解整数规划的经典方法... | [查看](exact/branch-and-bound.md) |
 | ... | ... | ... |
 ```
 
