@@ -68,5 +68,6 @@ alwaysApply: false
 ## 其他
 
 - 新增或润色 `docs/**/*.md` 时，扫一遍 `**`，凡不符合「仅冒号前标签加粗」的，一律删除；表格、索引表以零加粗为佳。
+- 运筹 `docs/or-opt/` 下**元启发式算法子页**的开篇结构、主循环 `algorithm` 与内层子过程顺序等，见项目规则 `docs-or-opt-heuristics.mdc`；**不要**在用户文档中重复粘贴该体例全文。
 
 范本：结构清晰、加粗极少的 `docs/or-opt/branch-price-and-cut.md`；历史文档可按本规则逐步收敛。
