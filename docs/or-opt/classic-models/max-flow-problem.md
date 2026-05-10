@@ -46,17 +46,17 @@
 
 ### 一般约束形式
 
-可行流需满足容量与流平衡：
+可行流需满足容量与非源汇节点的流量守恒（下文数值例中用 $u_{ij}$ 表示弧 $(i,j)$ 的容量）。抽象写法：
 
 $$
-0 \le x_{ij} \le \text{弧 } (i, j) \text{ 的容量}, \quad \forall (i, j) \tag{1}
+0 \le x_{ij} \le u_{ij}, \quad \forall (i,j) \tag{1}
 $$
 
 $$
-\text{流入点 } i \text{ 的流量} = \text{流出点 } i \text{ 的流量}, \quad \forall i \tag{2}
+\sum_{j:(j,i)\in A} x_{ji} = \sum_{j:(i,j)\in A} x_{ij}, \quad \forall i \in V \setminus \{\mathrm{so},\mathrm{si}\} \tag{2}
 $$
 
-将人工弧 $(\mathrm{si},\mathrm{so})$ 及其流量 $x_0$ 显式放入模型，则极大化 $x_0$ 就等价于极大化从 $\mathrm{so}$ 到 $\mathrm{si}$ 的可行输送量。对本例，得到如下 LP（$z=x_0$ 为目标）。
+（若节点集合与弧集用 $V,E$ 叙述，也可写成「入减出为零」的净流量形式，见 2.3.3。）将人工弧 $(\mathrm{si},\mathrm{so})$ 及其流量 $x_0$ 显式放入模型，则极大化 $x_0$ 就等价于极大化从 $\mathrm{so}$ 到 $\mathrm{si}$ 的可行输送量。对本例，得到如下 LP（$z=x_0$ 为目标）。
 
 $$
 \max \quad z = x_0 \tag{3}
@@ -65,31 +65,56 @@ $$
 弧容量（与表 2.1 一致）：
 
 $$
-\begin{aligned}
-& x_{\mathrm{so},1} \le 2 \tag{4} \\
-& x_{\mathrm{so},2} \le 3 \tag{5} \\
-& x_{12} \le 3 \tag{6} \\
-& x_{2,\mathrm{si}} \le 2 \tag{7} \\
-& x_{13} \le 4 \tag{8} \\
-& x_{3,\mathrm{si}} \le 1 \tag{9}
-\end{aligned}
+x_{\mathrm{so},1} \le 2 \tag{4}
+$$
+
+$$
+x_{\mathrm{so},2} \le 3 \tag{5}
+$$
+
+$$
+x_{12} \le 3 \tag{6}
+$$
+
+$$
+x_{2,\mathrm{si}} \le 2 \tag{7}
+$$
+
+$$
+x_{13} \le 4 \tag{8}
+$$
+
+$$
+x_{3,\mathrm{si}} \le 1 \tag{9}
 $$
 
 流量平衡（本网络拓扑）：
 
 $$
-\begin{aligned}
-& x_0 = x_{\mathrm{so},1} + x_{\mathrm{so},2} \tag{10} \\
-& x_{\mathrm{so},1} = x_{12} + x_{13} \tag{11} \\
-& x_{\mathrm{so},2} + x_{12} = x_{2,\mathrm{si}} \tag{12} \\
-& x_{13} = x_{3,\mathrm{si}} \tag{13} \\
-& x_{3,\mathrm{si}} + x_{2,\mathrm{si}} = x_0 \tag{14}
-\end{aligned}
+x_0 = x_{\mathrm{so},1} + x_{\mathrm{so},2} \tag{10}
 $$
 
 $$
-x_{ij} \ge 0, \quad \text{对图中出现的弧 } (i,j) \tag{15}
+x_{\mathrm{so},1} = x_{12} + x_{13} \tag{11}
 $$
+
+$$
+x_{\mathrm{so},2} + x_{12} = x_{2,\mathrm{si}} \tag{12}
+$$
+
+$$
+x_{13} = x_{3,\mathrm{si}} \tag{13}
+$$
+
+$$
+x_{3,\mathrm{si}} + x_{2,\mathrm{si}} = x_0 \tag{14}
+$$
+
+$$
+x_{\mathrm{so},1},\, x_{\mathrm{so},2},\, x_{12},\, x_{13},\, x_{2,\mathrm{si}},\, x_{3,\mathrm{si}},\, x_{\mathrm{si},\mathrm{so}} \ge 0 \tag{15}
+$$
+
+（人工弧 $(\mathrm{si},\mathrm{so})$ 的流量即 $x_0$，与 (3) 中目标变量一致。）
 
 **注**：(4)–(9) 为弧上容量；(10)–(14) 为在添加人工弧后的节点平衡；模型搭好后可用任意 LP 软件求解。上一段给出的数值解使 $x_0=2$，与「最大 2 百万桶/时」一致。
 
@@ -107,7 +132,7 @@ $$
 $$
 
 $$
-\sum_{e \in \text{Out}(i)} x_e - \sum_{e \in \text{In}(i)} x_e = b_i, \quad \forall i \in V \tag{17}
+\sum_{e \in \operatorname{Out}(i)} x_e - \sum_{e \in \operatorname{In}(i)} x_e = b_i, \quad \forall i \in V \tag{17}
 $$
 
 $$
@@ -116,4 +141,4 @@ $$
 
 其中 $b_i$ 的取值为：$i = \mathrm{so}$ 时 $b_i = f$；$i = \mathrm{si}$ 时 $b_i = -f$；其余中间节点上 $b_i = 0$。若采用与 2.3.2 相同的人工回流弧技巧，把 $f$ 与某条 $x_0$ 或等价标量对应起来，则一般模型与具体 LP 实现可一一对应。
 
-**注**：(17) 中 $\text{Out}(i)$、$\text{In}(i)$ 分别表示离开、进入 $i$ 的弧的集合，与[最短路问题](shortest-path-problem.md) 中的 $\text{out}/\text{in}$ 写法同型，各文献在大小写与「出/入」命名上可能略有不同。最大流是网络流与组合优化的核心模型之一，可用专门算法或 LP/ILP 求解器计算。
+**注**：(17) 中 $\operatorname{Out}(i)$、$\operatorname{In}(i)$ 分别表示离开、进入 $i$ 的弧的集合，与[最短路问题](shortest-path-problem.md) 中的 $\mathrm{out}/\mathrm{in}$ 写法同型，各文献在大小写与「出/入」命名上可能略有不同。最大流是网络流与组合优化的核心模型之一，可用专门算法或 LP/ILP 求解器计算。
