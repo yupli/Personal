@@ -32,7 +32,8 @@
 
 | 算法 | 说明 | 链接 |
 |------|------|------|
-| 单纯形法（Simplex Method） | 线性规划顶点迭代求解；LP 松弛与列生成主问题的经典内核 | [查看](exact/simplex-method.md) |
+| 单纯形法（Simplex Method） | 线性规划顶点迭代；正文含对偶单纯形骨架；LP 松弛与列生成主问题的经典内核 | [查看](exact/simplex-method.md) |
+| 改进单纯形法（Revised Simplex） | 不显式存表的修正单纯形；$\pi$、定价、比值与基逆/LU 更新概要 | [查看](exact/revised-simplex.md) |
 | 分支定界（Branch and Bound） | 求解整数规划的经典方法，通过分支和定界剪枝搜索解空间 | [查看](exact/branch-and-bound.md) |
 | 分支切割（Branch and Cut） | 在分支定界基础上加入割平面，加速收敛 | [查看](exact/branch-and-cut.md) |
 | 列生成（Column Generation） | 求解大规模线性规划，按需生成变量列 | [查看](exact/column-generation.md) |
