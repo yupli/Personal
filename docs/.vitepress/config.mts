@@ -94,6 +94,7 @@ export default defineConfig({
           link: "/or-opt/exact/exact-algorithms",
           collapsed: false,
           items: [
+            { text: "单纯形法（Simplex）", link: "/or-opt/exact/simplex-method" },
             { text: "分支定界（B&B）", link: "/or-opt/exact/branch-and-bound" },
             { text: "分支切割（B&C）", link: "/or-opt/exact/branch-and-cut" },
             { text: "列生成（Column Generation）", link: "/or-opt/exact/column-generation" },
