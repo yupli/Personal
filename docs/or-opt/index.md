@@ -16,7 +16,7 @@
 
 | 问题 | 说明 | 链接 |
 |------|------|------|
-| 指派问题 | N 对 N 一一指派；二部图匹配、0–1 线性整数模型 | [查看](classic-models/assignment-problem.md) |
+| 指派问题 | N 对 N 一一指派；二部图匹配、0–1 模型；匈牙利算法与图解示例 | [查看](classic-models/assignment-problem.md) |
 | 最短路问题 | $G=(V,E)$、$s$–$t$ 最短路；IP/LP 模型与整数最优解性质 | [查看](classic-models/shortest-path-problem.md) |
 | 最大流问题 | 源汇网络、表 2.1 油运例；图 2.4/2.5；LP 与一般形 | [查看](classic-models/max-flow-problem.md) |
 | 最优整数解特性与幺模矩阵 | 凸包与整数性；幺模/全幺模定义与定理 2.4.1–2.4.3 | [查看](classic-models/integer-solutions-unimodular-matrices.md) |
