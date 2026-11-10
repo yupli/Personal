@@ -12,4 +12,4 @@ hero:
 ## 分栏
 
 - [运筹优化](/or-opt/)
-- [人工智能](/ai/)
+- [强化学习](/reinforcement-learning/)

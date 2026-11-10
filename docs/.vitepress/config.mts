@@ -8,7 +8,7 @@ const LOGO_ASSET = `${BASE}logo.svg?v=2`;
 
 export default defineConfig({
   title: "个人知识库",
-  description: "运筹优化与人工智能笔记",
+  description: "运筹优化与强化学习笔记",
   lang: "zh-CN",
   base: BASE,
 
@@ -58,7 +58,7 @@ export default defineConfig({
     nav: [
       { text: "首页", link: "/" },
       { text: "运筹优化", link: "/or-opt/", activeMatch: "/or-opt/" },
-      { text: "人工智能", link: "/ai/", activeMatch: "/ai/" },
+      { text: "强化学习", link: "/reinforcement-learning/", activeMatch: "/reinforcement-learning/" },
     ],
 
     sidebar: {
@@ -151,7 +151,7 @@ export default defineConfig({
           ],
         },
       ],
-      "/ai/": [{ text: "人工智能", link: "/ai/" }],
+      "/reinforcement-learning/": [{ text: "强化学习", link: "/reinforcement-learning/" }],
     },
 
     search: {

@@ -6,12 +6,12 @@ alwaysApply: true
 
 # 导航同步规则
 
-当在任何知识目录（如 `docs/or-opt/`、`docs/ai/` 等）下添加、删除或修改文档时，必须同步更新以下位置。
+当在任何知识目录（如 `docs/or-opt/`、`docs/reinforcement-learning/` 等）下添加、删除或修改文档时，必须同步更新以下位置。
 
 ## 适用场景
 
 - **运筹优化** (`docs/or-opt/`)：仓库内与侧栏一致分子目录，如 `modeling/`（建模方法）、`exact/`（精确算法）、`heuristics/`（总览、基础篇 `simple/`、元启发式 `meta/` 等）、`graph/`（图算法）等
-- **人工智能** (`docs/ai/`)：机器学习、深度学习、强化学习等
+- **强化学习** (`docs/reinforcement-learning/`)：强化学习笔记
 - **其他知识类型**：未来可能添加的任何知识分类
 
 ## 必须更新的文件
@@ -51,10 +51,10 @@ alwaysApply: true
   },
 ],
 
-// 人工智能等：也可按「基础 / 进阶」等分组，结构同上
-"/ai/": [
-  { text: "人工智能", link: "/ai/" },
-  { text: "子页", link: "/ai/..." }, // 或 { text, items: [...] } 分组
+// 强化学习等：也可按「基础 / 进阶」等分组，结构同上
+"/reinforcement-learning/": [
+  { text: "强化学习", link: "/reinforcement-learning/" },
+  { text: "子页", link: "/reinforcement-learning/..." }, // 或 { text, items: [...] } 分组
 ],
 ```
 
@@ -79,14 +79,14 @@ alwaysApply: true
 | ... | ... | ... |
 ```
 
-格式示例（人工智能）：
+格式示例（强化学习）：
 ```markdown
 ## 知识模块
 
 | 主题 | 说明 | 链接 |
 |------|------|------|
-| **机器学习基础** | 监督学习、无监督学习... | [查看](machine-learning.md) |
-| **深度学习** | 神经网络、反向传播... | [查看](deep-learning.md) |
+| 马尔可夫决策过程 | 状态、动作、奖励和状态转移 | [查看](markov-decision-process.md) |
+| Q 学习 | 通过交互估计动作价值 | [查看](q-learning.md) |
 | ... | ... | ... |
 ```
 
@@ -101,7 +101,7 @@ alwaysApply: true
 nav: [
   { text: "首页", link: "/" },
   { text: "运筹优化", link: "/or-opt/", activeMatch: "/or-opt/" },
-  { text: "人工智能", link: "/ai/", activeMatch: "/ai/" },
+  { text: "强化学习", link: "/reinforcement-learning/", activeMatch: "/reinforcement-learning/" },
   { text: "新分类", link: "/new-category/", activeMatch: "/new-category/" },
 ],
 ```
