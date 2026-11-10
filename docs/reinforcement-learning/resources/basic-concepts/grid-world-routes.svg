@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="620" height="280" viewBox="0 0 620 280">
+  <title>两条从 s₁ 到目标 s₉ 的路线</title>
+  <desc>路线 A 避开禁区。路线 B 从左侧经过禁区 s₇。两条路线均走四步。</desc>
+  <defs>
+    <g id="grid">
+      <rect width="216" height="216" fill="#fff"/>
+      <path d="M144 72h72v72h-72zM0 144h72v72H0z" fill="#fce6a4"/>
+      <path d="M144 144h72v72h-72z" fill="#c7ebff"/>
+      <path d="M72 0v216m72-216v216M0 72h216M0 144h216" stroke="#9daeb9"/>
+      <rect width="216" height="216" fill="none" stroke="#708594"/>
+      <g font-size="17" fill="#253c4c">
+        <text x="9" y="21">s₁</text><text x="81" y="21">s₂</text><text x="153" y="21">s₃</text>
+        <text x="9" y="93">s₄</text><text x="81" y="93">s₅</text><text x="153" y="93">s₆</text>
+        <text x="9" y="165">s₇</text><text x="81" y="165">s₈</text><text x="153" y="165">s₉</text>
+      </g>
+    </g>
+    <marker id="arrow-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="3" markerHeight="3" orient="auto">
+      <path d="M0 0l10 5-10 5z" fill="#087759"/>
+    </marker>
+    <marker id="arrow-b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="3" markerHeight="3" orient="auto">
+      <path d="M0 0l10 5-10 5z" fill="#883d16"/>
+    </marker>
+  </defs>
+  <rect x="1" y="1" width="618" height="278" rx="12" fill="#f7fafc" stroke="#d3dfe7"/>
+  <g font-family="system-ui, sans-serif">
+    <g transform="translate(46 42)">
+      <text x="108" y="-13" text-anchor="middle" font-size="18" fill="#123a2e">路线 A · 避开禁区</text>
+      <use href="#grid"/>
+      <path d="M36 36h72v144h72" fill="none" stroke="#087759" stroke-width="5" stroke-linejoin="round" marker-end="url(#arrow-a)"/>
+      <circle cx="36" cy="36" r="6" fill="#087759"/>
+    </g>
+    <g transform="translate(358 42)">
+      <text x="108" y="-13" text-anchor="middle" font-size="18" fill="#642d17">路线 B · 经过禁区</text>
+      <use href="#grid"/>
+      <path d="M36 36v144h144" fill="none" stroke="#883d16" stroke-width="5" stroke-linejoin="round" marker-end="url(#arrow-b)"/>
+      <circle cx="36" cy="36" r="6" fill="#883d16"/>
+    </g>
+  </g>
+</svg>
