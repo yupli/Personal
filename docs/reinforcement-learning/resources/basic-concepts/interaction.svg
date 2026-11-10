@@ -6,27 +6,27 @@
     <g transform="translate(18 64)">
   <rect width="126" height="70" rx="10" fill="#fff" stroke="#8ca9bb"/>
   <text x="63" y="29" font-size="17" font-weight="600">当前状态</text>
-  <text x="63" y="52" font-size="14">sₜ</text>
+  <text x="63" y="52" font-size="14">例如 s₁</text>
 </g>
     <g transform="translate(170 64)">
   <rect width="126" height="70" rx="10" fill="#e2f5ec" stroke="#73ae99"/>
-  <text x="63" y="29" font-size="17" font-weight="600">策略</text>
-  <text x="63" y="52" font-size="14">π(a | s)</text>
+  <text x="63" y="29" font-size="17" font-weight="600">机器人选动作</text>
+  <text x="63" y="52" font-size="14">例如向右</text>
 </g>
     <g transform="translate(322 64)">
   <rect width="126" height="70" rx="10" fill="#e5f1fb" stroke="#86acc6"/>
   <text x="63" y="29" font-size="17" font-weight="600">环境</text>
-  <text x="63" y="52" font-size="14">转移与奖励</text>
+  <text x="63" y="52" font-size="14">按网格规则回应</text>
 </g>
     <g transform="translate(474 64)">
   <rect width="126" height="70" rx="10" fill="#fff" stroke="#8ca9bb"/>
   <text x="63" y="29" font-size="17" font-weight="600">下一状态 · 奖励</text>
-  <text x="63" y="52" font-size="14">sₜ₊₁ · rₜ₊₁</text>
+  <text x="63" y="52" font-size="14">到 s₂ · 得 0 分</text>
 </g>
     <g stroke="#335b70" stroke-width="2" fill="none" marker-end="url(#edge)">
       <path d="M145 99h23"/><path d="M297 99h23"/><path d="M449 99h23"/>
     </g>
-    <text x="309" y="50" font-size="15">选出动作 aₜ</text>
+    <text x="309" y="50" font-size="15">发出向右指令</text>
     <path d="M537 137v34H81v-34" fill="none" stroke="#087759" stroke-width="2" marker-end="url(#repeat)"/>
     <rect x="233" y="159" width="154" height="24" rx="6" fill="#f7fafc"/>
     <text x="310" y="177" font-size="14" fill="#08654d">进入下一次决策</text>

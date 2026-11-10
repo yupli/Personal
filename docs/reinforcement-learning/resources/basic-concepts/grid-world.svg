@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="380" height="252" viewBox="0 0 380 252">
+  <title>网格世界的九个状态</title>
+  <rect x="1" y="1" width="378" height="250" rx="14" fill="#f7fafc" stroke="#d3dfe7"/>
+  <g text-anchor="middle" font-family="system-ui, sans-serif" font-size="22" fill="#17384a">
+    <rect x="82" y="18" width="72" height="72" fill="#fff"/><text x="118" y="61">s₁</text>
+    <rect x="154" y="18" width="72" height="72" fill="#fff"/><text x="190" y="61">s₂</text>
+    <rect x="226" y="18" width="72" height="72" fill="#fff"/><text x="262" y="61">s₃</text>
+    <rect x="82" y="90" width="72" height="72" fill="#fff"/><text x="118" y="133">s₄</text>
+    <rect x="154" y="90" width="72" height="72" fill="#fff"/><text x="190" y="133">s₅</text>
+    <rect x="226" y="90" width="72" height="72" fill="#fce6a4"/><text x="262" y="121">s₆</text><text x="262" y="144" font-size="14">禁区</text>
+    <rect x="82" y="162" width="72" height="72" fill="#fce6a4"/><text x="118" y="193">s₇</text><text x="118" y="216" font-size="14">禁区</text>
+    <rect x="154" y="162" width="72" height="72" fill="#fff"/><text x="190" y="205">s₈</text>
+    <rect x="226" y="162" width="72" height="72" fill="#c7ebff"/><text x="262" y="193">s₉</text><text x="262" y="216" font-size="14">目标</text>
+  </g>
+  <path d="M154 18v216m72-216v216M82 90h216m-216 72h216" fill="none" stroke="#8ca9bb"/>
+  <rect x="82" y="18" width="216" height="216" fill="none" stroke="#335b70" stroke-width="2"/>
+</svg>
