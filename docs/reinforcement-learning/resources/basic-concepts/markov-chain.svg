@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="620" height="270" viewBox="0 0 620 270">
+  <title>固定策略下的状态转移</title>
+  <defs><marker id="step" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0l10 5-10 5z" fill="#335b70"/></marker></defs>
+  <rect x="1" y="1" width="618" height="268" rx="14" fill="#f7fafc" stroke="#d3dfe7"/>
+  <g fill="none" stroke="#335b70" stroke-width="2" marker-end="url(#step)">
+    <path d="M151 48H284"/><path d="M127 72v32"/><path d="M469 48H336"/>
+    <path d="M310 72v32"/><path d="M151 130h133"/><path d="M310 154v32"/>
+    <path d="M493 154v32"/><path d="M151 212h133"/><path d="M334 212h133"/>
+    <path d="M512 199c55-46 67 50 4 24"/>
+  </g>
+  <g font-family="system-ui, sans-serif" text-anchor="middle" fill="#17384a">
+    <g font-size="14">
+      <text x="218" y="40">0.5</text><text x="110" y="95">0.5</text><text x="401" y="40">1</text>
+      <text x="297" y="95">1</text><text x="218" y="122">1</text><text x="297" y="177">1</text>
+      <text x="480" y="177">1</text><text x="218" y="204">1</text><text x="401" y="204">1</text><text x="566" y="211">1</text>
+    </g>
+    <g font-size="18">
+    <g transform="translate(127 48)"><circle r="23" fill="#fff" stroke="#7b9cab"/><text y="6">s₁</text></g>
+    <g transform="translate(310 48)"><circle r="23" fill="#fff" stroke="#7b9cab"/><text y="6">s₂</text></g>
+    <g transform="translate(493 48)"><circle r="23" fill="#fff" stroke="#7b9cab"/><text y="6">s₃</text></g>
+    <g transform="translate(127 130)"><circle r="23" fill="#fff" stroke="#7b9cab"/><text y="6">s₄</text></g>
+    <g transform="translate(310 130)"><circle r="23" fill="#fff" stroke="#7b9cab"/><text y="6">s₅</text></g>
+    <g transform="translate(493 130)"><circle r="23" fill="#fce6a4" stroke="#7b9cab"/><text y="6">s₆</text></g>
+    <g transform="translate(127 212)"><circle r="23" fill="#fce6a4" stroke="#7b9cab"/><text y="6">s₇</text></g>
+    <g transform="translate(310 212)"><circle r="23" fill="#fff" stroke="#7b9cab"/><text y="6">s₈</text></g>
+    <g transform="translate(493 212)"><circle r="23" fill="#c7ebff" stroke="#7b9cab"/><text y="6">s₉</text></g>
+    </g>
+  </g>
+</svg>
