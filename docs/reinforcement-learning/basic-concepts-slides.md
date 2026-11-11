@@ -12,13 +12,13 @@ outline: [2, 3]
 
 <img src="./resources/basic-concepts-slides/slide-01.webp" alt="第 01 页课件：本课要解决什么问题" width="642" height="480" loading="lazy">
 
-把一个机器人放进九宫格，让它自己决定怎么走。要描述这个任务，先得说清它在哪里、可以做什么、做完会怎样。后半讲再给每一步打分，看一整条路线值多少分，最后把这些规则写成一个模型。
+本课先用网格举例，再用马尔可夫决策过程（MDP）统一表述。先看机器人在哪里、能做什么、做完会怎样，再用奖励和回报判断路线的好坏。
 
 ### 第 02 页 · 网格世界（Grid World）
 
 <img src="./resources/basic-concepts-slides/slide-02.webp" alt="第 02 页课件：网格世界（Grid World）" width="642" height="480" loading="lazy">
 
-机器人是负责做决定的智能体（agent）。网格和网格里的规则是环境（environment）。机器人可以从任一格出发，目标是右下角的蓝格。路上有两个黄色禁区，外框则是不能越过的边界。
+机器人是智能体（agent），网格及其规则构成环境（environment）。白格可通行，黄格是禁区，蓝格是目标，外框不可越过。机器人从任一格出发，只能沿上下左右移动。到达目标只是基本要求，还要比较是否踩进禁区、反复折返或试图越界。
 
 ### 第 03 页 · 状态和状态空间（State and State Space）
 
@@ -32,9 +32,7 @@ outline: [2, 3]
 
 <img src="./resources/basic-concepts-slides/slide-04.webp" alt="第 04 页课件：动作和动作空间（Action and Action Space）" width="642" height="480" loading="lazy">
 
-动作是机器人能够发出的指令。课件把五个动作记作 a₁（↑）、a₂（→）、a₃（↓）、a₄（←）和 a₅（原地不动），没有斜走。给定状态 s，把能在那一格发出的指令列出来，得到动作空间 𝒜(s)。
-
-本例在边角也能发出五种指令。能发出「向上」和向上以后能不能移动，是两个问题。其他任务也可以为不同状态规定不同的动作集合。
+动作是机器人能发出的指令。课件把向上、向右、向下、向左和原地不动记作 a₁ 至 a₅，图中的圆圈表示 a₅。状态 s 下可选的指令组成动作空间 𝒜(s)，可随状态而变。本例在边角也允许发出向上的指令，是否能移动由环境决定。
 
 ### 第 05 页 · 一步状态转移（State Transition）
 
@@ -57,6 +55,8 @@ outline: [2, 3]
 <img src="./resources/basic-concepts-slides/slide-07.webp" alt="第 07 页课件：把状态转移写成表" width="642" height="480" loading="lazy">
 
 先找当前状态所在的行，再找执行动作所在的列。比如 s₅ 行、a₂ 列写着 s₆，就读作「从 s₅ 向右会到 s₆」。当每组状态和动作都只有一个结果时，每个单元格只需写一个下一状态。
+
+老师先用 s₁、a₁ 示范，向上撞墙后还是 s₁。若另设规则，允许撞墙后以不同概率弹到 s₄ 或 s₇，这种每格只填一个落点的表就不够了。
 
 <details>
 <summary>展开完整状态转移表</summary>
@@ -82,9 +82,7 @@ outline: [2, 3]
 
 <img src="./resources/basic-concepts-slides/slide-08.webp" alt="第 08 页课件：状态转移概率（State Transition Probability）" width="642" height="480" loading="lazy">
 
-设想机器人向右时可能被风吹偏。只写一个落点就不够了，要写出各个落点出现的可能性。概率 1 表示必然发生，0 表示不会发生，0.5 表示有一半的机会。
-
-用 p(s′ | s, a) 写这个条件概率（conditional probability）。竖线右边给定当前状态 s 和动作 a，左边的 s′ 是想问的下一状态。无风时，从 s₁ 向右到 s₂ 的概率为 1，到其他格的概率为 0。有风时，课件设想同一个向右动作可能各以 0.5 的概率把机器人带到 s₂ 或 s₅。
+条件概率（conditional probability）p(s′ | s, a) 表示给定当前格 s 和动作 a 后，到达下一格 s′ 的概率。s₁ 向右时，无风必到 s₂，因此该落点的概率为 1，其他为 0。有风时，同一个向右动作可能各以 0.5 的概率把机器人带到 s₂ 或 s₅。
 
 ### 第 09 页 · 策略（Policy）
 
@@ -100,7 +98,7 @@ outline: [2, 3]
 
 <img src="./resources/basic-concepts-slides/slide-10.webp" alt="第 10 页课件：用概率写确定性策略（Deterministic Policy）" width="642" height="480" loading="lazy">
 
-用 π（读作 pi）表示策略。π(a | s) 问的是「给定当前状态 s，机器人选动作 a 的概率」。第 09 页的箭头在 s₁ 指向右，因此 π(a₂ | s₁) = 1，其余四个动作的概率都为 0。每个状态只指定一个动作，这样的策略叫作确定性策略。
+箭头能显示确定的走法。用条件概率 π(a | s) 则可以描述任意状态下选择各动作的机会。π（读作 pi）表示策略。同一格内，各动作的概率之和为 1。图中 s₁ 的向右概率 π(a₂ | s₁) 为 1，其余四项为 0。每格都这样指定一个动作，就是确定性策略。
 
 ### 第 11 页 · 随机策略（Stochastic Policy）
 
@@ -144,7 +142,7 @@ outline: [2, 3]
 
 <img src="./resources/basic-concepts-slides/slide-13.webp" alt="第 13 页课件：奖励（Reward）" width="642" height="480" loading="lazy">
 
-环境在执行一次动作后给机器人一个数，这个数叫作奖励。若目标是让总得分更高，正数鼓励，负数惩罚，零表示这一步没有奖惩。和一个会扣分的动作相比，得 0 分仍然更可取。也可以把正数记作代价，此时目标是让总成本尽量低。
+奖励（reward）是执行一次动作后收到的数。最大化总得分时，正数鼓励，负数惩罚，零表示没有奖惩，相对扣分仍更可取。也可以反过来用正数记惩罚、负数记鼓励，同时把目标改为最小化总成本。
 
 ### 第 14 页 · 给网格里的动作打分
 
@@ -162,6 +160,8 @@ outline: [2, 3]
 <img src="./resources/basic-concepts-slides/slide-15.webp" alt="第 15 页课件：把奖励写成表" width="642" height="480" loading="lazy">
 
 同样先找状态行，再找动作列。在 s₁ 向上时，奖励是 −1。选择原地不动时，奖励是 0。对照第 07 页会发现，这两个动作的下一状态都是 s₁，但得分不同。
+
+这张表也只适用于每组状态和动作都给出一个确定奖励的情形。若奖励大小随机，就要写出各分数的概率。
 
 <details>
 <summary>展开完整奖励表</summary>
@@ -265,6 +265,8 @@ outline: [2, 3]
 - p(sₜ₊₁ | sₜ, aₜ, Hₜ) = p(sₜ₊₁ | sₜ, aₜ)
 - p(rₜ₊₁ | sₜ, aₜ, Hₜ) = p(rₜ₊₁ | sₜ, aₜ)
 
+老师用三个词帮助记忆。Markov 指无记忆性，decision 指用策略做选择，process 指状态与奖励随交互逐步产生。
+
 ### 第 25 页 · 固定策略后，只看状态怎样变化
 
 <img src="./resources/basic-concepts-slides/slide-25.webp" alt="第 25 页课件：固定策略后，只看状态怎样变化" width="642" height="480" loading="lazy">
@@ -278,3 +280,5 @@ outline: [2, 3]
 <img src="./resources/basic-concepts-slides/slide-26.webp" alt="第 26 页课件：用一步行动串起全课" width="642" height="480" loading="lazy">
 
 指着网格里的 s₁ 走一遍。当前位置是状态，向右是动作，策略给出选它的概率，环境决定下一格和这一步的奖励。连续走下去得到轨迹，在终止状态停下就完成一个回合。加总轨迹上的奖励得到回报，给未来奖励乘上逐步衰减的权重则得到折扣回报。马尔可夫决策过程把这些规则放进同一个模型。
+
+下一课会用贝尔曼公式计算固定策略下的状态价值。 [第 2 课 · 贝尔曼公式 · V1（逐页）](bellman-equation-slides.md)
