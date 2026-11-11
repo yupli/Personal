@@ -1,6 +1,6 @@
-# 第 1 课 · 基本概念（总结版）
+# 第 1 课 · 基本概念 · V2（总结）
 
-[切换到 PPT 逐页版](basic-concepts-slides.md)
+[切换到 V1（逐页）](basic-concepts-slides.md)
 
 ## 1. 状态、动作与环境反馈
 

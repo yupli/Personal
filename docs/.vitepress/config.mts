@@ -1,5 +1,4 @@
 import { defineConfig } from "vitepress";
-import mathjax3 from "markdown-it-mathjax3";
 import container from "markdown-it-container";
 
 const BASE = "/Personal/";
@@ -22,10 +21,10 @@ export default defineConfig({
   ],
 
   markdown: {
+    math: true,
     theme: { light: "github-light", dark: "github-dark" },
     lineNumbers: true,
     config: (md) => {
-      md.use(mathjax3);
       // 自定义 algorithm 容器
       md.use(container, "algorithm", {
         render(tokens, idx, _options, env) {
@@ -156,8 +155,15 @@ export default defineConfig({
         {
           text: "第 1 课 · 基本概念",
           items: [
-            { text: "总结版", link: "/reinforcement-learning/basic-concepts" },
-            { text: "PPT 逐页版", link: "/reinforcement-learning/basic-concepts-slides" },
+            { text: "V1（逐页）", link: "/reinforcement-learning/basic-concepts-slides" },
+            { text: "V2（总结）", link: "/reinforcement-learning/basic-concepts" },
+          ],
+        },
+        {
+          text: "第 2 课 · 贝尔曼公式",
+          items: [
+            { text: "V1（逐页）", link: "/reinforcement-learning/bellman-equation-slides" },
+            { text: "V2（总结）", link: "/reinforcement-learning/bellman-equation" },
           ],
         },
       ],
