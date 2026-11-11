@@ -4,7 +4,7 @@ outline: [2, 3]
 
 # 第 1 课 · 基本概念（PPT 逐页版）
 
-[切换到讲解版](basic-concepts.md)
+[切换到总结版](basic-concepts.md)
 
 ## 上半讲 · 状态、动作与策略
 
