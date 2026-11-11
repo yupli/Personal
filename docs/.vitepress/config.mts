@@ -153,7 +153,13 @@ export default defineConfig({
       ],
       "/reinforcement-learning/": [
         { text: "强化学习", link: "/reinforcement-learning/" },
-        { text: "第 1 课 · 基本概念", link: "/reinforcement-learning/basic-concepts" },
+        {
+          text: "第 1 课 · 基本概念",
+          items: [
+            { text: "讲解版", link: "/reinforcement-learning/basic-concepts" },
+            { text: "PPT 逐页版", link: "/reinforcement-learning/basic-concepts-slides" },
+          ],
+        },
       ],
     },
 

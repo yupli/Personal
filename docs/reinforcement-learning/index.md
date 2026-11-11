@@ -2,4 +2,4 @@
 
 ## 目录
 
-- [第 1 课 · 基本概念](basic-concepts.md)。用网格世界串起状态、动作、策略、奖励与回报，理解马尔可夫决策过程。
+- 第 1 课 · 基本概念。[讲解版](basic-concepts.md) · [PPT 逐页版](basic-concepts-slides.md)
