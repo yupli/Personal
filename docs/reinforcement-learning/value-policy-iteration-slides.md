@@ -6,7 +6,7 @@ outline: [2, 3]
 
 [切换到 V2（总结）](value-policy-iteration.md)
 
-## Part 1 · 值迭代
+## Part 1 · Value Iteration
 
 ### 第 01 页 · 从求解方程到实际算法
 
@@ -30,7 +30,7 @@ outline: [2, 3]
 
 <img src="./resources/value-policy-iteration-slides/iteration-04.webp" alt="第 04 页课件：把最优方程写成迭代" loading="lazy">
 
-贝尔曼最优方程是 $v=Tv$，其中 $Tv=\max_\pi(\mathbf r_\pi+\gamma P_\pi v)$，最大值逐状态取。第 3 课的收缩映射定理说明，从任意 $v_0$ 反复做 $v_{k+1}=Tv_k$，价值都会收敛到 $v^*$。用 $v^*$ 比较首步动作，可提取最优策略。这就是值迭代。
+贝尔曼最优方程是 $v=Tv$，其中 $Tv=\max_\pi(\mathbf r_\pi+\gamma P_\pi v)$，最大值逐状态取。第 3 课的收缩映射定理（contraction mapping theorem）说明，从任意 $v_0$ 反复做 $v_{k+1}=Tv_k$，价值都会收敛到 $v^*$。用 $v^*$ 比较首步动作，可提取最优策略。这就是值迭代。
 
 ### 第 05 页 · 一次更新拆成选动作和写价值
 
@@ -42,25 +42,25 @@ outline: [2, 3]
 
 <img src="./resources/value-policy-iteration-slides/iteration-06.webp" alt="第 06 页课件：从矩阵公式转为逐状态实现" loading="lazy">
 
-矩阵向量形式适合描述整个算子和证明收敛。实现时要列出每个状态的可选动作，逐个计算「平均即时奖励加折扣后续价值」，再比较这些数。下面分别写出选动作和更新价值的逐状态形式。
+矩阵向量形式（matrix–vector form）适合描述整个算子和证明收敛。实现时采用逐状态形式（elementwise form），要列出每个状态的可选动作，逐个计算「平均即时奖励加折扣后续价值」，再比较这些数。下面分别写出选动作和更新价值的逐状态形式。
 
-### 第 07 页 · 策略更新 · 每个状态选最大动作
+### 第 07 页 · Policy update · 选最大动作
 
-<img src="./resources/value-policy-iteration-slides/iteration-07.webp" alt="第 07 页课件：策略更新 · 每个状态选最大动作" loading="lazy">
+<img src="./resources/value-policy-iteration-slides/iteration-07.webp" alt="第 07 页课件：Policy update · 选最大动作" loading="lazy">
 
 对每个 $s,a$ 算 $q_k(s,a)=\sum_r p(r\mid s,a)r+\gamma\sum_{s'}p(s'\mid s,a)v_k(s')$。用动作概率加权的结果不能超过最大的 $q_k$，所以可给任一最大动作概率 1、其余概率 0。这样的选择称为贪心策略（greedy policy）。此时的 $q_k$ 随估计 $v_k$ 改变。
 
-### 第 08 页 · 价值更新 · 把最大值记下来
+### 第 08 页 · Value update · 记录最大值
 
-<img src="./resources/value-policy-iteration-slides/iteration-08.webp" alt="第 08 页课件：价值更新 · 把最大值记下来" loading="lazy">
+<img src="./resources/value-policy-iteration-slides/iteration-08.webp" alt="第 08 页课件：Value update · 记录最大值" loading="lazy">
 
 既然贪心策略只选一个最大动作，就可以把按新策略求平均简化为 $v_{k+1}(s)=\max_a q_k(s,a)$。$\arg\max$ 给出动作，$\max$ 给出它的数值。程序可以在遍历动作时同时保存两者。
 
-### 第 09 页 · 值迭代伪代码
+### 第 09 页 · Value Iteration pseudocode
 
-<img src="./resources/value-policy-iteration-slides/iteration-09.webp" alt="第 09 页课件：值迭代伪代码" loading="lazy">
+<img src="./resources/value-policy-iteration-slides/iteration-09.webp" alt="第 09 页课件：Value Iteration pseudocode" loading="lazy">
 
-已知每个状态动作对的奖励和转移模型。先给出 $v_0$。每轮用同一份旧值，遍历全部状态和它们的全部动作，算 $q_k$、记录最大动作并保存 $v_{k+1}$。全部状态处理后才进入下一轮。相邻两轮的价值差低于预设阈值时可以停止，例如课上用 0.001 说明阈值的含义，输出价值估计及相应的贪心策略。
+已知每个状态动作对的奖励和转移模型（transition model）。先给出 $v_0$。每轮用同一份旧值，遍历全部状态和它们的全部动作，算 $q_k$、记录最大动作并保存 $v_{k+1}$。全部状态处理后才进入下一轮。停止条件（stopping criterion）是相邻两轮的价值差低于预设阈值，课上以 0.001 为例。达到条件后输出价值估计及相应的贪心策略。
 
 ### 第 10 页 · 四格算例 · 给每个动作列出计算式
 
@@ -80,7 +80,7 @@ outline: [2, 3]
 
 把 $v_1$ 代入。$s_1$ 向下是 $0+0.9(1)=0.9$，停留是 0，向右是 $-1+0.9(1)=-0.1$，因此改为向下。其余三格仍选之前的动作，值变为 $1.9$，故 $v_2=(0.9,1.9,1.9,1.9)$。后三格能立即持续得 1，$s_1$ 最快在第二步开始得 1，所以此时策略已最优。价值估计还没到 $(9,10,10,10)$，程序仍要按阈值继续更新。
 
-## Part 2 · 策略迭代
+## Part 2 · Policy Iteration
 
 ### 第 13 页 · 进入策略迭代
 
@@ -88,9 +88,9 @@ outline: [2, 3]
 
 值迭代从一组价值估计出发。接下来改从一套实际的策略出发，先算它的价值，再借这组价值找更好的动作。
 
-### 第 14 页 · 策略迭代 · 先评价，再改进
+### 第 14 页 · Policy Iteration · 评价与改进
 
-<img src="./resources/value-policy-iteration-slides/iteration-14.webp" alt="第 14 页课件：策略迭代 · 先评价，再改进" loading="lazy">
+<img src="./resources/value-policy-iteration-slides/iteration-14.webp" alt="第 14 页课件：Policy Iteration · 评价与改进" loading="lazy">
 
 给定初始策略 $\pi_0$。策略评价（policy evaluation，PE）固定当前 $\pi_k$，求出它的价值 $v_{\pi_k}=\mathbf r_{\pi_k}+\gamma P_{\pi_k}v_{\pi_k}$。策略改进（policy improvement，PI）用这组已经求出的价值，逐状态选最大的首步动作，得到 $\pi_{k+1}$。
 
@@ -100,15 +100,15 @@ outline: [2, 3]
 
 一轮的输入是策略，先算出该策略的价值，再用价值改出下一套策略。接下来依次讨论怎样解评价方程、为什么改进不会变差、怎样达到最优，以及它和值迭代的联系。
 
-### 第 16 页 · 用直接求解或内层迭代做策略评价
+### 第 16 页 · Exact policy evaluation · 两种解法
 
-<img src="./resources/value-policy-iteration-slides/iteration-16.webp" alt="第 16 页课件：用直接求解或内层迭代做策略评价" loading="lazy">
+<img src="./resources/value-policy-iteration-slides/iteration-16.webp" alt="第 16 页课件：Exact policy evaluation · 两种解法" loading="lazy">
 
-可解 $(I-\gamma P_{\pi_k})v_{\pi_k}=\mathbf r_{\pi_k}$，也可固定 $\pi_k$ 反复做 $v^{(j+1)}=\mathbf r_{\pi_k}+\gamma P_{\pi_k}v^{(j)}$，直到得到该策略的价值。状态多时，显式求逆通常代价较大，因此也常用迭代。$k$ 数外层换策略的轮次，$j$ 数同一套策略内部更新了多少次。
+可解 $(I-\gamma P_{\pi_k})v_{\pi_k}=\mathbf r_{\pi_k}$，也可固定 $\pi_k$ 反复做 $v^{(j+1)}=\mathbf r_{\pi_k}+\gamma P_{\pi_k}v^{(j)}$，直到得到该策略的价值。闭式解（closed-form solution）可用线性方程组求得。状态多时，显式求逆通常代价较大，因此也常用迭代求解（iterative solution）。$k$ 数外层循环换策略的轮次，$j$ 数内层循环评价同一策略的步数。
 
-### 第 17 页 · 为什么贪心改进不会变差
+### 第 17 页 · Policy improvement lemma
 
-<img src="./resources/value-policy-iteration-slides/iteration-17.webp" alt="第 17 页课件：为什么贪心改进不会变差" loading="lazy">
+<img src="./resources/value-policy-iteration-slides/iteration-17.webp" alt="第 17 页课件：Policy improvement lemma" loading="lazy">
 
 旧策略用自己的动作分布对 $q_{\pi_k}(s,a)$ 求平均，新策略选最大值，所以用旧价值做一次新策略更新就有 $T_{\pi_{k+1}}v_{\pi_k}\ge v_{\pi_k}$。用新策略继续更新会保持逐状态大小关系，极限是新策略真实价值。因此 $v_{\pi_{k+1}}\ge v_{\pi_k}$，这里允许两者打平。
 
@@ -124,23 +124,23 @@ outline: [2, 3]
 
 策略迭代的收敛可以借助值迭代的收敛来证明。第三段还会说明，两种方法都是截断策略迭代的特殊情况，差别在于选好新策略后固定它更新几次。
 
-### 第 20 页 · 评价的逐状态公式
+### 第 20 页 · Policy evaluation · 逐状态公式
 
-<img src="./resources/value-policy-iteration-slides/iteration-20.webp" alt="第 20 页课件：评价的逐状态公式" loading="lazy">
+<img src="./resources/value-policy-iteration-slides/iteration-20.webp" alt="第 20 页课件：Policy evaluation · 逐状态公式" loading="lazy">
 
 评价期间一直用 $\pi_k(a\mid s)$ 给各动作加权。把旧的内层估计 $v^{(j)}_{\pi_k}$ 放进折扣项，算出全部状态的 $v^{(j+1)}_{\pi_k}$。可以迭代到相邻值差很小，理论上的完全评价对应求到方程的固定点。
 
-### 第 21 页 · 改进的逐状态公式
+### 第 21 页 · Policy improvement · 逐状态公式
 
-<img src="./resources/value-policy-iteration-slides/iteration-21.webp" alt="第 21 页课件：改进的逐状态公式" loading="lazy">
+<img src="./resources/value-policy-iteration-slides/iteration-21.webp" alt="第 21 页课件：Policy improvement · 逐状态公式" loading="lazy">
 
 用刚求得的真实价值 $v_{\pi_k}$ 来算 $q_{\pi_k}(s,a)$。它的含义是先指定动作 $a$，再按旧策略走。逐状态选 $a_k^*(s)\in\arg\max_a q_{\pi_k}(s,a)$，新策略给这个动作概率 1。即使旧策略从来不选某个首步，也要把它纳入比较。
 
-### 第 22 页 · 策略迭代伪代码
+### 第 22 页 · Policy Iteration pseudocode
 
-<img src="./resources/value-policy-iteration-slides/iteration-22.webp" alt="第 22 页课件：策略迭代伪代码" loading="lazy">
+<img src="./resources/value-policy-iteration-slides/iteration-22.webp" alt="第 22 页课件：Policy Iteration pseudocode" loading="lazy">
 
-外层从 $\pi_0$ 开始。每一轮先固定策略，内层迭代到评价完成；接着用评价结果遍历所有状态与动作，选出新策略。若原策略在各状态已经是贪心的，就可停止。若采用并列时优先保留原动作的规则，这可以直接通过检查策略是否改变来实现。
+外层从 $\pi_0$ 开始。每一轮先固定策略，内层迭代到评价完成；接着用评价结果遍历所有状态与动作，选出新策略。若原策略在各状态已经是贪心的，就可停止。若采用保留原动作的并列处理规则（tie-breaking rule），这可以直接通过检查策略是否改变来实现。
 
 ### 第 23 页 · 两格算例 · 读懂初始箭头
 
@@ -148,15 +148,15 @@ outline: [2, 3]
 
 左格 $s_1$ 是普通格，右格 $s_2$ 是目标。可选左、停、右，撞边界扣 1 并留在原地，进入或停在目标得 1，其余为 0，$\gamma=0.9$。左图的初始策略在两格都向左，右图的目标策略在 $s_1$ 向右、在 $s_2$ 停留。下面用算法求出右图的动作。
 
-### 第 24 页 · 两格算例 · 先求旧策略价值
+### 第 24 页 · Policy evaluation · 两格算例
 
-<img src="./resources/value-policy-iteration-slides/iteration-24.webp" alt="第 24 页课件：两格算例 · 先求旧策略价值" loading="lazy">
+<img src="./resources/value-policy-iteration-slides/iteration-24.webp" alt="第 24 页课件：Policy evaluation · 两格算例" loading="lazy">
 
 从 $s_1$ 向左会一直撞墙，所以 $v_{\pi_0}(s_1)=-1+0.9v_{\pi_0}(s_1)=-10$。从 $s_2$ 向左，先得 0 并到 $s_1$，所以 $v_{\pi_0}(s_2)=0+0.9(-10)=-9$。用全零值迭代评价，前三轮依次为 $(-1,0)$、$(-1.9,-0.9)$、$(-2.71,-1.71)$，继续算会趋于同一结果。目标格是起点，过去到达它时的得分不计入当前回报。
 
-### 第 25 页 · 两格算例 · 比较左右和停留
+### 第 25 页 · Policy improvement · 两格算例
 
-<img src="./resources/value-policy-iteration-slides/iteration-25.webp" alt="第 25 页课件：两格算例 · 比较左右和停留" loading="lazy">
+<img src="./resources/value-policy-iteration-slides/iteration-25.webp" alt="第 25 页课件：Policy improvement · 两格算例" loading="lazy">
 
 把 $(-10,-9)$ 代入动作值。按左、停、右排列，$s_1$ 是 $(-10,-9,-7.1)$，$s_2$ 是 $(-9,-7.1,-9.1)$。例如 $s_1$ 向右是 $1+0.9(-9)=-7.1$，表示进目标之后仍按旧策略离开。选出的新策略在左格向右、右格停留，重新评价可得 $(10,10)$。本例一轮改进已最优，程序还需用停止条件确认。
 
@@ -178,7 +178,7 @@ outline: [2, 3]
 
 后面的几轮把能到达目标的走法逐步传到更远的格子。普通格早期可能原地不动，因为沿当时已知走法还看不到更高回报。等相邻格的策略能走到目标，再朝它移动就有价值。从 $\pi_2$ 到 $\pi_3$，右下方的一些格子开始向左接上通往目标的路线。到 $\pi_9$，接近目标的格子大多已有合适的动作，较远的格子仍在调整。课件的 $\pi_{10}$ 从各个起点都可以走到目标，有绕行路线时会避开代价高的禁区。
 
-## Part 3 · 截断策略迭代
+## Part 3 · Truncated Policy Iteration
 
 ### 第 29 页 · 进入截断策略迭代
 
@@ -210,35 +210,35 @@ outline: [2, 3]
 
 固定刚选出的 $\pi_1$，以旧值 $v_0$ 开始评价。做 1 次就是值迭代的一次更新，做若干次后提早停下就是截断策略迭代，求到极限就是完整评价。这里的「无穷次」指迭代评价的理论极限，也可以直接求解贝尔曼方程。
 
-### 第 34 页 · 截断策略迭代伪代码
+### 第 34 页 · Truncated Policy Iteration pseudocode
 
-<img src="./resources/value-policy-iteration-slides/iteration-34.webp" alt="第 34 页课件：截断策略迭代伪代码" loading="lazy">
+<img src="./resources/value-policy-iteration-slides/iteration-34.webp" alt="第 34 页课件：Truncated Policy Iteration pseudocode" loading="lazy">
 
-课件按「评价当前策略、贪心改进」编排。每轮评价沿用上一轮的价值估计作内层起点，固定当前策略做 $m$ 次同步更新，把第 $m$ 次的结果交给下一次改进。代码要分清外层的策略轮次与内层的评价步数。单看一轮中动作没有变化，未必能确认近似价值已经收敛。
+课件按「评价当前策略、贪心改进」编排。每轮评价沿用上一轮的价值估计作内层起点，固定当前策略做 $m$ 次同步更新，把第 $m$ 次的结果交给下一次改进。代码要分清外层的策略轮次与内层的评价步数（evaluation steps）。单看一轮中动作没有变化，未必能确认近似价值已经收敛。
 
-### 第 35 页 · 为什么少做几步仍可能提升价值
+### 第 35 页 · Value improvement · 逐步提升的条件
 
-<img src="./resources/value-policy-iteration-slides/iteration-35.webp" alt="第 35 页课件：为什么少做几步仍可能提升价值" loading="lazy">
+<img src="./resources/value-policy-iteration-slides/iteration-35.webp" alt="第 35 页课件：Value improvement · 逐步提升的条件" loading="lazy">
 
 课件命题从上一套策略的真实价值 $v_{\pi_{k-1}}$ 出发，固定对它贪心的新策略 $\pi_k$。第一次更新已经不低于起点。固定策略的更新会保持逐状态大小关系，所以第二次也不低于第一次，依此类推。这个逐步改进结论依赖所述起点条件，不能套到随意指定的初始估计上。
 
-### 第 36 页 · 读懂三条收敛示意线
+### 第 36 页 · Convergence · 三条示意线
 
-<img src="./resources/value-policy-iteration-slides/iteration-36.webp" alt="第 36 页课件：读懂三条收敛示意线" loading="lazy">
+<img src="./resources/value-policy-iteration-slides/iteration-36.webp" alt="第 36 页课件：Convergence · 三条示意线" loading="lazy">
 
 图把值迭代、截断策略迭代和策略迭代放在同一个最优值下比较。对齐共同的初值后，完整评价至少达到一次更新的价值。值迭代又收敛到最优价值，于是可以用上下界理解策略迭代的收敛。示意图把有限次评价的曲线画在一次更新与完整评价之间。横轴是外层轮次，每轮做的计算量不同。
 
 当前视频从第 36 页跳到第 40 页。第 37–39 页用作者公开课件补齐。
 
-### 第 37 页 · 误差实验怎样设置（课件补充）
+### 第 37 页 · Value error · 实验设置（课件补充）
 
-<img src="./resources/value-policy-iteration-slides/iteration-37.webp" alt="第 37 页课件：误差实验怎样设置" loading="lazy">
+<img src="./resources/value-policy-iteration-slides/iteration-37.webp" alt="第 37 页课件：Value error · 实验设置" loading="lazy">
 
 沿用五乘五网格和课件给出的初始策略。这里用 $\|v_k-v^*\|$ 画价值误差，以小于 0.01 为停止条件。这个对照实验预先有 $v^*$。实际未知最优值时，可检查相邻价值差或贝尔曼残差。
 
-### 第 38 页 · 比较四种评价步数（课件补充）
+### 第 38 页 · Evaluation steps · 四组对比（课件补充）
 
-<img src="./resources/value-policy-iteration-slides/iteration-38.webp" alt="第 38 页课件：比较四种评价步数" loading="lazy">
+<img src="./resources/value-policy-iteration-slides/iteration-38.webp" alt="第 38 页课件：Evaluation steps · 四组对比" loading="lazy">
 
 图比较每轮固定策略评价 $m=1,3,6,100$ 步。横轴是外层轮次，纵轴是价值误差。$m=1$ 是每次只更新一次的情形。不同小图纵轴刻度不同，要用刻度比较误差大小；起初的误差也可能先升高。
 
