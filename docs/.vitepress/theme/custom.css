@@ -395,6 +395,71 @@ html:not(.dark) .VPDoc .aside-curtain {
   text-decoration-thickness: 2px;
 }
 
+/* 强化学习总结页的长文、算例和公式。 */
+.rl-summary .vp-doc {
+  --doc-prose-lh: 1.85;
+  --doc-prose-p-gap: 1em;
+  font-family: Inter, "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  font-size: clamp(1rem, 0.98rem + 0.2vw, 1.0625rem);
+}
+
+.rl-summary .vp-doc p {
+  text-align: start;
+}
+
+.rl-summary .vp-doc :is(h2, h3, strong) {
+  font-weight: 700;
+}
+
+.rl-summary .vp-doc h3 {
+  font-size: 1.125rem;
+  line-height: 1.5;
+}
+
+.rl-summary .vp-doc figure {
+  margin: 1.4rem 0;
+}
+
+.rl-summary .vp-doc figure img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin-inline: auto;
+}
+
+.rl-summary .vp-doc figcaption {
+  margin: 0.65rem auto 0;
+  max-width: 38rem;
+  color: var(--vp-c-text-2);
+  font-size: 0.9rem;
+  line-height: 1.65;
+}
+
+.rl-summary .vp-doc mjx-container[display="true"] {
+  padding: 0.45rem 0.65rem;
+  background: var(--vp-c-bg-soft);
+  border-radius: 8px;
+}
+
+.rl-summary .vp-doc mjx-container[display="true"] > svg {
+  max-width: 100%;
+  height: auto;
+}
+
+@media (max-width: 640px) {
+  .rl-summary .vp-doc :is(th, td) {
+    padding: 0.5rem 0.6rem;
+  }
+
+  .rl-summary .vp-doc th {
+    min-width: 4em;
+  }
+
+  .rl-summary .vp-doc :is(th, td) mjx-container {
+    white-space: nowrap;
+  }
+}
+
 /* ----- 提示块（Material 式） ----- */
 .custom-block {
   border-radius: var(--vp-radius);
