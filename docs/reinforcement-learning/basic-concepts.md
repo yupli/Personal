@@ -6,12 +6,12 @@ pageClass: rl-summary
 
 [切换到 V1（逐页）](basic-concepts-slides.md)
 
-## 1. 状态、动作与环境反馈
+## 1. States, Actions & Transitions
 
-一次交互从当前状态开始。智能体先选动作，环境再返回一笔奖励和一个新状态。例如在左上角 $s_1$ 向右，会到达 $s_2$ 并得到 0 分。
+一次<strong>智能体与环境的交互（agent–environment interaction）</strong>从当前状态开始。智能体先选动作，环境再返回一笔奖励和一个新状态。例如在左上角 $s_1$ 向右，会到达 $s_2$ 并得到 0 分。
 
 - <strong>状态（state）</strong>记录智能体（agent）当前所处的情形。网格中用 $s_1$ 到 $s_9$ 表示位置，构成状态空间 $\mathcal S$。
-- <strong>动作空间（action space）</strong> $\mathcal A(s)$ 是状态 $s$ 下可选的指令。本例 $a_1$ 至 $a_5$ 依次为上、右、下、左、原地不动。
+- <strong>动作空间（action space）</strong> $\mathcal A(s)$ 是状态 $s$ 下可选的指令。在这个网格世界（grid world）中，$a_1$ 至 $a_5$ 依次为上、右、下、左、原地不动。
 - <strong>状态转移（state transition）</strong>由环境决定。$p(s'\mid s,a)$ 表示在 $s$ 做 $a$ 后到达 $s'$ 的概率。无风时 $s_1$ 向右必到 $s_2$，有风时则可能落在 $s_2$ 或 $s_5$。
 - <strong>奖励（reward）</strong>是当前一步得到的分数。$p(r\mid s,a)$ 表示在 $s$ 做 $a$ 后得到 $r$ 的概率。从 $s_1$ 向上撞墙和主动停留都留在 $s_1$，但奖励分别是 $-1$ 和 0。只看落点还不能判断奖励。
 
@@ -21,12 +21,12 @@ pageClass: rl-summary
 </figure>
 
 <details>
-<summary>展开状态转移与奖励表</summary>
+<summary>Transition & reward table（展开）</summary>
 
 按当前状态查行、按动作查列。每格依次给出下一状态和即时奖励。
 
 <table>
-  <thead><tr><th scope="col">状态</th><th scope="col">a₁ ↑</th><th scope="col">a₂ →</th><th scope="col">a₃ ↓</th><th scope="col">a₄ ←</th><th scope="col">a₅ ○</th></tr></thead>
+  <thead><tr><th scope="col">State</th><th scope="col">a₁ ↑</th><th scope="col">a₂ →</th><th scope="col">a₃ ↓</th><th scope="col">a₄ ←</th><th scope="col">a₅ ○</th></tr></thead>
   <tbody>
     <tr><th scope="row">s₁</th><td>s₁，−1</td><td>s₂，0</td><td>s₄，0</td><td>s₁，−1</td><td>s₁，0</td></tr>
     <tr><th scope="row">s₂</th><td>s₂，−1</td><td>s₃，0</td><td>s₅，0</td><td>s₁，0</td><td>s₂，0</td></tr>
@@ -42,9 +42,9 @@ pageClass: rl-summary
 
 </details>
 
-## 2. 策略决定选哪个动作
+## 2. Policy · 怎样选动作
 
-<strong>策略（policy）</strong> $\pi(a\mid s)$ 给出在 $s$ 选择 $a$ 的概率。同一个状态下，这些概率加起来为 1。换一个状态，就按新状态对应的规则选动作。
+<strong>策略（policy）</strong> $\pi(a\mid s)$ 给出在 $s$ 选择 $a$ 的概率。同一个状态下，这些概率加起来为 1。换一个状态，就按新状态的动作分布（action distribution）选动作。
 
 - <strong>确定性策略（deterministic policy）</strong>给一个动作概率 1。例如 $s_1$ 总是向右。
 - <strong>随机策略（stochastic policy）</strong>给多个动作正概率。例如 $s_1$ 向右、向下各 0.5。
@@ -52,12 +52,12 @@ pageClass: rl-summary
 <strong>策略概率回答「打算怎么走」，转移概率回答「选定后会到哪儿」。</strong> 假设策略有 0.5 的概率选向右，而选中后又只有 0.8 的概率落到右边的 $s_2$。那么「选向右且落到 $s_2$」这条分支的概率是 $0.5\times0.8=0.4$。
 
 <details>
-<summary>展开策略表</summary>
+<summary>Policy table（展开）</summary>
 
 每格是选动作的概率。把 s₁ 行改为 (0, 1, 0, 0, 0)，就得到例子里的确定性策略。
 
 <table>
-  <thead><tr><th scope="col">状态</th><th scope="col">a₁ ↑</th><th scope="col">a₂ →</th><th scope="col">a₃ ↓</th><th scope="col">a₄ ←</th><th scope="col">a₅ ○</th></tr></thead>
+  <thead><tr><th scope="col">State</th><th scope="col">a₁ ↑</th><th scope="col">a₂ →</th><th scope="col">a₃ ↓</th><th scope="col">a₄ ←</th><th scope="col">a₅ ○</th></tr></thead>
   <tbody>
     <tr><th scope="row">s₁</th><td>0</td><td>0.5</td><td>0.5</td><td>0</td><td>0</td></tr>
     <tr><th scope="row">s₂</th><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td></tr>
@@ -73,7 +73,7 @@ pageClass: rl-summary
 
 </details>
 
-## 3. 从单步奖励到整条轨迹的回报
+## 3. Rewards, Trajectories & Returns
 
 <strong>轨迹（trajectory）</strong>按顺序记录状态、动作与奖励。从 $s_1$ 选向右、得到 0 分并到达 $s_2$，就是一条轨迹的第一步。<strong>回报（return）</strong>把一条轨迹上的奖励合起来。先比较下面两条只算到达目标那一步、暂时不做折扣的路线。
 
@@ -82,9 +82,9 @@ pageClass: rl-summary
   <figcaption>两条路都在第四步到达目标。路线 A 的回报为 0 + 0 + 0 + 1 = 1，路线 B 在第二步进了禁区，回报为 0 − 1 + 0 + 1 = 0。</figcaption>
 </figure>
 
-两条路线到达的是同一个目标，但累计分数不同。如果某个策略以 0.5 的概率走路线 A、以 0.5 的概率走路线 B，它一次实际运行的回报是 1 或 0，多次运行的平均回报是 $0.5(1)+0.5(0)=0.5$。第 2 课会用这个平均来评价策略。
+两条路线到达的是同一个目标，但累计分数不同。如果某个策略以 0.5 的概率走路线 A、以 0.5 的概率走路线 B，它一次实际运行的回报是 1 或 0，多次运行的平均回报是 $0.5(1)+0.5(0)=0.5$。这个加权平均叫期望回报（expected return），第 2 课会用它评价策略。
 
-## 4. 回合、持续任务与折扣回报
+## 4. Episodes & Discounted Return
 
 从起点一直走到<strong>终止状态（terminal state）</strong>，这段交互称为一个<strong>回合（episode）</strong>。到达目标是否意味着回合结束，由任务规则决定。<strong>持续型任务（continuing task）</strong>会在到达目标后继续计算后续交互。
 
@@ -109,7 +109,7 @@ $$
 
 当 $\gamma=0.5$ 时，终止版本的回报是 $0.5^3=0.125$，持续版本是 $0.125/(1-0.5)=0.25$。$\gamma=0$ 时只计第一步，越接近 1 则越重视远期奖励。只要每步奖励有界，折扣后的总和就是有限的。
 
-## 5. 马尔可夫决策过程
+## 5. Markov Decision Process (MDP)
 
 <strong>马尔可夫决策过程（Markov decision process，MDP）</strong>统一描述环境的状态、可选动作、奖励和状态转移。折扣因子决定怎样计算回报。策略 $\pi(a\mid s)$ 则是在这套规则下选动作的方案。
 

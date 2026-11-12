@@ -6,7 +6,7 @@ outline: [2, 3]
 
 [切换到 V2（总结）](bellman-equation.md)
 
-## Part 1 · 为什么要计算回报
+## Part 1 · Why Return Matters
 
 ### 第 01 页 · 贝尔曼公式在课程中的位置
 
@@ -40,9 +40,9 @@ outline: [2, 3]
 
 评估策略好坏也为改进策略提供依据。要比较改动是否有用，先在同一起点上量化原策略的表现。
 
-### 第 06 页 · 策略一的折扣回报
+### 第 06 页 · Discounted Return · 策略一
 
-<img src="./resources/bellman-equation-slides/bellman-06.webp" alt="第 06 页课件：策略一的折扣回报" width="642" height="480" loading="lazy">
+<img src="./resources/bellman-equation-slides/bellman-06.webp" alt="第 06 页课件：Discounted Return · 策略一" width="642" height="480" loading="lazy">
 
 第一步到 $s_3$ 得 0，第二步进入 $s_4$ 得 1，此后每次停留仍得 1。折扣因子为 $\gamma$ 时，回报是 $0+\gamma+\gamma^2+\cdots=\gamma/(1-\gamma)$。第一个正奖励在第二步，权重从 $\gamma$ 开始。
 
@@ -52,9 +52,9 @@ outline: [2, 3]
 
 第一步进入 $s_2$ 得 −1，后续奖励序列与策略一相同。回报为 $-1+\gamma/(1-\gamma)$，恰好比策略一少 1，因为扣分发生在第一步，权重为 1。
 
-### 第 08 页 · 策略三的平均回报
+### 第 08 页 · Expected Return · 随机策略
 
-<img src="./resources/bellman-equation-slides/bellman-08.webp" alt="第 08 页课件：策略三的平均回报" width="642" height="480" loading="lazy">
+<img src="./resources/bellman-equation-slides/bellman-08.webp" alt="第 08 页课件：Expected Return · 随机策略" width="642" height="480" loading="lazy">
 
 从 $s_1$ 向下与向右各有 0.5 的概率。一次实际走法只会拿到第 06 页或第 07 页的回报。按两条轨迹的概率求平均，得到 $0.5[\gamma/(1-\gamma)]+0.5[-1+\gamma/(1-\gamma)]=-0.5+\gamma/(1-\gamma)$。
 
@@ -66,15 +66,15 @@ outline: [2, 3]
 
 从同一个 $s_1$ 比较，后续奖励项相同，首步得分或平均得分依次为 0、−0.5、−1。因此策略一优于策略三，策略三优于策略二。这一排序针对当前起点。换到三个策略走法相同的格子，价值也可能相同。
 
-### 第 10 页 · 方法一，按定义展开回报
+### 第 10 页 · Direct Sum · 展开奖励序列
 
-<img src="./resources/bellman-equation-slides/bellman-10.webp" alt="第 10 页课件：方法一，按定义展开回报" width="642" height="480" loading="lazy">
+<img src="./resources/bellman-equation-slides/bellman-10.webp" alt="第 10 页课件：Direct Sum · 展开奖励序列" width="642" height="480" loading="lazy">
 
 图中的箭头形成 $s_1\to s_2\to s_3\to s_4\to s_1$ 的循环，$r_i$ 是离开 $s_i$ 这一跳的奖励。记从 $s_i$ 出发的回报为 $v_i$，则 $v_1=r_1+\gamma r_2+\gamma^2r_3+\cdots$。从别的格出发时，按同一循环把奖励序列移到相应起点。
 
-### 第 11 页 · 方法二，把剩余回报交给下一状态
+### 第 11 页 · Recursive Calculation · 从下一状态倒推
 
-<img src="./resources/bellman-equation-slides/bellman-11.webp" alt="第 11 页课件：方法二，把剩余回报交给下一状态" width="642" height="480" loading="lazy">
+<img src="./resources/bellman-equation-slides/bellman-11.webp" alt="第 11 页课件：Recursive Calculation · 从下一状态倒推" width="642" height="480" loading="lazy">
 
 把 $v_1$ 的第一项拿出来，括号里剩下的 $r_2+\gamma r_3+\cdots$ 正是 $v_2$。同理可得 $v_1=r_1+\gamma v_2$、$v_2=r_2+\gamma v_3$、$v_3=r_3+\gamma v_4$、$v_4=r_4+\gamma v_1$。这些价值互相依赖，用下一状态的价值表示当前价值称为自举（bootstrapping）。
 
@@ -94,7 +94,7 @@ outline: [2, 3]
 
 用第 06 页的策略写出 $v_1=\gamma v_3$、$v_2=1+\gamma v_4$、$v_3=1+\gamma v_4$、$v_4=1+\gamma v_4$。先解只有一个未知量的最后一式，再依次得到 $v_2,v_3,v_1$。这里可以手算，也可以让程序联立求解。逐个倒推可行，是因为三个格最终都进入目标格的自循环。
 
-## Part 2 · 状态价值
+## Part 2 · State Value
 
 ### 第 14 页 · 从单条轨迹转向状态价值
 
@@ -102,9 +102,9 @@ outline: [2, 3]
 
 有随机性的策略或环境可能让同一起点产生不同回报。接下来给这些回报取条件期望，得到每个起点对应的一个状态价值。
 
-### 第 15 页 · 记号与单步随机过程
+### 第 15 页 · Notation · 单步随机过程
 
-<img src="./resources/bellman-equation-slides/bellman-15.webp" alt="第 15 页课件：记号与单步随机过程" width="642" height="480" loading="lazy">
+<img src="./resources/bellman-equation-slides/bellman-15.webp" alt="第 15 页课件：Notation · 单步随机过程" width="642" height="480" loading="lazy">
 
 在时刻 $t$，状态是 $S_t$，动作是 $A_t$，随后得到奖励 $R_{t+1}$ 和下一状态 $S_{t+1}$。大写字母表示随机变量，小写 $s,a,r,s'$ 表示取到的具体值。
 
@@ -118,9 +118,9 @@ outline: [2, 3]
 
 连续重复单步过程得到一条轨迹。从时刻 $t$ 算起，$G_t=R_{t+1}+\gamma R_{t+2}+\gamma^2 R_{t+3}+\cdots$。由于后续奖励可能随机，$G_t$ 也可能有多个取值。
 
-### 第 17 页 · 状态价值是条件期望
+### 第 17 页 · State Value as a Conditional Expectation
 
-<img src="./resources/bellman-equation-slides/bellman-17.webp" alt="第 17 页课件：状态价值是条件期望" width="642" height="480" loading="lazy">
+<img src="./resources/bellman-equation-slides/bellman-17.webp" alt="第 17 页课件：State Value as a Conditional Expectation" width="642" height="480" loading="lazy">
 
 固定策略 $\pi$，从 $s$ 出发的平均回报是 $v_\pi(s)=\mathbb E_\pi[G_t\mid S_t=s]$。给定同一个 $s$，换策略可能改变平均回报。如果选动作、转移和奖励都是确定的，从 $s$ 出发只有一种回报，期望就等于该回报。
 
@@ -132,7 +132,7 @@ outline: [2, 3]
 
 第 06、07 页各只有一个回报，第 08 页有两个可能的回报。因此 $v_{\pi_1}(s_1)=\gamma/(1-\gamma)$，$v_{\pi_2}(s_1)=-1+\gamma/(1-\gamma)$，$v_{\pi_3}(s_1)=-0.5+\gamma/(1-\gamma)$。第三个值是平均值，一次实际走完只会得到两个分支之一的回报。
 
-## Part 3 · 贝尔曼公式的推导
+## Part 3 · Deriving the Bellman Equation
 
 ### 第 19 页 · 进入贝尔曼公式的推导
 
@@ -146,9 +146,9 @@ outline: [2, 3]
 
 从 $s$ 出发的回报由当前一步以及后续轨迹组成。下一步可能去多个状态，所以当前价值会依赖这些状态的价值。前面的循环例子只有一个确定落点，下面把这个关系推广到随机情形。
 
-### 第 21 页 · 把回报拆成两项
+### 第 21 页 · Return Decomposition · 拆成两项
 
-<img src="./resources/bellman-equation-slides/bellman-21.webp" alt="第 21 页课件：把回报拆成两项" width="642" height="480" loading="lazy">
+<img src="./resources/bellman-equation-slides/bellman-21.webp" alt="第 21 页课件：Return Decomposition · 拆成两项" width="642" height="480" loading="lazy">
 
 从定义提出第一项，得到 $G_t=R_{t+1}+\gamma G_{t+1}$。对给定 $S_t=s$ 的两项分别取期望：
 
@@ -157,9 +157,9 @@ v_\pi(s)=\mathbb E_\pi[R_{t+1}\mid S_t=s]
 +\gamma\,\mathbb E_\pi[G_{t+1}\mid S_t=s].
 $$
 
-### 第 22 页 · 第一项，平均即时奖励
+### 第 22 页 · Expected Immediate Reward
 
-<img src="./resources/bellman-equation-slides/bellman-22.webp" alt="第 22 页课件：第一项，平均即时奖励" width="642" height="480" loading="lazy">
+<img src="./resources/bellman-equation-slides/bellman-22.webp" alt="第 22 页课件：Expected Immediate Reward" width="642" height="480" loading="lazy">
 
 先固定动作 $a$，按 $p(r\mid s,a)$ 对即时奖励 $r$ 加权。动作本身也由策略随机选择，所以再按 $\pi(a\mid s)$ 对不同动作的结果加权。
 
@@ -168,9 +168,9 @@ $$
 =\sum_a\pi(a\mid s)\sum_r p(r\mid s,a)r.
 $$
 
-### 第 23 页 · 第二项，平均后续回报
+### 第 23 页 · Expected Future Return
 
-<img src="./resources/bellman-equation-slides/bellman-23.webp" alt="第 23 页课件：第二项，平均后续回报" width="642" height="480" loading="lazy">
+<img src="./resources/bellman-equation-slides/bellman-23.webp" alt="第 23 页课件：Expected Future Return" width="642" height="480" loading="lazy">
 
 先按下一状态 $s'$ 分组。固定同一策略，在 $s'$ 已知后，马尔可夫性质让我们只用 $v_\pi(s')$ 表示此后的平均回报。到达 $s'$ 的概率本身要把所有动作的贡献加起来。
 
@@ -181,9 +181,9 @@ $$
 =\sum_{s'}v_\pi(s')\sum_a \pi(a\mid s)p(s'\mid s,a).
 $$
 
-### 第 24 页 · 合成贝尔曼公式
+### 第 24 页 · Bellman Expectation Equation
 
-<img src="./resources/bellman-equation-slides/bellman-24.webp" alt="第 24 页课件：合成贝尔曼公式" width="642" height="480" loading="lazy">
+<img src="./resources/bellman-equation-slides/bellman-24.webp" alt="第 24 页课件：Bellman Expectation Equation" width="642" height="480" loading="lazy">
 
 第 22 页与第 23 页都按同一个策略对动作求平均。把 $\pi(a\mid s)$ 提出来，括号内便是选中 $a$ 后的平均即时奖励，加上折扣后的下一状态平均价值。
 
@@ -213,9 +213,9 @@ $\pi(a\mid s)$ 是要评价的策略，两个 $p$ 是环境模型给出的概率
 
 $s_2$ 和 $s_3$ 都以 +1 进入 $s_4$。到了 $s_4$ 后原地不动，每步仍为 +1。令 $v_i=v_\pi(s_i)$，四个等式为 $v_1=\gamma v_3$、$v_2=1+\gamma v_4$、$v_3=1+\gamma v_4$、$v_4=1+\gamma v_4$。
 
-### 第 28 页 · 从自循环解出目标格
+### 第 28 页 · Self-loop · 解出目标格的价值
 
-<img src="./resources/bellman-equation-slides/bellman-28.webp" alt="第 28 页课件：从自循环解出目标格" width="642" height="480" loading="lazy">
+<img src="./resources/bellman-equation-slides/bellman-28.webp" alt="第 28 页课件：Self-loop · 解出目标格的价值" width="642" height="480" loading="lazy">
 
 先把 $\gamma v_4$ 移到左边，得到 $v_4=1/(1-\gamma)$。代入得 $v_2=v_3=1/(1-\gamma)$，最后 $v_1=\gamma/(1-\gamma)$。这与第 06 页沿轨迹累加的结果相同。
 
@@ -237,7 +237,7 @@ $s_1$ 各以 0.5 的概率向右和向下。右转立即得 −1 并到 $s_2$，
 
 $v_1=0.5(-1+\gamma v_2)+0.5(0+\gamma v_3)$。代入 $v_2=v_3=1/(1-\gamma)$，得 $v_1=-0.5+\gamma/(1-\gamma)$。取 $\gamma=0.9$，起点价值为 8.5，其余三个格仍为 10。与第 29 页相比，起点降低的 0.5 来自一半概率的首步惩罚。
 
-## Part 4 · 矩阵形式与求解
+## Part 4 · Matrix Form & Policy Evaluation
 
 ### 第 32 页 · 转入矩阵形式
 
@@ -264,9 +264,9 @@ $$
 
 于是逐状态式可写为 $v_\pi(s)=r_\pi(s)+\gamma\sum_{s'}p_\pi(s'\mid s)v_\pi(s')$。
 
-### 第 35 页 · 把所有状态排成矩阵
+### 第 35 页 · Matrix–Vector Form
 
-<img src="./resources/bellman-equation-slides/bellman-35.webp" alt="第 35 页课件：把所有状态排成矩阵" width="642" height="480" loading="lazy">
+<img src="./resources/bellman-equation-slides/bellman-35.webp" alt="第 35 页课件：Matrix–Vector Form" width="642" height="480" loading="lazy">
 
 $\mathbf v_\pi$ 与 $\mathbf r_\pi$ 各有 $n$ 个分量。$P_\pi$ 是 $n\times n$ 的转移矩阵，第 $i$ 行第 $j$ 列表示从 $s_i$ 到 $s_j$ 的概率。每行概率之和为 1。
 
@@ -276,15 +276,15 @@ $$
 
 矩阵乘法的第 $i$ 个分量就是第 $i$ 个状态的下一步平均价值。
 
-### 第 36 页 · 确定性策略的转移矩阵
+### 第 36 页 · Transition Matrix · 确定性策略
 
-<img src="./resources/bellman-equation-slides/bellman-36.webp" alt="第 36 页课件：确定性策略的转移矩阵" width="642" height="480" loading="lazy">
+<img src="./resources/bellman-equation-slides/bellman-36.webp" alt="第 36 页课件：Transition Matrix · 确定性策略" width="642" height="480" loading="lazy">
 
 按 $s_1,s_2,s_3,s_4$ 排列，$\mathbf r_\pi=(0,1,1,1)^\mathsf T$。$P_\pi$ 第一行的 1 在第 3 列，表示 $s_1$ 必到 $s_3$。其余三行的 1 都在第 4 列，最后一行表示 $s_4$ 的自循环。
 
-### 第 37 页 · 随机策略的转移矩阵
+### 第 37 页 · Transition Matrix · 随机策略
 
-<img src="./resources/bellman-equation-slides/bellman-37.webp" alt="第 37 页课件：随机策略的转移矩阵" width="642" height="480" loading="lazy">
+<img src="./resources/bellman-equation-slides/bellman-37.webp" alt="第 37 页课件：Transition Matrix · 随机策略" width="642" height="480" loading="lazy">
 
 随机策略只改第一行。它是 $(0,0.5,0.5,0)$，分别对应向右到 $s_2$ 和向下到 $s_3$。奖励向量的第一项也变成 $0.5(-1)+0.5(0)=-0.5$。代回矩阵的第一行，就得到第 31 页的起点方程。
 
@@ -294,17 +294,17 @@ $$
 
 矩阵里的奖励和转移由给定策略决定。接下来用这组已知量求 $\mathbf v_\pi$，也就是执行策略评估。
 
-### 第 39 页 · 为什么要解状态价值
+### 第 39 页 · Policy Evaluation · 求状态价值
 
-<img src="./resources/bellman-equation-slides/bellman-39.webp" alt="第 39 页课件：为什么要解状态价值" width="642" height="480" loading="lazy">
+<img src="./resources/bellman-equation-slides/bellman-39.webp" alt="第 39 页课件：Policy Evaluation · 求状态价值" width="642" height="480" loading="lazy">
 
 状态价值描述给定策略从各个起点出发的平均表现。接下来用闭式解和迭代解计算它。
 
 老师把求值和改进连在一起。先知道现有策略在各状态的表现，才能用这些价值判断怎样改进策略。
 
-### 第 40 页 · 闭式解与迭代解
+### 第 40 页 · Closed-form & Iterative Solutions
 
-<img src="./resources/bellman-equation-slides/bellman-40.webp" alt="第 40 页课件：闭式解与迭代解" width="642" height="480" loading="lazy">
+<img src="./resources/bellman-equation-slides/bellman-40.webp" alt="第 40 页课件：Closed-form & Iterative Solutions" width="642" height="480" loading="lazy">
 
 移项得到 $(I-\gamma P_\pi)\mathbf v_\pi=\mathbf r_\pi$，其中 $I$ 是单位矩阵。有限状态、$0\le\gamma<1$ 时，闭式解和迭代式分别是
 
@@ -316,9 +316,9 @@ $$
 
 闭式解给出精确关系，实际可以求解线性方程组。迭代从任意初值开始，反复用上一轮的价值更新全部状态，避免显式求逆。
 
-### 第 41 页 · 为什么迭代会收敛
+### 第 41 页 · Convergence · 为什么迭代有效
 
-<img src="./resources/bellman-equation-slides/bellman-41.webp" alt="第 41 页课件：为什么迭代会收敛" width="642" height="480" loading="lazy">
+<img src="./resources/bellman-equation-slides/bellman-41.webp" alt="第 41 页课件：Convergence · 为什么迭代有效" width="642" height="480" loading="lazy">
 
 把第 $k$ 轮与真值之差记为 $\delta_k=\mathbf v_k-\mathbf v_\pi$。将迭代式减去真值满足的贝尔曼方程，奖励项抵消，得到 $\delta_{k+1}=\gamma P_\pi\delta_k$。重复展开就是 $\delta_k=\gamma^k P_\pi^k\delta_0$。$P_\pi^k$ 的每行仍是概率分布，所以其加权平均不会放大最大绝对误差。$\gamma^k$ 趋向 0，因此迭代收敛到真值。
 
@@ -338,7 +338,7 @@ $$
 
 上图的策略一直向右，最终反复撞右边界，价值全为负。下图的策略是随机生成的一套箭头，许多格会碰墙或进禁区，也有些格一直原地不动。
 
-## Part 5 · 动作价值
+## Part 5 · Action Value
 
 ### 第 44 页 · 进入动作价值
 
@@ -346,17 +346,17 @@ $$
 
 状态价值把所有可能的首步动作按策略平均。接下来固定第一个动作，看看从同一格选择不同指令各值多少。
 
-### 第 45 页 · 状态价值与动作价值的区别
+### 第 45 页 · State Value vs. Action Value
 
-<img src="./resources/bellman-equation-slides/bellman-45.webp" alt="第 45 页课件：状态价值与动作价值的区别" width="642" height="480" loading="lazy">
+<img src="./resources/bellman-equation-slides/bellman-45.webp" alt="第 45 页课件：State Value vs. Action Value" width="642" height="480" loading="lazy">
 
 状态价值给定起点，首步仍由策略选择。动作价值（action value）同时给定起点和首步动作，从第二步起再按原策略走。要比较在同一格向右和向下，动作价值就能把两种选择分开。
 
 在同一状态比较各动作时，动作价值较高表示指定该动作后，按同一策略继续能得到更高的平均回报。
 
-### 第 46 页 · 动作价值的定义
+### 第 46 页 · Action Value · 固定首步
 
-<img src="./resources/bellman-equation-slides/bellman-46.webp" alt="第 46 页课件：动作价值的定义" width="642" height="480" loading="lazy">
+<img src="./resources/bellman-equation-slides/bellman-46.webp" alt="第 46 页课件：Action Value · 固定首步" width="642" height="480" loading="lazy">
 
 $q_\pi(s,a)=\mathbb E_\pi[G_t\mid S_t=s,A_t=a]$。它取决于状态、指定动作和之后采用的策略。若把第一个动作交回给策略，就按其概率平均：
 
@@ -364,9 +364,9 @@ $$
 v_\pi(s)=\sum_a\pi(a\mid s)q_\pi(s,a).
 $$
 
-### 第 47 页 · 用下一状态的价值计算动作价值
+### 第 47 页 · Action Value from State Value
 
-<img src="./resources/bellman-equation-slides/bellman-47.webp" alt="第 47 页课件：用下一状态的价值计算动作价值" width="642" height="480" loading="lazy">
+<img src="./resources/bellman-equation-slides/bellman-47.webp" alt="第 47 页课件：Action Value from State Value" width="642" height="480" loading="lazy">
 
 贝尔曼公式中按动作加权的括号，正是固定首步动作后得到的价值。
 
@@ -416,8 +416,8 @@ $$
 
 从一条轨迹的折扣回报出发，对给定起点的回报取平均得到状态价值。把即时奖励和后续价值拆开，就能写出贝尔曼方程，最后把固定首步动作的部分单独拿出来定义动作价值。
 
-### 第 52 页 · 公式回顾
+### 第 52 页 · Bellman Equation · 公式回顾
 
-<img src="./resources/bellman-equation-slides/bellman-52.webp" alt="第 52 页课件：公式回顾" width="642" height="480" loading="lazy">
+<img src="./resources/bellman-equation-slides/bellman-52.webp" alt="第 52 页课件：Bellman Equation · 公式回顾" width="642" height="480" loading="lazy">
 
 状态价值是给定状态的平均回报，动作价值再固定首步动作。逐状态贝尔曼公式计算平均即时奖励加上折扣后的下一状态平均价值。把各状态的式子并起来得到 $\mathbf v_\pi=\mathbf r_\pi+\gamma P_\pi\mathbf v_\pi$，可解线性方程组，也可迭代更新。
