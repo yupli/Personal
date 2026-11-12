@@ -166,6 +166,13 @@ export default defineConfig({
             { text: "V2（总结）", link: "/reinforcement-learning/bellman-equation" },
           ],
         },
+        {
+          text: "第 3 课 · 贝尔曼最优公式",
+          items: [
+            { text: "V1（逐页）", link: "/reinforcement-learning/bellman-optimality-slides" },
+            { text: "V2（总结）", link: "/reinforcement-learning/bellman-optimality" },
+          ],
+        },
       ],
     },
 
