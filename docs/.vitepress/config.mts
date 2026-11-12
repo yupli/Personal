@@ -173,6 +173,13 @@ export default defineConfig({
             { text: "V2（总结）", link: "/reinforcement-learning/bellman-optimality" },
           ],
         },
+        {
+          text: "第 4 课 · 值迭代与策略迭代",
+          items: [
+            { text: "V1（逐页）", link: "/reinforcement-learning/value-policy-iteration-slides" },
+            { text: "V2（总结）", link: "/reinforcement-learning/value-policy-iteration" },
+          ],
+        },
       ],
     },
 
