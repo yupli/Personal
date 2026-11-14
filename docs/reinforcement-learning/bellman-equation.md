@@ -172,19 +172,11 @@ $$
 \end{aligned}
 $$
 
-#### Iterative Policy Evaluation Pseudocode
+#### Iterative Policy Evaluation · 课件原页
 
-```text
-Input: fixed policy π, model, γ, tolerance θ
-Initialize V for every state
-Repeat:
-    For each state s:
-        V_next(s) ← r_π(s) + γ Σ_s′ P_π(s, s′) V(s′)
-    Δ ← max_s |V_next(s) − V(s)|
-    V ← V_next
-Until Δ ≤ θ
-Return V
-```
+<figure>
+  <img src="./resources/bellman-equation/bellman-40-procedure.webp" alt="原课件第 40 页的迭代解与收敛公式" width="571" height="202" loading="lazy">
+</figure>
 
 一轮内固定策略和整份旧价值。误差递推给出 $\|V-v_\pi\|_\infty\le\gamma\Delta/(1-\gamma)$，其中 $V$ 指刚完成更新后的向量。
 

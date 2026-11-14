@@ -50,18 +50,9 @@ $$
 
 ### Value Iteration Pseudocode · PPT 9
 
-```text
-Initialize V for every state
-Repeat:
-    For each state s:
-        Evaluate q_V(s, a) for every available action a
-        V_next(s) ← max_a q_V(s, a)
-    Δ ← max_s |V_next(s) − V(s)|
-    V ← V_next
-Until Δ ≤ θ
-Choose π greedy with respect to the final V
-Return V and π
-```
+<figure>
+  <img src="./resources/value-policy-iteration/iteration-09-procedure.webp" alt="原课件第 9 页的 Value Iteration 伪代码" width="559" height="343" loading="lazy">
+</figure>
 
 $q_V$ 的整轮计算都读取更新前的 $V$。
 
@@ -87,16 +78,9 @@ $$
 
 ### Policy Iteration Pseudocode · PPT 22
 
-```text
-Initialize a deterministic policy π
-Repeat:
-    Solve V = T_π V for the current π
-    For each state s:
-        Choose π_next(s) maximizing q_V(s, ·)
-        Keep π(s) when it is already a maximizing action
-    If π_next = π, return V and π
-    π ← π_next
-```
+<figure>
+  <img src="./resources/value-policy-iteration/iteration-22-procedure.webp" alt="原课件第 22 页的 Policy Iteration 伪代码" width="605" height="408" loading="lazy">
+</figure>
 
 完整评价可通过解线性方程组完成，也可用内层同步迭代逼近。若只做近似评价，动作稳定这一判断还取决于估计精度。
 
@@ -153,17 +137,9 @@ $$
 
 ### Truncated Policy Iteration Pseudocode · PPT 34
 
-```text
-Input: initial policy π, value estimate V, sweep budget m ≥ 1
-Repeat:
-    For j = 1, …, m:
-        V_next ← T_π V  (synchronous sweep)
-        V ← V_next
-    π_next ← greedy policy with respect to V
-    Check the Bellman residual or the iteration budget
-    If stopping, return V and π_next
-    π ← π_next
-```
+<figure>
+  <img src="./resources/value-policy-iteration/iteration-34-procedure.webp" alt="原课件第 34 页的 Truncated Policy Iteration 伪代码" width="560" height="403" loading="lazy">
+</figure>
 
 遵循课件先评价、后改进的次序。每轮评价沿用上一轮的价值，内层固定策略，做满 $m$ 次后才进行贪心选择。第一段评价之后，这个循环与上面的截断更新式对齐。
 

@@ -61,19 +61,9 @@ $$
 
 第一行用模型加权，$\bar r(s,a)$ 是平均即时奖励。第二行直接对固定首步后的回报取期望。MC 用样本估计第二行。
 
-```text
-Input: initial policy π, episodes per pair N
-Repeat:
-    For each state–action pair (s, a):
-        Generate N episodes starting with (s, a)
-        Follow the same π after the first action
-        Q(s, a) ← mean of the N discounted returns
-    For each state s:
-        π_next(s) ← an action maximizing Q(s, ·)
-    π ← π_next
-Until the estimates stabilize or the sampling budget is reached
-Return Q and π
-```
+<figure>
+  <img src="./resources/monte-carlo/mc-16-procedure.webp" alt="原课件第 16 页的 MC Basic 伪代码" width="555" height="323" loading="lazy">
+</figure>
 
 精确评价时，MC Basic 与策略迭代的贪心改进一致。有限样本下，动作值接近时可能排错序。策略暂时不变也不能证明已经最优。
 
@@ -113,22 +103,11 @@ $$
 
 ### MC Exploring Starts Pseudocode · PPT 35
 
-```text
-Initialize π, Q and visit counts N(s, a) = 0
-For each episode:
-    Draw (S₀, A₀), allowing every pair as a start
-    Execute A₀ and follow π to generate the episode
-    G ← 0
-    For t = T−1 down to 0:
-        G ← Rₜ₊₁ + γG
-        If (Sₜ, Aₜ) appeared before time t, continue
-        N(Sₜ, Aₜ) ← N(Sₜ, Aₜ) + 1
-        Q(Sₜ, Aₜ) ← Q(Sₜ, Aₜ) + (G − Q(Sₜ, Aₜ)) / N(Sₜ, Aₜ)
-        π(Sₜ) ← an action maximizing Q(Sₜ, ·)
-Return Q and π when training stops
-```
+<figure>
+  <img src="./resources/monte-carlo/mc-35-procedure.webp" alt="原课件第 35 页的 MC Exploring Starts 伪代码" width="596" height="372" loading="lazy">
+</figure>
 
-用累计次数与增量均值代替课件的 Returns 列表。第 $N$ 个回报 $G$ 到来时，
+实现时可以用累计次数与增量均值代替截图里的 Returns 列表。第 $N$ 个回报 $G$ 到来时，
 
 $$
 Q_{\mathrm{new}}
@@ -186,24 +165,11 @@ $$
 
 ### MC ε-Greedy Pseudocode · PPT 43
 
-```text
-Input: 0 < ε ≤ 1 and an allowed start-state distribution
-Initialize an ε-greedy policy π, Q and all counts N = 0
-For each episode:
-    Draw S₀ and follow π from the first action onward
-    G ← 0
-    For t = T−1 down to 0:
-        G ← Rₜ₊₁ + γG
-        N(Sₜ, Aₜ) ← N(Sₜ, Aₜ) + 1
-        Q(Sₜ, Aₜ) ← Q(Sₜ, Aₜ) + (G − Q(Sₜ, Aₜ)) / N(Sₜ, Aₜ)
-        b ← an action maximizing Q(Sₜ, ·)
-        m ← number of available actions at Sₜ
-        Set π(a | Sₜ) ← ε/m for every available action a
-        Add 1−ε to π(b | Sₜ)
-Return Q and π when training stops
-```
+<figure>
+  <img src="./resources/monte-carlo/mc-43-procedure.webp" alt="原课件第 43 页的 MC ε-Greedy 伪代码" width="554" height="400" loading="lazy">
+</figure>
 
-第 43 页同时写了 every-visit 和「此前未出现」的判断，后者属于 first-visit。这里按该页标注的 every-visit 更新，计入同一回合内的重复访问。回合从任务允许的起点开始，首步也按软策略采样。
+第 43 页同时写了 every-visit 和「此前未出现」的判断，后者属于 first-visit。按 every-visit 实现时应略过这条过滤判断，计入同一回合内的重复访问。若无需探索性起点，回合从任务允许的起点开始，首步也按软策略采样。
 
 ## 5. Exploration vs. Optimality
 
