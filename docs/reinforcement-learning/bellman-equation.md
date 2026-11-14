@@ -175,7 +175,7 @@ $$
 #### Iterative Policy Evaluation · 课件原页
 
 <figure>
-  <img src="./resources/bellman-equation/bellman-40-procedure.webp" alt="原课件第 40 页的迭代解与收敛公式" width="571" height="202" loading="lazy">
+  <img src="./resources/bellman-equation/bellman-40-procedure.webp" alt="原课件第 40 页的迭代解与收敛公式" width="571" height="265" loading="lazy">
 </figure>
 
 一轮内固定策略和整份旧价值。误差递推给出 $\|V-v_\pi\|_\infty\le\gamma\Delta/(1-\gamma)$，其中 $V$ 指刚完成更新后的向量。
