@@ -180,6 +180,13 @@ export default defineConfig({
             { text: "V2（总结）", link: "/reinforcement-learning/value-policy-iteration" },
           ],
         },
+        {
+          text: "第 5 课 · 蒙特卡洛方法",
+          items: [
+            { text: "V1（逐页）", link: "/reinforcement-learning/monte-carlo-slides" },
+            { text: "V2（总结）", link: "/reinforcement-learning/monte-carlo" },
+          ],
+        },
       ],
     },
 
