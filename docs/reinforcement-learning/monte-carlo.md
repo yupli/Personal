@@ -48,6 +48,35 @@ $$
 1. <strong>Policy evaluation</strong>。固定旧策略。对每个状态动作对都指定首步，收集足够多的回合，将回报取平均。
 2. <strong>Policy improvement</strong>。每个状态选出估计值最大的动作，组成新的 greedy policy，再进入下一轮。
 
+#### MC Basic Pseudocode · PPT 16
+
+动作价值的两种写法给出两条计算路径。
+
+$$
+\begin{aligned}
+q_\pi(s,a)&=\bar r(s,a)+\gamma\sum_{s'}p(s'\mid s,a)v_\pi(s')\\
+&=\mathbb E_\pi[G_t\mid S_t=s,A_t=a].
+\end{aligned}
+$$
+
+第一行用模型加权，$\bar r(s,a)$ 是平均即时奖励。第二行直接对固定首步后的回报取期望。MC 用样本估计第二行。
+
+```text
+Input: initial policy π, episodes per pair N
+Repeat:
+    For each state–action pair (s, a):
+        Generate N episodes starting with (s, a)
+        Follow the same π after the first action
+        Q(s, a) ← mean of the N discounted returns
+    For each state s:
+        π_next(s) ← an action maximizing Q(s, ·)
+    π ← π_next
+Until the estimates stabilize or the sampling budget is reached
+Return Q and π
+```
+
+精确评价时，MC Basic 与策略迭代的贪心改进一致。有限样本下，动作值接近时可能排错序。策略暂时不变也不能证明已经最优。
+
 若共有 $M$ 个状态动作对，每对独立收集 $N$ 条回合，一轮需要 $MN$ 条。MC Basic 每条回合只用于起点。
 
 持续任务只记录 $L$ 步时，若 $|R_t|\le R_{\max}$，遗漏的折扣尾项满足
@@ -82,6 +111,33 @@ $$
 
 任意指定首状态和动作，在仿真中容易做到。在真实环境里，可能没有办法把机器人重置到任意状态。此时可以从任务允许的起点出发，让策略主动探索可达状态的其他动作。
 
+### MC Exploring Starts Pseudocode · PPT 35
+
+```text
+Initialize π, Q and visit counts N(s, a) = 0
+For each episode:
+    Draw (S₀, A₀), allowing every pair as a start
+    Execute A₀ and follow π to generate the episode
+    G ← 0
+    For t = T−1 down to 0:
+        G ← Rₜ₊₁ + γG
+        If (Sₜ, Aₜ) appeared before time t, continue
+        N(Sₜ, Aₜ) ← N(Sₜ, Aₜ) + 1
+        Q(Sₜ, Aₜ) ← Q(Sₜ, Aₜ) + (G − Q(Sₜ, Aₜ)) / N(Sₜ, Aₜ)
+        π(Sₜ) ← an action maximizing Q(Sₜ, ·)
+Return Q and π when training stops
+```
+
+用累计次数与增量均值代替课件的 Returns 列表。第 $N$ 个回报 $G$ 到来时，
+
+$$
+Q_{\mathrm{new}}
+=\frac{(N-1)Q_{\mathrm{old}}+G}{N}
+=Q_{\mathrm{old}}+\frac{G-Q_{\mathrm{old}}}{N}.
+$$
+
+计数跨回合保留，采样期间策略固定。实现时可以正向记录每对的首次索引，再倒序算回报，避免每一步都重新扫描前缀。
+
 ## 4. MC ε-Greedy · 让策略在途中探索
 
 ### Soft Policy & ε-Greedy
@@ -100,6 +156,8 @@ $$
 
 两种分支对应 <strong>exploitation</strong>（利用当前最好动作）和 <strong>exploration</strong>（随机试动作）。$\varepsilon=0$ 时是纯贪心，$\varepsilon=1$ 时是均匀分布。
 
+贪心动作与任意其他动作的概率相差 $1-\varepsilon$。为保证每个动作都有探索概率，需要 $\varepsilon>0$。
+
 ### Policy Improvement under a Fixed ε
 
 对任意给定动作值 $q(s,a)$，若把主要概率给动作 $b$，整个分布的加权动作值是
@@ -113,6 +171,39 @@ $$
 $$
 
 第一项与选谁做贪心动作无关。对 $0\le\varepsilon<1$，要让第二项最大，就选 $q$ 最大的 $b$。MC ε-Greedy 在每次采样后继续用回报均值更新动作值，课件伪代码使用 every-visit。改进时保留每个动作的探索概率。
+
+用这个分解可以写出固定 $\varepsilon$ 时的最优 Bellman 更新，其中 $m=|\mathcal A(s)|$。
+
+$$
+\begin{aligned}
+[T_\varepsilon v](s)
+&=(1-\varepsilon)\max_a q_v(s,a)\\
+&\quad+\frac{\varepsilon}{m}\sum_a q_v(s,a).
+\end{aligned}
+$$
+
+这里 $q_v$ 是用候选价值 $v$ 做一步前瞻的分数。这条公式刻画给定探索概率时的优化目标。MC 算法仍用采样回报估计动作价值。只要 $\varepsilon>0$，即使贪心动作已经找准，均匀探索项也仍会影响最终价值。
+
+### MC ε-Greedy Pseudocode · PPT 43
+
+```text
+Input: 0 < ε ≤ 1 and an allowed start-state distribution
+Initialize an ε-greedy policy π, Q and all counts N = 0
+For each episode:
+    Draw S₀ and follow π from the first action onward
+    G ← 0
+    For t = T−1 down to 0:
+        G ← Rₜ₊₁ + γG
+        N(Sₜ, Aₜ) ← N(Sₜ, Aₜ) + 1
+        Q(Sₜ, Aₜ) ← Q(Sₜ, Aₜ) + (G − Q(Sₜ, Aₜ)) / N(Sₜ, Aₜ)
+        b ← an action maximizing Q(Sₜ, ·)
+        m ← number of available actions at Sₜ
+        Set π(a | Sₜ) ← ε/m for every available action a
+        Add 1−ε to π(b | Sₜ)
+Return Q and π when training stops
+```
+
+第 43 页同时写了 every-visit 和「此前未出现」的判断，后者属于 first-visit。这里按该页标注的 every-visit 更新，计入同一回合内的重复访问。回合从任务允许的起点开始，首步也按软策略采样。
 
 ## 5. Exploration vs. Optimality
 

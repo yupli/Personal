@@ -172,6 +172,22 @@ $$
 \end{aligned}
 $$
 
+#### Iterative Policy Evaluation Pseudocode
+
+```text
+Input: fixed policy π, model, γ, tolerance θ
+Initialize V for every state
+Repeat:
+    For each state s:
+        V_next(s) ← r_π(s) + γ Σ_s′ P_π(s, s′) V(s′)
+    Δ ← max_s |V_next(s) − V(s)|
+    V ← V_next
+Until Δ ≤ θ
+Return V
+```
+
+一轮内固定策略和整份旧价值。误差递推给出 $\|V-v_\pi\|_\infty\le\gamma\Delta/(1-\gamma)$，其中 $V$ 指刚完成更新后的向量。
+
 ## 4. State Value & Action Value · 双向换算
 
 ### State Value → Action Value

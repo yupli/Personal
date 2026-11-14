@@ -145,6 +145,24 @@ $$
 2. 对每个状态取最大值，写入 $v_{k+1}(s)=\max_a q_{v_k}(s,a)$，并可记录取得最大值的动作。
 3. 全部状态更新完后，用 $v_{k+1}$ 作为下一轮的输入。可以检查两轮价值最大的差距，判断下一轮还能改变多少。若相邻两轮最多差 $d$，之后每轮差距依次至多是 $\gamma d,\gamma^2d,\ldots$，所以当前新值与最终解最多差 $\gamma d/(1-\gamma)$。
 
+### Fixed-point Iteration Pseudocode
+
+```text
+Input: model, γ, tolerance θ
+Initialize V for every state
+Repeat:
+    Q(s, a) ← expected reward + γ expected next-state V
+    V_next(s) ← max_a Q(s, a), for all s
+    Δ ← max_s |V_next(s) − V(s)|
+    V ← V_next
+Until Δ ≤ θ
+Recompute Q from the final V
+π(s) ← an action maximizing Q(s, ·), for all s
+Return V and π
+```
+
+$V$ 是价值估计。用最终价值重新比较动作，得到与返回值对应的贪心策略。
+
 ## 6. Extracting a Greedy Policy
 
 求得价值解 $v^*$ 后，固定第一步做 $a$，之后用 $v^*$ 计算后续回报，就得到<strong>最优动作价值（optimal action value）</strong>。
