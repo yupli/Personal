@@ -172,14 +172,21 @@ $$
 
 <img src="./resources/bellman-equation-slides/bellman-23.webp" alt="第 23 页课件：Expected Future Return" width="642" height="480" loading="lazy">
 
-先按下一状态 $s'$ 分组。固定同一策略，在 $s'$ 已知后，马尔可夫性质让我们只用 $v_\pi(s')$ 表示此后的平均回报。到达 $s'$ 的概率本身要把所有动作的贡献加起来。
-
-具体地，先有 $\mathbb E_\pi[G_{t+1}\mid S_t=s,S_{t+1}=s']$。给定 $S_{t+1}=s'$ 后可去掉条件里的 $S_t=s$，再用状态价值的定义得到 $v_\pi(s')$。
+先按下一状态 $s'$ 用全期望公式（law of total expectation）分组。每组的权重是按当前策略从 $s$ 到达 $s'$ 的概率 $p_\pi(s'\mid s)$。给定落点后，马尔可夫性质和固定的状态策略允许划掉条件中的旧状态 $S_t=s$。剩下的条件期望按定义就是 $v_\pi(s')$。
 
 $$
+\begin{aligned}
 \mathbb E_\pi[G_{t+1}\mid S_t=s]
-=\sum_{s'}v_\pi(s')\sum_a \pi(a\mid s)p(s'\mid s,a).
+&=\sum_{s'}p_\pi(s'\mid s)\,
+  \mathbb E_\pi[G_{t+1}\mid S_t=s,S_{t+1}=s']\\
+&=\sum_{s'}p_\pi(s'\mid s)\,
+  \mathbb E_\pi[G_{t+1}\mid S_{t+1}=s']\\
+&=\sum_{s'}p_\pi(s'\mid s)\,v_\pi(s')\\
+&=\sum_{s'}v_\pi(s')\sum_a p(s'\mid s,a)\pi(a\mid s).
+\end{aligned}
 $$
+
+最后一行对所有动作求和，因为不同动作都可能通往同一个 $s'$。这里求的是从下一时刻计价的平均后续回报，代回第 21 页的式子时才乘上 $\gamma$。
 
 ### 第 24 页 · Bellman Expectation Equation
 
