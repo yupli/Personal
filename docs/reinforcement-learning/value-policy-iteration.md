@@ -82,9 +82,27 @@ $$
 
 ## 4. Truncated Policy Iteration
 
+### Policy Iteration vs. Value Iteration
+
+沿用课件第 32 页的五步对照。记 $\mathcal G(v)$ 为对 $v$ 做一步前瞻后逐状态选出的贪心策略。为了对齐起点，令 Value Iteration 的 $v_0=v_{\pi_0}$，并让两种算法采用同样的并列动作选择规则。
+
+| Step | Policy Iteration | Value Iteration | Difference |
+| --- | --- | --- | --- |
+| 1. Initial policy | 给定 $\pi_0$ | — | VI 可以直接从价值开始 |
+| 2. Initial value | $v_{\pi_0}=T_{\pi_0}v_{\pi_0}$ | $v_0:=v_{\pi_0}$ | 对齐价值起点 |
+| 3. Greedy policy | $\pi_1=\mathcal G(v_{\pi_0})$ | $\pi_1=\mathcal G(v_0)$ | 得到同一个 $\pi_1$ |
+| 4. Value update | $v_{\pi_1}=T_{\pi_1}v_{\pi_1}$ | $v_1=T_{\pi_1}v_0$ | 完整评价与一次更新。此处 $v_{\pi_1}\ge v_1$ |
+| 5. Next policy | $\pi_2=\mathcal G(v_{\pi_1})$ | $\pi'_2=\mathcal G(v_1)$ | 输入不同，动作可能不同 |
+
+第 4 步使用同一个算子 $T_{\pi_1}v=\mathbf r_{\pi_1}+\gamma P_{\pi_1}v$。区别在右侧的价值：PI 求满足不动点方程的 $v_{\pi_1}$，VI 直接代入旧估计 $v_0$。
+
 ### Evaluation depth
 
-令值迭代与策略迭代从同一份价值 $v_0=v_{\pi_0}$ 开始。它们第一次贪心选动作时可以得到同一个 $\pi_1$。分歧发生在接下来如何评价 $\pi_1$。先固定它，以 $u_0=v_0$ 开始做 $u_{j+1}=T_{\pi_1}u_j$。
+把课件第 33 页的内层迭代写成 $u_0=v_0$、$u_{j+1}=T_{\pi_1}u_j$。在这个对齐的起点，$u_1=Tv_0\ge v_0$，且 $T_{\pi_1}$ 保持逐状态大小关系。因此
+
+$$
+u_0\le u_1\le u_2\le\cdots\le u_m\le v_{\pi_1}.
+$$
 
 | Algorithm | Evaluation steps | Next value |
 | --- | --- | --- |
@@ -92,7 +110,14 @@ $$
 | Truncated Policy Iteration | 更新有限的 $m$ 步 | $u_m$ |
 | Policy Iteration | 求到评价方程的解 | $v_{\pi_1}$ |
 
-做完有限的 $m$ 步就停，得到的是近似策略评价（approximate policy evaluation）。课件用 $j$ 记录内层已经做了几步，用截断上限 $m$ 指定什么时候停。循环是<strong>对当前值贪心选策略 → 固定这套策略更新 $m$ 次 → 用所得价值重新选策略</strong>。如果按课件伪代码从一套初始策略开始，就先执行它的第一段评价，再进入同样的循环。
+有限步截断得到近似策略评价（approximate policy evaluation）。$k$ 数外层换策略的轮次，$j$ 数内层评价步，$m$ 是每轮的截断上限。
+
+$$
+\pi_{k+1}=\mathcal G(v_k),\qquad
+v_{k+1}=(T_{\pi_{k+1}})^m v_k.
+$$
+
+若按课件伪代码从初始策略开始，先评价该策略，再进入这个循环。
 
 ### Monotone value improvement
 

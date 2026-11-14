@@ -10,9 +10,11 @@ pageClass: rl-summary
 
 智能体（agent）观察当前状态 $s\in\mathcal S$，从可用动作集合 $\mathcal A(s)$ 中选择 $a$。环境返回即时奖励 $r$ 和下一状态 $s'$。
 
-- <strong>State transition probability</strong> $p(s'\mid s,a)$ 给出当前状态和动作已知时的落点概率。
-- <strong>Reward probability</strong> $p(r\mid s,a)$ 给出同样条件下的奖励概率。
-- <strong>Joint distribution</strong> $p(s',r\mid s,a)$ 同时描述落点和奖励。对其中一个变量求和即可得到另一个变量的边缘分布。
+| Quantity | Definition |
+| --- | --- |
+| Joint distribution | $p(s',r\mid s,a)$ 同时描述落点和奖励 |
+| State transition probability | $p(s'\mid s,a)=\sum_r p(s',r\mid s,a)$ |
+| Reward probability | $p(r\mid s,a)=\sum_{s'}p(s',r\mid s,a)$ |
 
 ## 2. Policy
 

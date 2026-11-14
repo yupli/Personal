@@ -159,7 +159,18 @@ $$
 
 <strong>迭代解（iterative solution）</strong>把第 $k$ 轮的整组价值 $\mathbf v_k$ 放到等式右边，得到下一轮 $\mathbf v_{k+1}=\mathbf r_\pi+\gamma P_\pi\mathbf v_k$。全轮都用旧值，算完一组才一起换新值，这叫同步更新（synchronous update）。
 
-设误差 $\boldsymbol\delta_k=\mathbf v_k-\mathbf v_\pi$。把迭代式减去真实价值满足的方程，奖励项抵消，得到 $\boldsymbol\delta_{k+1}=\gamma P_\pi\boldsymbol\delta_k$。$P_\pi$ 的每行都是概率权重，因此一轮后的最大绝对误差至多是上一轮的 $\gamma$ 倍。第 3 课会用同样的思路说明含有最大值的公式也能迭代求解。
+令 $\boldsymbol\delta_k=\mathbf v_k-\mathbf v_\pi$。迭代式减去贝尔曼方程后，奖励项抵消。$P_\pi$ 每行的概率之和是 1，所以加权平均无法放大最大绝对误差。
+
+$$
+\begin{aligned}
+\boldsymbol\delta_{k+1}
+&=\gamma P_\pi(\mathbf v_k-\mathbf v_\pi)\\
+&=\gamma P_\pi\boldsymbol\delta_k,\\
+\|\boldsymbol\delta_k\|_\infty
+&\le\gamma^k\|\boldsymbol\delta_0\|_\infty
+\longrightarrow 0.
+\end{aligned}
+$$
 
 ## 4. State Value & Action Value · 双向换算
 

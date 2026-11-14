@@ -10,12 +10,7 @@ pageClass: rl-summary
 
 第 4 课用已知的奖励和转移概率做<strong>策略评价（policy evaluation）</strong>。如果环境的概率模型未知，但我们可以执行动作、记录奖励，就能改用<strong>样本均值（sample mean）</strong>估计价值。这就是本课的 model-free 思路。
 
-以硬币为例，正面记 $+1$，反面记 $-1$。若正反面各半，可直接算出期望 0。如果不知道正反面的概率，独立投四次得到 $1,-1,1,1$，就用样本均值 $0.5$ 估计。换四次可能得到另一结果。
-
-<figure>
-  <img src="./resources/monte-carlo/coin-mean.webp" alt="投硬币的结果在正负一之间变化，累计样本均值逐渐接近零。" loading="lazy">
-  <figcaption>散点是每次试验的结果，曲线是累计均值。后期每个新样本占的权重更小，曲线总体更稳定。</figcaption>
-</figure>
+已知概率分布时可直接求期望。模型未知时，用同一采样规则得到的样本均值估计期望。
 
 ### Law of Large Numbers
 
@@ -53,36 +48,31 @@ $$
 1. <strong>Policy evaluation</strong>。固定旧策略。对每个状态动作对都指定首步，收集足够多的回合，将回报取平均。
 2. <strong>Policy improvement</strong>。每个状态选出估计值最大的动作，组成新的 greedy policy，再进入下一轮。
 
-三乘三网格每个状态有五个动作，共 45 对。如果每对都采 100 条回合，一轮评价就要收集 4,500 条。只用每条回合的首对来更新，其余访问还没有利用起来。
+若共有 $M$ 个状态动作对，每对独立收集 $N$ 条回合，一轮需要 $MN$ 条。MC Basic 每条回合只用于起点。
 
-### Gridworld · 从同一个起点试五个动作
+持续任务只记录 $L$ 步时，若 $|R_t|\le R_{\max}$，遗漏的折扣尾项满足
 
-<figure>
-  <img src="./resources/monte-carlo/basic-grid.webp" alt="三乘三网格，左上角 s1 的旧策略向上撞墙，右下角为目标。" loading="lazy">
-  <figcaption>先任选一个首步，第二步开始沿图中的旧箭头走。取折扣因子 0.9。</figcaption>
-</figure>
+$$
+\left|G_t-G_t^{(L)}\right|
+\le \sum_{j=L}^{\infty}\gamma^jR_{\max}
+=\frac{\gamma^L R_{\max}}{1-\gamma}.
+$$
 
-| 首步 Action | 奖励序列 | 回报 Return |
-| --- | --- | ---: |
-| Up 或 Left | $-1,-1,-1,\ldots$ | $-10$ |
-| Right 或 Down | $0,0,0,1,1,\ldots$ | $7.29$ |
-| Stay | $0,-1,-1,\ldots$ | $-9$ |
-
-向右经 $s_2$，向下经 $s_4$，两路在 $s_5$ 汇合，第四步到目标。之后留在目标每步得 1，因此两者都是 $\gamma^3/(1-\gamma)=7.29$。原地停留只免掉第一步惩罚，下一步仍沿旧策略撞墙，所以它的回报是 $-\gamma/(1-\gamma)=-9$。在 $s_1$ 可以任选向右或向下作为改进动作。
-
-环境和旧策略在此例中都是确定的，指定首步后轨迹唯一。无限轨迹的回报在这里能通过几何级数算出。实际持续任务若只记录 $L$ 步，省去的尾项大小至多为 $\gamma^L R_{\max}/(1-\gamma)$，其中 $R_{\max}$ 是每步奖励绝对值的上界。五乘五实验中，短回合只能让靠近目标的起点看到正奖励。课上用「找水的探索半径」解释这个现象。回合长度从 14 增到 15 时，更远的格子才第一次有机会走到目标；延长到 30、100 步后，箭头可以先稳定，价值估计还会继续变化。
+环境和策略都确定时，固定首步便确定整条轨迹。随机情形下，增加回合条数可降低估计波动，延长回合则减少截断误差。回合太短时，远期奖励还没有进入估计，策略可能靠并列选择产生箭头。策略稳定后，估计值仍可能随长度变化。
 
 ## 3. MC Exploring Starts · 从一条轨迹多取样本
 
 ### Initial-visit, First-visit & Every-visit
 
-假设一条回合在时刻 0 和时刻 2 两次访问 $(s_1,a_2)$，在时刻 1 访问 $(s_2,a_4)$。每次访问都有自己的回报，包含该动作得到的奖励以及后续折扣奖励。
+回合长度为 $T$ 时，从 $G_T=0$ 倒序计算 $G_t=R_{t+1}+\gamma G_{t+1}$。对状态动作对 $(s,a)$，记访问时刻集合为 $I(s,a)=\{t:(S_t,A_t)=(s,a)\}$。
 
-- <strong>Initial-visit</strong>只用时刻 0 的回报，更新回合起点那一对。
-- <strong>First-visit</strong>对每个不同的状态动作对取时间上最早的访问。因此用时刻 0 和 1 的回报，跳过时刻 2 的重复访问。
-- <strong>Every-visit</strong>用每次访问的回报。时刻 0、1、2 都参与更新。
+| Method | 保留的时刻 | 更新范围 |
+| --- | --- | --- |
+| Initial-visit | $t=0$ | 只更新回合起点 |
+| First-visit | $\min I(s,a)$ | 每个已访问对在一条回合中最多一次 |
+| Every-visit | 所有 $t\in I(s,a)$ | 计入重复访问 |
 
-例如一条三步回合的奖励依次是 $0,-1,2$，取 $\gamma=0.9$。从结尾倒算，$G_2=2$，$G_1=-1+0.9(2)=0.8$，$G_0=0+0.9(0.8)=0.72$。若时刻 0 和 2 是同一对，first-visit 取 $0.72$，every-visit 同时取 $0.72$ 和 $2$。<strong>倒序计算回报，仍按正向时间判断首次访问。</strong>
+<strong>First-visit 取时间最早的一次。</strong> 倒序算回报时，最先算到的访问反而是时间最晚的。
 
 ### Episode-by-episode Update
 
@@ -108,7 +98,7 @@ $$
 \end{cases}
 $$
 
-有五个动作、$\varepsilon=0.2$ 时，每个动作先分到 $0.2/5=0.04$。贪心动作再加 $0.8$，合计 $0.84$。五项相加是 $0.84+4(0.04)=1$。$\varepsilon=0$ 时完全利用已有估计（exploitation），$\varepsilon=1$ 时均匀尝试所有动作（exploration）。
+两种分支对应 <strong>exploitation</strong>（利用当前最好动作）和 <strong>exploration</strong>（随机试动作）。$\varepsilon=0$ 时是纯贪心，$\varepsilon=1$ 时是均匀分布。
 
 ### Policy Improvement under a Fixed ε
 
@@ -126,14 +116,13 @@ $$
 
 ## 5. Exploration vs. Optimality
 
-<figure>
-  <img src="./resources/monte-carlo/epsilon-values.webp" alt="四个网格比较相同贪心方向在不同 epsilon 下的状态价值。" loading="lazy">
-  <figcaption>保持主要动作方向相同，逐步提高 ε。图中目标价值随探索增加而下降，较大 ε 下甚至为负。</figcaption>
-</figure>
+| Comparison | 课件实验说明 |
+| --- | --- |
+| Exploration | 课件比较 100、1,000、10,000 步的覆盖。均匀策略在该网格覆盖更广。较小的 $\varepsilon$ 使访问集中在已有偏好上，少见动作的估计仍可能不准。 |
+| Fixed directions | 保持贪心方向，只提高 $\varepsilon$ 时，执行次优动作的频率上升。目标附近的高惩罚动作可能使目标状态价值为负。 |
+| Reoptimized directions | 固定 $\varepsilon$ 再优化，最优性是在对应的策略类内比较。课件中 $\varepsilon=0.1$ 时主要方向仍与纯贪心最优策略一致，取 0.2 或 0.5 时已有部分方向改变。 |
 
-课件比较了 100、1,000、10,000 步的访问次数。均匀选动作时覆盖更广，但各对的访问次数仍可能不同。较小的 $\varepsilon$ 会把更多访问集中在当前策略偏好的路径。另一个实验用每轮一百万步的轨迹，两轮找到了该网格的最优 $\varepsilon$-greedy 策略。这个轮数是算例结果。
-
-<strong>固定方向再加入探索</strong>和<strong>给定 $\varepsilon$ 后重新求最优方向</strong>是两项不同的操作。第一种保持箭头，只修改概率，目标附近若有禁区，偶尔走错就可能抵消目标带来的收益。第二种重新比较长期回报，贪心方向也可能随之变化。课件中 $\varepsilon=0.1$ 时，主要方向和纯贪心最优策略一致；到 0.2、0.5 时，一些方向已经不同。固定正的 $\varepsilon$ 所优化的是相应的策略类。逐渐减小 $\varepsilon$ 可以让最终策略更接近贪心，衰减时仍要确保相关状态动作对获得足够访问。
+课件中每轮用一条一百万步的轨迹，两轮取得该网格的最优 $\varepsilon$-greedy 策略。所需轮数取决于覆盖与环境。逐渐降低 $\varepsilon$ 可让策略更接近纯贪心，同时仍要让各状态动作对获得足够访问。
 
 | Algorithm | 采样怎样开始 | 一条回合怎样用 |
 | --- | --- | --- |
