@@ -187,6 +187,20 @@ export default defineConfig({
             { text: "V2（总结）", link: "/reinforcement-learning/monte-carlo" },
           ],
         },
+        {
+          text: "第 6 课 · 随机近似与随机梯度下降",
+          items: [
+            { text: "V1（逐页）", link: "/reinforcement-learning/stochastic-approximation-slides" },
+            { text: "V2（总结）", link: "/reinforcement-learning/stochastic-approximation" },
+          ],
+        },
+        {
+          text: "第 7 课 · 时序差分方法",
+          items: [
+            { text: "V1（逐页）", link: "/reinforcement-learning/temporal-difference-slides" },
+            { text: "V2（总结）", link: "/reinforcement-learning/temporal-difference" },
+          ],
+        },
       ],
     },
 
