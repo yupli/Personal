@@ -8,7 +8,7 @@ pageClass: rl-summary
 
 ## 1. Incremental Mean Estimation
 
-设 $w_k$ 是前 $k-1$ 个样本的均值。收到 $x_k$ 后，把旧和写成 $(k-1)w_k$：
+目标是从样本流 $x_1,x_2,\ldots$ 估计总体均值 $\mu=\mathbb E[X]$。第 5 课用样本均值作为估计量，这里改变的是它的计算方式。按课件的下标，$w_k$ 是读入 $x_k$ **之前**的估计，所以在 $k\ge2$ 时包含前 $k-1$ 个样本。把旧样本和写成 $(k-1)w_k$：
 
 $$
 \begin{aligned}
@@ -18,7 +18,35 @@ w_{k+1}
 \end{aligned}
 $$
 
-第一步 $1/k=1$ 令 $w_2=x_1$。此后只需保留估计和计数。$1/k$ 保证每个样本等权。一般步长 $\alpha_k$ 给出不同权重，常数步长会对较新的数据赋予更大权重。
+第一步 $1/k=1$ 令 $w_2=x_1$，初始猜测被消去。此后只需保留估计和计数。增量算法在每一步都等于重新对已有样本求平均。
+
+### Step Size & Sample Weights
+
+把 $1/k$ 换成 $\alpha_k$，得到 $w_{k+1}=(1-\alpha_k)w_k+\alpha_k x_k$。当 $0<\alpha_k\le1$ 时，更新是旧估计和新样本的加权平均。逐次展开：
+
+$$
+\begin{aligned}
+w_{k+1}
+&=\left[\prod_{j=1}^k(1-\alpha_j)\right]w_1\\
+&\quad+\sum_{i=1}^k\left[\alpha_i
+  \prod_{j=i+1}^k(1-\alpha_j)\right]x_i.
+\end{aligned}
+$$
+
+每个样本进入时先乘 $\alpha_i$，以后每更新一次再乘相应的 $1-\alpha_j$。当 $\alpha_j=1/j$ 时，$\prod_{j=i+1}^k (j-1)/j=i/k$，所以每项权重都是 $1/k$。
+
+常数步长 $\alpha\in(0,1)$ 给 $x_i$ 权重 $\alpha(1-\alpha)^{k-i}$，越早的数据权重越小。这适合跟踪变化中的均值。若初值固定，且样本 iid、方差为 $\sigma^2>0$，独立性让方差按权重的平方相加：
+
+$$
+\begin{aligned}
+\mathbb E[w_{k+1}]-\mu&=(1-\alpha)^k(w_1-\mu),\\
+\mathrm{Var}(w_{k+1})
+&=\alpha^2\sigma^2\sum_{j=0}^{k-1}(1-\alpha)^{2j}\\
+&\longrightarrow \frac{\alpha\sigma^2}{2-\alpha}.
+\end{aligned}
+$$
+
+期望趋近 $\mu$ 时，估计的方差仍可能为正。第 7 课区分期望收敛与样本路径收敛时，也会遇到这个步长问题。
 
 ## 2. Robbins–Monro · Root Finding under Noise
 
@@ -29,6 +57,10 @@ w_{k+1}=w_k-a_k\widetilde g(w_k,\eta_k).
 $$
 
 若 $g$ 递增，根右边的正函数值把估计往左推，根左边则相反。带噪声时单次方向可能出错，因此需要同时约束步长和噪声。
+
+<figure>
+  <img src="./resources/stochastic-approximation/robbins-monro-update.webp" alt="课件第 17 页，Robbins–Monro 更新式、观测噪声和步长的定义" loading="lazy">
+</figure>
 
 ### Convergence Conditions
 
@@ -59,6 +91,21 @@ $$
 
 当步长足够小时，第一项的系数小于 1，收缩量与 $a_k$ 同阶。若条件二阶矩的上界为 $C$，第二项的总和至多为 $C\sum_k a_k^2$。
 
+### Why the Two Step-size Conditions Matter
+
+无噪声时，从足够大的轮次 $K$ 起可以取 $0\le 1-a_kh_k\le 1-c_1a_k$。展开误差递推，并用 $1-x\le e^{-x}$：
+
+$$
+\begin{aligned}
+|e_{k+1}|&\le |e_K|\prod_{j=K}^{k}(1-c_1a_j)\\
+&\le |e_K|\exp\!\left(-c_1\sum_{j=K}^{k}a_j\right).
+\end{aligned}
+$$
+
+$\sum a_k=\infty$ 让这个上界趋零。相反，对于线性 $g(w)=c(w-w^*)$，若 $0<ca_k<1$ 且 $\sum a_k<\infty$，累乘可能保留一部分初始误差。带噪声时再用 $\sum a_k^2<\infty$ 控制每步注入的方差。几乎必然收敛是 RM 定理的结论。上面的乘积只展开了无噪声的部分。
+
+课件第 34 页给出可选的 Dvoretzky 形式 $z_{k+1}=(1-\beta_k)z_k+\lambda_k\xi_k$。用它看 RM，可令 $z_k=e_k$、$\beta_k=a_kh_k$、$\lambda_k=a_k$、$\xi_k=-\eta_k$。有界正斜率把关于 $a_k$ 的条件传给 $\beta_k$，噪声项则沿用平方可和的 $a_k$。
+
 ### Mean Estimation as RM
 
 令 $\mu=\mathbb E[X]$，取 $g(w)=w-\mu$、$\widetilde g(w,x)=w-x$，则
@@ -72,7 +119,7 @@ $$
 
 ## 3. Stochastic Gradient Descent
 
-令 $J(w)=\mathbb E[f(w,X)]$。可交换微分与期望时，$g(w)=\nabla J(w)=\mathbb E[\nabla f(w,X)]$。寻找驻点就是求 $g(w)=0$。单样本梯度的分解为
+令 $J(w)=\mathbb E[f(w,X)]$。可交换微分与期望时，$g(w)=\nabla J(w)=\mathbb E[\nabla f(w,X)]$。寻找驻点就是求 $g(w)=0$。GD 使用 $w_{k+1}=w_k-\alpha_k\nabla J(w_k)$，每一步需要真实的总体梯度。SGD 用单个样本的梯度替代它，相当于把同一个求根问题交给 RM：
 
 $$
 \begin{aligned}
@@ -82,7 +129,13 @@ w_{k+1} &= w_k-\alpha_k\widetilde g_k.
 \end{aligned}
 $$
 
-新样本独立于观测前的历史时，$\mathbb E[\eta_k\mid\mathcal F_k]=0$。课件的标量收敛条件用正的曲率上下界、RM 步长及 iid 样本。严格套用 RM 还要检查梯度噪声的二阶矩。严格正曲率使驻点成为唯一极小值。
+虽然 $w_k$ 取决于以前的样本，它在给定 $\mathcal F_k$ 后已确定。若新样本 $X_k$ 独立于这段历史，$\mathbb E[\nabla f(w_k,X_k)\mid\mathcal F_k]=\nabla J(w_k)$，故 $\mathbb E[\eta_k\mid\mathcal F_k]=0$。
+
+<figure>
+  <img src="./resources/stochastic-approximation/sgd-update.webp" alt="课件第 39 页，用单样本随机梯度替换真实梯度的 SGD 更新式" loading="lazy">
+</figure>
+
+课件的标量收敛条件用 $0<c_1\le \partial_w^2 f(w,X)\le c_2$、RM 步长及 iid 样本。这个曲率界会传给 $g'(w)=J''(w)$。严格套用 RM 还要检查梯度噪声的二阶矩。正曲率使驻点成为唯一极小值。向量情况下，曲率界写成 Hessian 的矩阵不等式。一般非凸目标中，梯度为零只表示驻点。
 
 平方损失直接连接三种递推：
 
@@ -92,11 +145,11 @@ f(w,X)=\tfrac12\|w-X\|^2,\quad
 \nabla J(w)=w-\mu.
 $$
 
-因此最优解 $w^*=\mu$，其 SGD 更新就是增量均值。三个层次可以读成 <strong>递推均值 → SGD → RM</strong>，每一项都是下一项的特例。
+因此最优解 $w^*=\mu$。将 $\nabla f(w_k,x_k)=w_k-x_k$ 代入 SGD，得到 $w_{k+1}=w_k+\alpha_k(x_k-w_k)$，这就是第 1 节的递推。<strong>递推均值是平方损失上的 SGD，SGD 是用样本梯度观测求根函数的 RM。</strong>
 
 ### Relative Gradient Error
 
-在一维、曲率下界为 $c>0$ 时，
+在一维、曲率下界为 $c>0$ 时，利用 $J'(w^*)=0$ 和中值定理，可把真实梯度写成 $J''(\xi_k)(w_k-w^*)$，其中 $\xi_k$ 在 $w_k,w^*$ 之间。对 $w_k\ne w^*$，
 
 $$
 \begin{aligned}
@@ -110,7 +163,16 @@ $$
 
 ## 4. BGD, MBGD & SGD
 
-有限数据目标 $J_n(w)=n^{-1}\sum_i f(w,x_i)$。从索引中均匀抽取 $I$ 时，$\mathbb E[f(w,x_I)]=J_n(w)$，因此单样本梯度是经验梯度的无偏估计。
+课件第 55–57 页先把数据集视为固定，只让索引随机。对 $I\sim\mathrm{Unif}\{1,\ldots,n\}$，
+
+$$
+\begin{aligned}
+\mathbb E_I[f(w,x_I)]&=\frac1n\sum_{i=1}^n f(w,x_i)=J_n(w),\\
+\mathbb E_I[\nabla f(w,x_I)]&=\nabla J_n(w).
+\end{aligned}
+$$
+
+这两条是对经验目标的等式。若原先要优化的是总体目标 $J$，则 $J_n$ 本身仍是基于有限数据的近似。每种方法都做 $w_{k+1}=w_k-\alpha_k d_k$，差别在于梯度 $d_k$ 如何计算。
 
 | Method | Gradient used at step $k$ | per-step sample count |
 | --- | --- | ---: |
@@ -118,4 +180,16 @@ $$
 | MBGD | $\frac1m\sum_{j=1}^m\nabla f(w_k,x_{I_j})$ | $m$ |
 | SGD | $\nabla f(w_k,x_I)$ | $1$ |
 
-独立有放回采样时，MBGD 梯度协方差是单样本的 $1/m$。批量增大通常降低单步随机性但提高开销，比较收敛曲线时要区分迭代轮数和处理的样本数。对经验平方损失，$1/k$ 步长使 BGD 第一步到全体均值，MBGD 累计批均值，SGD 累计单样本均值。
+给定本轮 $w_k$，若独立有放回地抽取 $m$ 个索引，批量梯度的协方差等于 $m$ 个单样本协方差之和除以 $m^2$，因此是单样本的 $1/m$。BGD 遍历所有固定样本，对经验目标没有抽样方差。批量增大通常降低单步随机性但提高开销。比较收敛曲线时，要区分用掉多少轮和累计处理多少样本。
+
+### Squared-loss Recurrences
+
+课件第 61–62 页用平方损失把三种算法都写成 $w_{k+1}=w_k+\alpha_k(z_k-w_k)$。当 $\alpha_k=1/k$ 时，第 1 节的推导直接给出 $w_{k+1}=k^{-1}\sum_{j=1}^k z_j$。
+
+| Method | This step’s target $z_k$ | Estimate after $k$ updates |
+| --- | --- | --- |
+| BGD | 全数据均值 $\bar x$ | 每步都是 $\bar x$ |
+| MBGD | 本轮批均值 $\bar x_k^{(m)}$ | $\frac1k\sum_{j=1}^k \bar x_j^{(m)}$ |
+| SGD | 本轮单个样本 $x_{I_k}$ | $\frac1k\sum_{j=1}^k x_{I_j}$ |
+
+BGD 第一步就得到经验均值，是这个平方损失和 $\alpha_1=1$ 共同给出的结果。对一般损失，一步全批梯度更新仍只是一次迭代。
