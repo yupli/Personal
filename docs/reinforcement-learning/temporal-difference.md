@@ -6,7 +6,7 @@ pageClass: rl-summary
 
 [切换到 V1（逐页）](temporal-difference-slides.md)
 
-## 1. 时序差分（Temporal-Difference，TD）· 状态价值预测
+## 1. 时序差分（Temporal-Difference，TD）· State-value Prediction
 
 #### （1）算法描述
 
@@ -16,7 +16,7 @@ pageClass: rl-summary
 
 **算法所需的经验**
 
-- 按给定策略 $\pi$ 生成轨迹 $(s_0,r_1,s_1,\ldots,s_t,r_{t+1},s_{t+1},\ldots)$，也可写作经验三元组 $\{(s_t,r_{t+1},s_{t+1})\}_t$。
+- 按给定策略 $\pi$ 生成轨迹（trajectory）$(s_0,r_1,s_1,\ldots,s_t,r_{t+1},s_{t+1},\ldots)$，也可写作经验三元组 $\{(s_t,r_{t+1},s_{t+1})\}_t$。
 
 **TD 更新公式**
 
@@ -31,7 +31,7 @@ $$
 
 </div>
 
-其中 $t=0,1,2,\ldots$。$v_t(s_t)$ 是对 $v_\pi(s_t)$ 的当前估计，$\alpha_t(s_t)$ 是状态 $s_t$ 在第 $t$ 步的学习率。
+其中 $t=0,1,2,\ldots$。$v_t(s_t)$ 是对状态价值（state value）$v_\pi(s_t)$ 的当前估计，$\alpha_t(s_t)$ 是状态 $s_t$ 在第 $t$ 步的学习率（learning rate）。
 
 - 第 $t$ 步只更新当前访问的状态 $s_t$，其他状态按式（2）处理。
 - 下文可省略式（2）。
@@ -49,8 +49,8 @@ $$
 <div class="td-slide-equation">
 
 $$
-\underbrace{v_{t+1}(s_t)}_{\text{新估计}}
-=\underbrace{v_t(s_t)}_{\text{当前估计}}
+\underbrace{v_{t+1}(s_t)}_{\text{new estimate}}
+=\underbrace{v_t(s_t)}_{\text{current estimate}}
 -\alpha_t(s_t)\left[
 \overbrace{v_t(s_t)-\bigl[\underbrace{r_{t+1}+\gamma v_t(s_{t+1})}_{\text{TD target }\bar v_t}\bigr]}^{\text{TD error }\delta_t}
 \right].\qquad (3)
@@ -146,7 +146,7 @@ $$
 
 ## 2. TD 算法的收敛性、与 MC 的比较
 
-### 贝尔曼方程与 TD 更新
+### Bellman Equation 与 TD 更新
 
 <div class="td-slide">
 <div class="td-slide-body">
@@ -157,7 +157,7 @@ $$
 
 #### （2）从回报定义写出状态价值
 
-令 $S$ 为当前状态、$R$ 为下一笔奖励、$G$ 为下一状态起算的后续回报。策略 $\pi$ 的状态价值为
+令 $S$ 为当前状态、$R$ 为下一笔奖励（reward）、$G$ 为下一状态起算的后续回报（return），$\gamma$ 为折扣因子（discount factor）。策略 $\pi$ 的状态价值为
 
 $$
 v_\pi(s)=\mathbb E[R+\gamma G\mid S=s],
@@ -184,7 +184,7 @@ $$
 
 #### （4）把贝尔曼方程写成求根问题
 
-对固定状态 $s$，定义残差函数
+对固定状态 $s$，定义贝尔曼残差（Bellman residual）
 
 $$
 g(v(s))=v(s)-\mathbb E[R+\gamma v_\pi(S')\mid S=s].
@@ -249,7 +249,7 @@ $$
 <div class="td-theorem-title">定理 · TD 学习的收敛性</div>
 <div class="td-theorem-body">
 
-在有限表格型、折扣任务和有界奖励的设定下，固定策略 $\pi$。若对每个待估计的状态 $s$ 都有
+在有限状态的表格型（tabular）折扣任务中，固定策略 $\pi$，并假设奖励有界。若对每个待估计的状态 $s$ 都有
 
 $$
 \sum_t\alpha_t(s)=\infty,
@@ -257,7 +257,7 @@ $$
 \sum_t\alpha_t(s)^2<\infty,
 $$
 
-则当 $t\to\infty$ 时，式（1）给出的 $v_t(s)$ 以概率 $1$ 收敛到 $v_\pi(s)$。
+则当 $t\to\infty$ 时，式（1）给出的 $v_t(s)$ 几乎必然（almost surely，即以概率 $1$）收敛到 $v_\pi(s)$。
 
 </div>
 </div>
@@ -266,7 +266,7 @@ $$
 
 - 收敛目标是**给定策略 $\pi$ 的状态价值**。
 - 两个条件要逐状态检查。第 $t$ 步仅对 $s=s_t$ 取 $\alpha_t(s)>0$，其余状态的步长为零。要让一个状态的步长之和发散，就必须无限次访问该状态。
-- 实践中常用较小的常数学习率。持续访问时，固定正步长的平方和发散。课件指出，在适当条件下，常数步长仍可得到**期望意义下的收敛**，而上面的概率 $1$ 收敛定理要求平方和有限。
+- 实践中常用较小的常数步长（constant step size）。持续访问时，固定正步长的平方和发散。课件指出，在适当条件下仍可**依期望收敛（convergence in expectation）**。上面的几乎必然收敛定理要求平方和有限。
 
 </div>
 </div>
@@ -283,8 +283,8 @@ TD 和 MC 都是 **model-free（无模型）**方法。
 
 | TD / Sarsa 学习 | MC 学习 |
 | --- | --- |
-| **在线更新。** 观察到一步奖励和下一状态即可更新状态价值。Sarsa 再采样下一动作，即可更新动作价值。 | **回合结束后更新。** 标准回合式 MC 等完整回合收齐，再用实际回报更新。 |
-| **Episodic tasks 与 continuing tasks。** 有终止回合或持续运行的任务都可逐步更新。 | **Episodic tasks。** 标准回合式 MC 需要到达终止状态，才能得到完整回报。 |
+| **Online。** 观察到一步奖励和下一状态即可更新状态价值。Sarsa 再采样下一动作，即可更新动作价值。 | **Offline（本表指回合结束后更新）。** 标准回合式 MC 等完整回合收齐，再用实际回报更新。 |
+| **Episodic tasks 与 continuing tasks。** 有终止回合或持续运行的任务都可逐步更新。 | **Episodic tasks。** 标准回合式 MC 需要到达终止状态（terminal state），才能得到完整回报。 |
 
 <div class="td-slide-caption">TD 与 MC 的比较</div>
 
@@ -300,18 +300,18 @@ TD 和 MC 都是 **model-free（无模型）**方法。
 | TD / Sarsa 学习 | MC 学习 |
 | --- | --- |
 | **Bootstrapping。** 目标用到已有的价值估计，因此需要为价值表设初值。 | **Non-bootstrapping。** 用实际回报估计状态或动作价值，目标与价值表初值无关。 |
-| **方差通常较低。** 一步目标用到的随机量较少，例如 Sarsa 使用 $R_{t+1}$、$S_{t+1}$ 和 $A_{t+1}$。 | **方差通常较高。** 估计 $q_\pi(s_t,a_t)$ 要采样完整折扣回报 $R_{t+1}+\gamma R_{t+2}$ $+\gamma^2R_{t+3}+\cdots$。长度为 $L$ 的回合，每步有 $\lvert\mathcal A\rvert$ 个动作时，单是动作序列就可有 $\lvert\mathcal A\rvert^L$ 种。 |
+| **Lower estimation variance。** 一步目标用到的随机量较少，估计方差通常较低。例如 Sarsa 使用 $R_{t+1}$、$S_{t+1}$ 和 $A_{t+1}$。 | **Higher estimation variance。** 估计 $q_\pi(s_t,a_t)$ 要采样完整折扣回报（discounted return）$R_{t+1}+\gamma R_{t+2}$ $+\gamma^2R_{t+3}+\cdots$。长度为 $L$ 的回合，每步有 $\lvert\mathcal A\rvert$ 个动作时，单是动作序列就可有 $\lvert\mathcal A\rvert^L$ 种。 |
 
 <div class="td-slide-caption">TD 与 MC 的比较（续）</div>
 
 </div>
 </div>
 
-在固定策略下，完整 MC 回报的条件期望是真实价值。TD 的目标依赖当前估计，因此早期可能有偏。目标的偏差来自下一状态的估值误差。
+在固定策略下，完整 MC 回报是价值的无偏估计（unbiased estimate）。TD target 依赖当前估计，可能带有偏差（bias），偏差来自下一状态的估值误差。
 
-## 3. Sarsa · 动作价值学习
+## 3. Sarsa · Action-value Learning
 
-观测五元组 $(S_t,A_t,R_{t+1},S_{t+1},A_{t+1})$。固定策略时，下一动作按同一策略抽取：
+Sarsa 的名称来自观测顺序 **State–Action–Reward–State–Action**，即五元组 $(S_t,A_t,R_{t+1},S_{t+1},A_{t+1})$。固定策略时，下一动作按同一策略抽取。
 
 $$
 \begin{aligned}
@@ -321,7 +321,7 @@ Q_{t+1}(S_t,A_t)&=Q_t(S_t,A_t)
 \end{aligned}
 $$
 
-每步只更新当前状态动作对。期望目标来自 $q_\pi$ 的贝尔曼方程。固定策略评价（policy evaluation）要收敛，需要充分访问各状态动作对，并使用适当步长。用于控制时，按同一个 $\varepsilon$-greedy 策略采样、评价和改进，属于 **on-policy** 的广义策略迭代（generalized policy iteration，GPI）。固定正探索率时，评价的是仍含探索的策略。
+每步只更新当前状态动作对（state–action pair）的动作价值（action value）。期望目标来自 $q_\pi$ 的 Bellman expectation equation。固定策略下的 **policy evaluation** 要收敛，需要充分访问各状态动作对，并使用适当步长。用于 **control** 时，按同一个 $\varepsilon$-greedy 策略采样、评价和改进，属于 **on-policy** 的广义策略迭代（Generalized Policy Iteration，GPI）。固定正探索率时，评价的是仍含探索的策略。
 
 ### Sarsa · 原课件伪代码
 
@@ -340,7 +340,7 @@ $$
 
 对给定的下一状态，这一步消除抽取单个动作带来的方差，代价是求和所需的动作值与概率。
 
-<strong>n-step Sarsa</strong> 用前 $n$ 步真实奖励，再用价值估计补上后续回报。
+<strong>n-step Sarsa</strong> 的 n-step return 由前 $n$ 步真实奖励和折扣后的价值估计组成。
 
 $$
 \begin{aligned}
@@ -352,7 +352,7 @@ $$
 
 从 $t$ 开始的更新必须等到第 $n$ 步信息就绪，或等回合提前结束。提前结束时只累计到末笔奖励，去掉自举项。$n=1$ 恢复 Sarsa，覆盖整个回合则得到 MC target。增加 $n$ 通常减少对当前估计的依赖，同时纳入更多采样随机性。
 
-## 5. Q-learning · 最优动作价值学习
+## 5. Q-learning · Optimal Action Values
 
 用下一状态的最大动作值替换 Sarsa 的下一动作样本：
 
@@ -369,11 +369,11 @@ $$
 | 策略 | 作用 |
 | --- | --- |
 | Behavior policy（行为策略） | 生成经验，可保留探索概率 |
-| Target policy（目标策略） | 决定更新目标。Q-learning 使用当前 $Q$ 的贪心动作 |
+| Target policy（目标策略） | 决定更新目标。Q-learning 使用关于当前 $Q$ 的 greedy policy（贪心策略） |
 
 Sarsa 使用行为策略抽出的 $A_{t+1}$ 评价同一策略。Q-learning 的最大值与实际执行的下一动作无关，属于 **off-policy** 更新。课件第 50 页的版本边采样边更新生成经验的策略，Q 更新目标仍取最大值。第 51 页直接使用独立行为策略生成的数据。两种实现都需要充分访问相关状态动作对。
 
-课件的探索实验在比较数据覆盖。均匀探索生成的轨迹能覆盖更多状态动作对。若行为策略长期偏向少数动作，延长轨迹也可能只增加已常见的访问，稀少表项仍难学好。图中的纵轴比较训练中提取的贪心策略价值与已知最优价值的差距。
+课件的实验在比较探索（exploration）如何改变状态动作对的覆盖（coverage）。均匀探索生成的轨迹能覆盖更多状态动作对。若行为策略长期偏向少数动作，延长轨迹也可能只增加已常见的访问，稀少表项仍难学好。图中的纵轴比较训练中提取的 greedy policy 的价值与已知最优价值的差距。
 
 ### Q-learning · 原课件两种实现
 
@@ -391,10 +391,10 @@ Sarsa 使用行为策略抽出的 $A_{t+1}$ 评价同一策略。Q-learning 的�
 
 | 算法 | 目标 $Y$ | 对应方程 |
 | --- | --- | --- |
-| Sarsa | $R_{t+1}+\gamma Q(S_{t+1},A_{t+1})$ | 贝尔曼期望方程 |
-| Expected Sarsa | $R_{t+1}+\gamma\sum_a\pi(a\mid S_{t+1})Q(S_{t+1},a)$ | 贝尔曼期望方程 |
-| n-step Sarsa | $G^{(n)}_t$ | 多步贝尔曼期望方程 |
-| Q-learning | $R_{t+1}+\gamma\max_a Q(S_{t+1},a)$ | 贝尔曼最优方程（Bellman optimality equation） |
+| Sarsa | $R_{t+1}+\gamma Q(S_{t+1},A_{t+1})$ | Bellman expectation equation |
+| Expected Sarsa | $R_{t+1}+\gamma\sum_a\pi(a\mid S_{t+1})Q(S_{t+1},a)$ | Bellman expectation equation |
+| n-step Sarsa | $G^{(n)}_t$ | 多步 Bellman expectation equation |
+| Q-learning | $R_{t+1}+\gamma\max_a Q(S_{t+1},a)$ | Bellman optimality equation |
 | MC | $G_t$ | 给定策略的完整回报期望 |
 
 MC 的等权样本均值对应第 $N$ 次访问使用 $\alpha=1/N$。课件把 $\alpha=1$ 写作直接放入单次回报，这只是统一更新式中的单样本情形。
