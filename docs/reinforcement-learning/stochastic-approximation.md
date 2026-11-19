@@ -73,39 +73,6 @@ $$
 
 这些是标量 RM 的一组充分条件，结论是 $w_k\to w^*$ 几乎必然成立。课件把噪声条件简写为有限二阶矩。使用该结论时应明确矩的控制，例如上表的统一上界。典型步长 $a_k=1/k$。常数步长违反平方可和，$1/k^2$ 的总步长有限。
 
-令误差为 $e_k=w_k-w^*$。中值定理给出 $g(w_k)=h_ke_k$，其中 $h_k\in[c_1,c_2]$。所以
-
-$$
-e_{k+1}=(1-a_k h_k)e_k-a_k\eta_k.
-$$
-
-这就是课件 Dvoretzky 形式中的「收缩项加零均值噪声」。条件零均值使平方误差展开后的交叉项在取条件期望时消失。$\sum a_k$ 与 $\sum a_k^2$ 分别控制长期收缩和噪声累积。
-
-$$
-\begin{aligned}
-\mathbb E[e_{k+1}^2\mid\mathcal F_k]
-&=(1-a_kh_k)^2e_k^2\\
-&\quad+a_k^2\mathbb E[\eta_k^2\mid\mathcal F_k].
-\end{aligned}
-$$
-
-当步长足够小时，第一项的系数小于 1，收缩量与 $a_k$ 同阶。若条件二阶矩的上界为 $C$，第二项的总和至多为 $C\sum_k a_k^2$。
-
-### Why the Two Step-size Conditions Matter
-
-无噪声时，从足够大的轮次 $K$ 起可以取 $0\le 1-a_kh_k\le 1-c_1a_k$。展开误差递推，并用 $1-x\le e^{-x}$：
-
-$$
-\begin{aligned}
-|e_{k+1}|&\le |e_K|\prod_{j=K}^{k}(1-c_1a_j)\\
-&\le |e_K|\exp\!\left(-c_1\sum_{j=K}^{k}a_j\right).
-\end{aligned}
-$$
-
-$\sum a_k=\infty$ 让这个上界趋零。相反，对于线性 $g(w)=c(w-w^*)$，若 $0<ca_k<1$ 且 $\sum a_k<\infty$，累乘可能保留一部分初始误差。带噪声时再用 $\sum a_k^2<\infty$ 控制每步注入的方差。几乎必然收敛是 RM 定理的结论。上面的乘积只展开了无噪声的部分。
-
-课件第 34 页给出可选的 Dvoretzky 形式 $z_{k+1}=(1-\beta_k)z_k+\lambda_k\xi_k$。用它看 RM，可令 $z_k=e_k$、$\beta_k=a_kh_k$、$\lambda_k=a_k$、$\xi_k=-\eta_k$。有界正斜率把关于 $a_k$ 的条件传给 $\beta_k$，噪声项则沿用平方可和的 $a_k$。
-
 ### Mean Estimation as RM
 
 令 $\mu=\mathbb E[X]$，取 $g(w)=w-\mu$、$\widetilde g(w,x)=w-x$，则
