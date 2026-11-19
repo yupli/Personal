@@ -191,7 +191,7 @@ TD learning and Monte Carlo (MC) learning are both **model-free**. What are the 
 | TD/Sarsa learning | MC learning |
 | --- | --- |
 | **Bootstrapping.** The update uses an existing value estimate, so TD needs initial estimates. | **Non-bootstrapping.** MC estimates state or action values from sampled returns. Those targets are available independently of any initial value estimate. |
-| **Typically lower estimation variance.** A one-step target involves fewer sampled quantities. For example, Sarsa uses the next reward $R_{t+1}$, state $S_{t+1}$ and action $A_{t+1}$. | **Typically higher estimation variance.** To estimate $q_\pi(s_t,a_t)$, MC uses samples of $R_{t+1}+\gamma R_{t+2}+\gamma^2R_{t+3}+\cdots$. With $L$ steps and $\lvert\mathcal A\rvert$ possible actions per step, there are up to $\lvert\mathcal A\rvert^L$ action sequences. |
+| **Typically lower estimation variance.** A one-step target involves fewer sampled quantities. For example, Sarsa uses the next reward $R_{t+1}$, state $S_{t+1}$ and action $A_{t+1}$. | **Typically higher estimation variance.** To estimate $q_\pi(s_t,a_t)$, MC uses samples of $R_{t+1}+\gamma R_{t+2}$ $+\gamma^2R_{t+3}+\cdots$. With $L$ steps and $\lvert\mathcal A\rvert$ possible actions per step, there are up to $\lvert\mathcal A\rvert^L$ action sequences. |
 
 <div class="td-slide-caption">Comparison between TD learning and MC learning (continued).</div>
 
@@ -351,6 +351,7 @@ MC 的等权样本均值对应第 $N$ 次访问使用 $\alpha=1/N$。课件把 $
 .rl-summary .vp-doc .td-slide :is(th, td) {
   padding: 0.5rem;
   border-inline-start: 0;
+  overflow-wrap: anywhere;
   vertical-align: top;
   text-align: start;
   color: inherit;
