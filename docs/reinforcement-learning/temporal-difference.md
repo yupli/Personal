@@ -39,7 +39,7 @@ $$
 </div>
 </div>
 
-#### （2）TD 目标与 TD 误差
+#### （2）TD target 与 TD error
 
 <div class="td-slide">
 <div class="td-slide-body">
@@ -52,31 +52,31 @@ $$
 \underbrace{v_{t+1}(s_t)}_{\text{新估计}}
 =\underbrace{v_t(s_t)}_{\text{当前估计}}
 -\alpha_t(s_t)\left[
-\overbrace{v_t(s_t)-\bigl[\underbrace{r_{t+1}+\gamma v_t(s_{t+1})}_{\text{TD 目标 }\bar v_t}\bigr]}^{\text{TD 误差 }\delta_t}
+\overbrace{v_t(s_t)-\bigl[\underbrace{r_{t+1}+\gamma v_t(s_{t+1})}_{\text{TD target }\bar v_t}\bigr]}^{\text{TD error }\delta_t}
 \right].\qquad (3)
 $$
 
 </div>
 
-<strong class="td-slide-emphasis">TD 目标（TD target）</strong>
+<strong class="td-slide-emphasis">TD target（目标值）</strong>
 
 $$
 \bar v_t\mathrel{\dot{=}}r_{t+1}+\gamma v_t(s_{t+1})
 $$
 
-<strong class="td-slide-emphasis">TD 误差（TD error）</strong>
+<strong class="td-slide-emphasis">TD error（时序差分误差）</strong>
 
 $$
 \delta_t\mathrel{\dot{=}}v_t(s_t)-[r_{t+1}+\gamma v_t(s_{t+1})]
 =v_t(s_t)-\bar v_t
 $$
 
-新估计等于当前估计减去学习率乘以 TD 误差。
+新估计等于当前估计减去学习率乘以 TD error。
 
 </div>
 </div>
 
-#### （3）为什么称为 TD 目标
+#### （3）为什么称为 TD target
 
 <div class="td-slide">
 <div class="td-slide-body">
@@ -112,7 +112,7 @@ $$
 </div>
 </div>
 
-#### （4）TD 误差的含义
+#### （4）TD error 的含义
 
 <div class="td-slide">
 <div class="td-slide-body">
@@ -128,7 +128,7 @@ $$
 \delta_{\pi,t}\mathrel{\dot{=}}v_\pi(s_t)-[r_{t+1}+\gamma v_\pi(s_{t+1})].
 $$
 
-由贝尔曼期望方程，
+由贝尔曼期望方程（Bellman expectation equation），
 
 $$
 \begin{aligned}
@@ -138,7 +138,7 @@ $$
 \end{aligned}
 $$
 
-- 若 $v_t=v_\pi$，则给定当前价值表和状态，**TD 误差的条件期望**为零。
+- 若 $v_t=v_\pi$，则给定当前价值表和状态，**TD error 的条件期望**为零。
 - 若这个条件期望非零，则 $v_t$ 与 $v_\pi$ 有差距。即使价值表准确，单次转移仍可能产生非零误差。
 
 </div>
@@ -233,7 +233,7 @@ $$
 #### （8）改成实际可用的 TD 更新
 
 - **直接用轨迹上的顺序样本。** 将固定 $s$ 的经验改为 $\{(s_t,r_{t+1},s_{t+1})\}_t$，每步更新当下访问的状态 $s_t$。
-- **用当前估计自举（bootstrapping）。** 真实价值 $v_\pi(s_{t+1})$ 未知，用 $v_t(s_{t+1})$ 代入式（6），就得到第一节的 TD 更新式（1）。
+- **Bootstrapping（自举）。** 真实价值 $v_\pi(s_{t+1})$ 未知，用 $v_t(s_{t+1})$ 代入式（6），就得到第一节的 TD 更新式（1）。
 
 </div>
 </div>
@@ -279,19 +279,19 @@ $$
 <div class="td-slide-title">TD 状态价值学习 · 算法性质</div>
 <div class="td-slide-body">
 
-TD 和 MC 都是**无模型**方法。
+TD 和 MC 都是 **model-free（无模型）**方法。
 
 | TD / Sarsa 学习 | MC 学习 |
 | --- | --- |
 | **在线更新。** 观察到一步奖励和下一状态即可更新状态价值。Sarsa 再采样下一动作，即可更新动作价值。 | **回合结束后更新。** 标准回合式 MC 等完整回合收齐，再用实际回报更新。 |
-| **回合任务和持续任务。** 逐步更新，无需等待终止。 | **回合任务。** 标准回合式 MC 需要到达终止状态，才能得到完整回报。 |
+| **Episodic tasks 与 continuing tasks。** 有终止回合或持续运行的任务都可逐步更新。 | **Episodic tasks。** 标准回合式 MC 需要到达终止状态，才能得到完整回报。 |
 
 <div class="td-slide-caption">TD 与 MC 的比较</div>
 
 </div>
 </div>
 
-#### （11）自举与估计方差
+#### （11）Bootstrapping 与估计方差
 
 <div class="td-slide">
 <div class="td-slide-title">TD 状态价值学习 · 算法性质</div>
@@ -299,7 +299,7 @@ TD 和 MC 都是**无模型**方法。
 
 | TD / Sarsa 学习 | MC 学习 |
 | --- | --- |
-| **自举。** 目标用到已有的价值估计，因此需要为价值表设初值。 | **直接采样回报。** 用实际回报估计状态或动作价值，目标与价值表初值无关。 |
+| **Bootstrapping。** 目标用到已有的价值估计，因此需要为价值表设初值。 | **Non-bootstrapping。** 用实际回报估计状态或动作价值，目标与价值表初值无关。 |
 | **方差通常较低。** 一步目标用到的随机量较少，例如 Sarsa 使用 $R_{t+1}$、$S_{t+1}$ 和 $A_{t+1}$。 | **方差通常较高。** 估计 $q_\pi(s_t,a_t)$ 要采样完整折扣回报 $R_{t+1}+\gamma R_{t+2}$ $+\gamma^2R_{t+3}+\cdots$。长度为 $L$ 的回合，每步有 $\lvert\mathcal A\rvert$ 个动作时，单是动作序列就可有 $\lvert\mathcal A\rvert^L$ 种。 |
 
 <div class="td-slide-caption">TD 与 MC 的比较（续）</div>
@@ -321,7 +321,7 @@ Q_{t+1}(S_t,A_t)&=Q_t(S_t,A_t)
 \end{aligned}
 $$
 
-每步只更新当前状态动作对。期望目标来自 $q_\pi$ 的贝尔曼方程。固定策略评价要收敛，需要充分访问各状态动作对，并使用适当步长。用于控制时，按同一个 $\varepsilon$-贪心策略采样、评价和改进，属于同策略（on-policy）的广义策略迭代。固定正探索率时，评价的是仍含探索的策略。
+每步只更新当前状态动作对。期望目标来自 $q_\pi$ 的贝尔曼方程。固定策略评价（policy evaluation）要收敛，需要充分访问各状态动作对，并使用适当步长。用于控制时，按同一个 $\varepsilon$-greedy 策略采样、评价和改进，属于 **on-policy** 的广义策略迭代（generalized policy iteration，GPI）。固定正探索率时，评价的是仍含探索的策略。
 
 ### Sarsa · 原课件伪代码
 
@@ -329,9 +329,9 @@ $$
   <img src="./resources/temporal-difference/sarsa-29.webp" alt="第 29 页 Sarsa 伪代码" loading="lazy">
 </figure>
 
-## 4. 期望 Sarsa 与多步 Sarsa
+## 4. Expected Sarsa 与 n-step Sarsa
 
-<strong>期望 Sarsa（Expected Sarsa）</strong> 对下一动作求条件期望，环境转移仍用样本。
+<strong>Expected Sarsa</strong> 对下一动作求条件期望，环境转移仍用样本。
 
 $$
 Y_t=R_{t+1}+\gamma\sum_a
@@ -340,7 +340,7 @@ $$
 
 对给定的下一状态，这一步消除抽取单个动作带来的方差，代价是求和所需的动作值与概率。
 
-<strong>多步 Sarsa（n-step Sarsa）</strong> 用前 $n$ 步真实奖励，再用价值估计补上后续回报。
+<strong>n-step Sarsa</strong> 用前 $n$ 步真实奖励，再用价值估计补上后续回报。
 
 $$
 \begin{aligned}
@@ -368,10 +368,10 @@ $$
 
 | 策略 | 作用 |
 | --- | --- |
-| 行为策略（behavior policy） | 生成经验，可保留探索概率 |
-| 目标策略（target policy） | 决定更新目标。Q-learning 使用当前 $Q$ 的贪心动作 |
+| Behavior policy（行为策略） | 生成经验，可保留探索概率 |
+| Target policy（目标策略） | 决定更新目标。Q-learning 使用当前 $Q$ 的贪心动作 |
 
-Sarsa 使用行为策略抽出的 $A_{t+1}$ 评价同一策略。Q-learning 的最大值与实际执行的下一动作无关，属于离策略（off-policy）更新。课件第 50 页的版本边采样边更新生成经验的策略，Q 更新目标仍取最大值。第 51 页直接使用独立行为策略生成的数据。两种实现都需要充分访问相关状态动作对。
+Sarsa 使用行为策略抽出的 $A_{t+1}$ 评价同一策略。Q-learning 的最大值与实际执行的下一动作无关，属于 **off-policy** 更新。课件第 50 页的版本边采样边更新生成经验的策略，Q 更新目标仍取最大值。第 51 页直接使用独立行为策略生成的数据。两种实现都需要充分访问相关状态动作对。
 
 课件的探索实验在比较数据覆盖。均匀探索生成的轨迹能覆盖更多状态动作对。若行为策略长期偏向少数动作，延长轨迹也可能只增加已常见的访问，稀少表项仍难学好。图中的纵轴比较训练中提取的贪心策略价值与已知最优价值的差距。
 
@@ -392,9 +392,9 @@ Sarsa 使用行为策略抽出的 $A_{t+1}$ 评价同一策略。Q-learning 的�
 | 算法 | 目标 $Y$ | 对应方程 |
 | --- | --- | --- |
 | Sarsa | $R_{t+1}+\gamma Q(S_{t+1},A_{t+1})$ | 贝尔曼期望方程 |
-| 期望 Sarsa | $R_{t+1}+\gamma\sum_a\pi(a\mid S_{t+1})Q(S_{t+1},a)$ | 贝尔曼期望方程 |
-| 多步 Sarsa | $G^{(n)}_t$ | 多步贝尔曼期望方程 |
-| Q-learning | $R_{t+1}+\gamma\max_a Q(S_{t+1},a)$ | 贝尔曼最优方程 |
+| Expected Sarsa | $R_{t+1}+\gamma\sum_a\pi(a\mid S_{t+1})Q(S_{t+1},a)$ | 贝尔曼期望方程 |
+| n-step Sarsa | $G^{(n)}_t$ | 多步贝尔曼期望方程 |
+| Q-learning | $R_{t+1}+\gamma\max_a Q(S_{t+1},a)$ | 贝尔曼最优方程（Bellman optimality equation） |
 | MC | $G_t$ | 给定策略的完整回报期望 |
 
 MC 的等权样本均值对应第 $N$ 次访问使用 $\alpha=1/N$。课件把 $\alpha=1$ 写作直接放入单次回报，这只是统一更新式中的单样本情形。
