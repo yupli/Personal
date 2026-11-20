@@ -442,17 +442,17 @@ $$
 
 使用同一策略采样并评价，属于 **on-policy** 学习。固定 $\varepsilon>0$ 时，执行的是仍含探索的策略。
 
-#### （6）Gridworld 任务
+#### （6）Gridworld 实验
+
+**任务设定**
 
 - 找一条从指定起点到目标状态的好路径。任务只考察这个起点出发的表现，之前的任务要求在每个状态都找到最优策略。
 - 每个 episode 从左上角开始，到达目标状态时结束。
 
-#### （7）实验结果与评价指标
+**结果与评价指标**
 
 - **左图**显示 Sarsa 最终学得的策略。箭头表示各状态的动作，仍有一些状态上的动作未达到最优。
 - **右图**上方是每回合总奖励（total reward per episode），下方是回合长度（episode length）。每回合总奖励是后续常用的评价指标。
-
-#### （8）学得的策略与 Learning Curves
 
 <figure>
   <img src="./resources/temporal-difference/sarsa-gridworld-results.png" alt="Sarsa Gridworld 实验。左图是最终策略与路径，右上是逐回合总奖励，右下是逐回合长度" width="1468" height="630" loading="lazy">
