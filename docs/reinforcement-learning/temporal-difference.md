@@ -73,13 +73,7 @@ $$
 
 新估计等于当前估计减去学习率乘以 TD error。
 
-</div>
-</div>
-
-#### （3）为什么称为 TD target
-
-<div class="td-slide">
-<div class="td-slide-body">
+**为什么称为 TD target**
 
 <span class="td-slide-emphasis">每次更新都会把当前状态的估计推向本轮目标。</span>
 
@@ -112,7 +106,7 @@ $$
 </div>
 </div>
 
-#### （4）TD error 的含义
+#### （3）TD error 的含义
 
 <div class="td-slide">
 <div class="td-slide-body">
@@ -146,16 +140,14 @@ $$
 
 ## 2. TD 算法的收敛性、与 MC 的比较
 
-### Bellman Equation 与 TD 更新
+#### （1）Bellman Equation 的期望形式
 
 <div class="td-slide">
 <div class="td-slide-body">
 
-#### （1）TD 在求解什么
-
 <span class="td-slide-emphasis">TD 求解给定策略 $\pi$ 的贝尔曼方程，得到各状态的价值 $v_\pi$。</span>
 
-#### （2）从回报定义写出状态价值
+**从回报定义写出状态价值**
 
 令 $S$ 为当前状态、$R$ 为下一笔奖励（reward）、$G$ 为下一状态起算的后续回报（return），$\gamma$ 为折扣因子（discount factor）。策略 $\pi$ 的状态价值为
 
@@ -164,7 +156,7 @@ v_\pi(s)=\mathbb E[R+\gamma G\mid S=s],
 \qquad s\in\mathcal S. \qquad (4)
 $$
 
-#### （3）用下一状态的价值改写
+**用下一状态的价值改写**
 
 令 $S'$ 为下一状态。给定 $S'$ 后，后续回报的条件期望为 $v_\pi(S')$，所以式（4）可写成
 
@@ -179,10 +171,12 @@ $$
 </div>
 </div>
 
+#### （2）用 Robbins–Monro 求解 Bellman Equation
+
 <div class="td-slide">
 <div class="td-slide-body">
 
-#### （4）把贝尔曼方程写成求根问题
+**写成求根问题**
 
 对固定状态 $s$，定义贝尔曼残差（Bellman residual）
 
@@ -192,7 +186,7 @@ $$
 
 式（5）等价于 $g(v(s))=0$，可用 Robbins–Monro（RM）算法求根。
 
-#### （5）把样本残差拆成真残差与噪声
+**把样本残差拆成真残差与噪声**
 
 从状态 $s$ 按策略 $\pi$ 采样一次，得到奖励 $r$ 和下一状态 $s'$。用它们代替期望，再加减同一个期望项。
 
@@ -206,7 +200,7 @@ $$
 
 噪声 $\eta$ 是期望目标与样本目标之差。给定 $s$，其条件期望为零。
 
-#### （6）写出 RM 更新
+**RM 更新**
 
 $$
 \begin{aligned}
@@ -222,15 +216,17 @@ $$
 </div>
 </div>
 
+#### （3）从 RM 更新到 TD 更新
+
 <div class="td-slide">
 <div class="td-slide-body">
 
-#### （7）式（6）的两个假设
+**式（6）的两个假设**
 
 - 求固定状态 $s$ 的价值时，每一步 $k$ 都要拿到从同一状态 $s$ 出发的经验 $(s,r_k,s_k')$。
 - 任意下一状态 $s'$ 的真实价值 $v_\pi(s')$ 都已知。
 
-#### （8）改成实际可用的 TD 更新
+**TD 的两处改动**
 
 - **直接用轨迹上的顺序样本。** 将固定 $s$ 的经验改为 $\{(s_t,r_{t+1},s_{t+1})\}_t$，每步更新当下访问的状态 $s_t$。
 - **Bootstrapping（自举）。** 真实价值 $v_\pi(s_{t+1})$ 未知，用 $v_t(s_{t+1})$ 代入式（6），就得到第一节的 TD 更新式（1）。
@@ -238,9 +234,7 @@ $$
 </div>
 </div>
 
-### 收敛定理
-
-#### （9）逐状态的学习率条件
+#### （4）收敛定理与逐状态学习率
 
 <div class="td-slide">
 <div class="td-slide-body">
@@ -271,15 +265,15 @@ $$
 </div>
 </div>
 
-### 与蒙特卡洛（Monte Carlo，MC）的比较
-
-#### （10）更新时机与适用任务
+#### （5）与蒙特卡洛（Monte Carlo，MC）的比较
 
 <div class="td-slide">
 <div class="td-slide-title">TD 状态价值学习 · 算法性质</div>
 <div class="td-slide-body">
 
 TD 和 MC 都是 **model-free（无模型）**方法。
+
+**更新时机与适用任务**
 
 | TD / Sarsa 学习 | MC 学习 |
 | --- | --- |
@@ -288,14 +282,7 @@ TD 和 MC 都是 **model-free（无模型）**方法。
 
 <div class="td-slide-caption">TD 与 MC 的比较</div>
 
-</div>
-</div>
-
-#### （11）Bootstrapping 与估计方差
-
-<div class="td-slide">
-<div class="td-slide-title">TD 状态价值学习 · 算法性质</div>
-<div class="td-slide-body">
+**Bootstrapping 与估计方差**
 
 | TD / Sarsa 学习 | MC 学习 |
 | --- | --- |
@@ -304,10 +291,10 @@ TD 和 MC 都是 **model-free（无模型）**方法。
 
 <div class="td-slide-caption">TD 与 MC 的比较（续）</div>
 
-</div>
-</div>
-
 在固定策略下，完整 MC 回报是价值的无偏估计（unbiased estimate）。TD target 依赖当前估计，可能带有偏差（bias），偏差来自下一状态的估值误差。
+
+</div>
+</div>
 
 ## 3. Sarsa · Action-value Learning
 
