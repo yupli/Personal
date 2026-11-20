@@ -514,20 +514,35 @@ $$
 
 ## 5. n-step Sarsa
 
-#### （1）从完整回报到 n-step return
+#### （1）Action value：从单步形式到 n-step 形式
 
 <div class="td-slide">
 <div class="td-slide-title">TD 动作价值学习 · n-step Sarsa</div>
 <div class="td-slide-body">
 
-**原来的 action value 定义**：在 $S_t=s$ 执行 $A_t=a$，此后按策略 $\pi$ 行动，取完整折扣回报的条件期望。
+**原来的单步形式（Sarsa）**：从状态 $s$ 执行动作 $a$，把**下一步奖励**与**下一状态动作对的折扣价值**相加，再取期望。
 
 $$
-q_\pi(s,a)=\mathbb E_\pi[G_t\mid S_t=s,A_t=a],
-\qquad G_t=R_{t+1}+\gamma R_{t+2}+\gamma^2 R_{t+3}+\cdots.
+q_\pi(s,a)
+=\mathbb E_\pi\!\left[
+ R_{t+1}+\gamma q_\pi(S_{t+1},A_{t+1})
+ \,\middle|\, S_t=s,A_t=a
+\right].
 $$
 
-**n-step 形式**：保留前 $n$ 步的实际奖励，用第 $n$ 步到达的状态动作对的价值代表之后的预期回报。下列公式以真实的 $q_\pi$ 表示尾部价值：
+**新的 n-step 形式（n-step Sarsa）**：把奖励展开到**前 $n$ 步**，再用**第 $n$ 步到达的状态动作对的折扣价值**补上剩余回报。
+
+$$
+\begin{aligned}
+q_\pi(s,a)
+ &=\mathbb E_\pi[G_t^{(n)}\mid S_t=s,A_t=a],\\
+G_t^{(n)}
+ &=\underbrace{\sum_{j=0}^{n-1}\gamma^j R_{t+j+1}}_{\text{前 }n\text{ 步的折扣奖励}}
+   +\underbrace{\gamma^n q_\pi(S_{t+n},A_{t+n})}_{\text{剩余回报的折扣价值}}.
+\end{aligned}
+$$
+
+两种形式都在计算 $q_\pi(s,a)=\mathbb E_\pi[G_t\mid S_t=s,A_t=a]$，也就是从 $(s,a)$ 出发、此后按策略 $\pi$ 行动的完整折扣回报的期望。**改变的是奖励展开的步数，以及从哪一步开始用价值补尾。** 对应的回报形式如下：
 
 $$
 \begin{aligned}
