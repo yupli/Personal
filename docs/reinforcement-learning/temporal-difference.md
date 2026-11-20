@@ -446,30 +446,159 @@ $$
   <figcaption>随训练推进，回合通常更短，总奖励趋于稳定。探索仍可能让个别回合出现明显波动。</figcaption>
 </figure>
 
-## 4. Expected Sarsa 与 n-step Sarsa
+## 4. Expected Sarsa
 
-<strong>Expected Sarsa</strong> 对下一动作求条件期望，环境转移仍用样本。
+#### （1）更新公式：对下一动作取期望
 
-$$
-Y_t=R_{t+1}+\gamma\sum_a
- \pi_t(a\mid S_{t+1})Q_t(S_{t+1},a).
-$$
+<div class="td-slide">
+<div class="td-slide-title">TD 动作价值学习 · Expected Sarsa</div>
+<div class="td-slide-body">
 
-对给定的下一状态，这一步消除抽取单个动作带来的方差，代价是求和所需的动作值与概率。
+Expected Sarsa 是 Sarsa 的一种变体。观察到奖励 $r_{t+1}$ 和下一状态 $s_{t+1}$ 后，**按当前策略 $\pi_t$ 对下一状态的所有动作加权平均**，得到 $v_t(s_{t+1})$。
 
-<strong>n-step Sarsa</strong> 的 n-step return 由前 $n$ 步真实奖励和折扣后的价值估计组成。
+<div class="td-slide-equation">
 
 $$
 \begin{aligned}
-G^{(n)}_t
-&=\sum_{j=0}^{n-1}\gamma^jR_{t+j+1}\\
-&\quad+\gamma^n Q(S_{t+n},A_{t+n}).
+q_{t+1}(s_t,a_t)
+&=q_t(s_t,a_t)-\alpha_t(s_t,a_t)\\
+&\quad\times\bigl[q_t(s_t,a_t)-[r_{t+1}+\gamma v_t(s_{t+1})]\bigr],\\[3pt]
+q_{t+1}(s,a)&=q_t(s,a),\quad (s,a)\ne(s_t,a_t).
 \end{aligned}
 $$
 
-从 $t$ 开始的更新必须等到第 $n$ 步信息就绪，或等回合提前结束。提前结束时只累计到末笔奖励，去掉自举项。$n=1$ 恢复 Sarsa，覆盖整个回合则得到 MC target。增加 $n$ 通常减少对当前估计的依赖，同时纳入更多采样随机性。
+</div>
 
-## 5. Q-learning · Optimal Action Values
+其中，$v_t(s_{t+1})$ 是用当前 action value 估计得到的状态价值：
+
+$$
+v_t(s_{t+1})
+=\mathbb E_{A\sim\pi_t(\cdot\mid s_{t+1})}[q_t(s_{t+1},A)]
+=\sum_b\pi_t(b\mid s_{t+1})q_t(s_{t+1},b).
+$$
+
+**与 Sarsa 相比**
+
+- **TD target**：Sarsa 使用 $r_{t+1}+\gamma q_t(s_{t+1},a_{t+1})$；Expected Sarsa 使用 $r_{t+1}+\gamma v_t(s_{t+1})$。
+- **计算量与方差**：对各动作求和比只查一个动作值更费计算，但消除了由抽取 $a_{t+1}$ 带来的目标方差。更新所需的样本从五元组 $(s_t,a_t,r_{t+1},s_{t+1},a_{t+1})$ 减为四元组 $(s_t,a_t,r_{t+1},s_{t+1})$。
+
+</div>
+</div>
+
+#### （2）它求解什么：两层期望
+
+<div class="td-slide">
+<div class="td-slide-body">
+
+给定策略 $\pi$，Expected Sarsa 用随机近似求解以下 **Bellman expectation equation**：
+
+$$
+\begin{aligned}
+q_\pi(s,a)
+ &= \mathbb E\!\bigl[R_{t+1}+\gamma\,
+ \underbrace{\mathbb E_{A_{t+1}\sim\pi(\cdot\mid S_{t+1})}
+ [q_\pi(S_{t+1},A_{t+1})]}_{v_\pi(S_{t+1})}
+ \mid S_t=s,A_t=a\bigr]\\[3pt]
+ &= \mathbb E\!\left[R_{t+1}+\gamma v_\pi(S_{t+1})
+ \mid S_t=s,A_t=a\right],\qquad \forall(s,a).
+\end{aligned}
+$$
+
+- **内层：对 $A_{t+1}$ 求期望。** 固定下一状态 $S_{t+1}$，按 $\pi(\cdot\mid S_{t+1})$ 对该状态的动作价值加权平均，结果就是 $v_\pi(S_{t+1})$。
+- **外层：对 $S_{t+1}$ 和 $R_{t+1}$ 求期望。** 给定当前的 $(s,a)$，对环境可能产生的下一状态和即时奖励取平均；$S_{t+1}$ 在内层固定，到外层才作为随机变量参与平均。
+
+实际更新时，**内层显式求和，外层用一次环境转移采样**。所以 Expected Sarsa 无须知道环境转移概率，奖励和下一状态的随机性仍然存在。
+
+</div>
+</div>
+
+## 5. n-step Sarsa
+
+#### （1）从完整回报到 n-step return
+
+<div class="td-slide">
+<div class="td-slide-title">TD 动作价值学习 · n-step Sarsa</div>
+<div class="td-slide-body">
+
+**原来的 action value 定义**：在 $S_t=s$ 执行 $A_t=a$，此后按策略 $\pi$ 行动，取完整折扣回报的条件期望。
+
+$$
+q_\pi(s,a)=\mathbb E_\pi[G_t\mid S_t=s,A_t=a],
+\qquad G_t=R_{t+1}+\gamma R_{t+2}+\gamma^2 R_{t+3}+\cdots.
+$$
+
+**n-step 形式**：保留前 $n$ 步的实际奖励，用第 $n$ 步到达的状态动作对的价值代表之后的预期回报。下列公式以真实的 $q_\pi$ 表示尾部价值：
+
+$$
+\begin{aligned}
+\text{Sarsa}\quad G_t^{(1)}
+  &=R_{t+1}+\gamma q_\pi(S_{t+1},A_{t+1}),\\[3pt]
+G_t^{(2)}
+  &=R_{t+1}+\gamma R_{t+2}+\gamma^2q_\pi(S_{t+2},A_{t+2}),\\[3pt]
+\text{n-step Sarsa}\quad G_t^{(n)}
+  &=\sum_{j=0}^{n-1}\gamma^j R_{t+j+1}+\gamma^n q_\pi(S_{t+n},A_{t+n}),\\[3pt]
+\text{MC}\quad G_t^{(\infty)}
+  &=R_{t+1}+\gamma R_{t+2}+\gamma^2R_{t+3}+\cdots.
+\end{aligned}
+$$
+
+这体现了 **truncated policy evaluation** 的思路：在第 $n$ 步截断实际采样的回报，再用价值估计补上未展开的尾部。它给出了同一个 action value 的 **n-step 表达式**。使用真实 $q_\pi$ 补尾时，替换的是尾部的条件期望，因此各形式对同一起始 $(s,a)$ 的条件期望相同；单条轨迹上的样本回报可以不同。
+
+</div>
+</div>
+
+#### （2）求解目标与实际更新
+
+<div class="td-slide">
+<div class="td-slide-body">
+
+**三种方法求解的方程**（下式中的 $\mid s,a$ 简写 $\mid S_t=s,A_t=a$，期望均在策略 $\pi$ 下取）：
+
+$$
+\begin{aligned}
+\text{Sarsa:}\quad q_\pi(s,a)
+ &=\mathbb E_\pi[G_t^{(1)}\mid s,a]\\
+ &=\mathbb E_\pi[R_{t+1}+\gamma q_\pi(S_{t+1},A_{t+1})\mid s,a],\\[4pt]
+\text{MC:}\quad q_\pi(s,a)
+ &=\mathbb E_\pi[G_t^{(\infty)}\mid s,a]\\
+ &=\mathbb E_\pi[R_{t+1}+\gamma R_{t+2}+\gamma^2R_{t+3}+\cdots\mid s,a],\\[4pt]
+\text{n-step Sarsa:}\quad q_\pi(s,a)
+ &=\mathbb E_\pi[G_t^{(n)}\mid s,a]\\
+ &=\mathbb E_\pi\!\left[\sum_{j=0}^{n-1}\gamma^j R_{t+j+1}
+    +\gamma^n q_\pi(S_{t+n},A_{t+n})\mid s,a\right].
+\end{aligned}
+$$
+
+**从方程到算法。** 用采到的奖励替换随机变量，用当前的 $q$ 估计替换尾部的真实 $q_\pi$，再把 $q(s_t,a_t)$ 朝这个样本目标推一步。在 $t$ 时刻还没有收齐所需经验 $(s_t,a_t,r_{t+1},s_{t+1},a_{t+1},\ldots,r_{t+n},s_{t+n},a_{t+n})$，所以要等到 $t+n$，用更新前的 $q_{t+n-1}$ 来计算：
+
+<div class="td-slide-equation">
+
+$$
+\begin{aligned}
+Y_t^{(n)}
+ &=\sum_{j=0}^{n-1}\gamma^j r_{t+j+1}
+   +\gamma^n q_{t+n-1}(s_{t+n},a_{t+n}),\\[3pt]
+q_{t+n}(s_t,a_t)
+ &=q_{t+n-1}(s_t,a_t)-\alpha_{t+n-1}(s_t,a_t)\\
+ &\quad\times\bigl[q_{t+n-1}(s_t,a_t)-Y_t^{(n)}\bigr].
+\end{aligned}
+$$
+
+</div>
+
+若回合在第 $n$ 步或之前结束，只累计到最后一笔奖励，去掉 **bootstrapping** 项。$n=1$ 恢复单步 Sarsa；当 $n$ 覆盖回合剩余的全部步数时，用的就是 MC 的完整回报（课件以 $n=\infty$ 表示这端）。
+
+</div>
+</div>
+
+#### （3）怎样理解 n 的取舍
+
+- **$n$ 较小，接近 Sarsa**：用到的采样奖励少，目标方差通常较低；但更依赖当前 action value 的估计，训练早期更容易受初值的偏差影响。
+- **$n$ 较大，接近 MC**：用到的采样奖励多，对当前估计的依赖较小，通常减轻由 bootstrapping 引入的偏差，但方差也可能更高。
+
+固定策略时，n-step Sarsa 做的是 **policy evaluation**；与 **policy improvement** 结合后，也可以用来寻找最优策略。
+
+## 6. Q-learning · Optimal Action Values
 
 用下一状态的最大动作值替换 Sarsa 的下一动作样本：
 
@@ -502,7 +631,7 @@ Sarsa 使用行为策略抽出的 $A_{t+1}$ 评价同一策略。Q-learning 的�
   <img src="./resources/temporal-difference/q-learning-51.webp" alt="第 51 页 Q-learning 独立行为策略伪代码" loading="lazy">
 </figure>
 
-## 6. TD 目标汇总
+## 7. TD 目标汇总
 
 所有动作值更新都可写成 $Q\leftarrow Q+\alpha(Y-Q)$，区别集中在目标 $Y$。
 
