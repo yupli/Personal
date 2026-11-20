@@ -314,8 +314,8 @@ TD 和 MC 都是 **model-free（无模型）**方法。
 #### （1）从 State Values 到 Action Values
 
 - 前两节的 TD 算法估计的是 **state value** $v_\pi(s)$。
-- Sarsa 直接估计 **action value** $q_\pi(s,a)$，可以比较同一状态下不同动作的价值。
-- 将 Sarsa 与 **policy improvement** 结合，就可以搜索最优策略（optimal policy）。
+- Sarsa 直接估计给定策略 $\pi$ 的 **action value** $q_\pi(s,a)$，可以比较同一状态下不同动作的价值。这一步是 **policy evaluation**。
+- 在实际做 **control** 时，通常把这一步更新与 **policy improvement** 结合，用更新后的 action value 改进策略。组合后的算法也叫 **Sarsa**。
 
 #### （2）Sarsa 更新公式
 
