@@ -311,22 +311,152 @@ TD 和 MC 都是 **model-free（无模型）**方法。
 
 ## 3. Sarsa · Action-value Learning
 
-Sarsa 的名称来自观测顺序 **State–Action–Reward–State–Action**，即五元组 $(S_t,A_t,R_{t+1},S_{t+1},A_{t+1})$。固定策略时，下一动作按同一策略抽取。
+#### （1）从 State Values 到 Action Values
+
+- 前两节的 TD 算法估计的是 **state value** $v_\pi(s)$。
+- Sarsa 直接估计 **action value** $q_\pi(s,a)$，可以比较同一状态下不同动作的价值。
+- 将 Sarsa 与 **policy improvement** 结合，就可以搜索最优策略（optimal policy）。
+
+#### （2）Sarsa 更新公式
+
+<div class="td-slide">
+<div class="td-slide-title">Sarsa · 算法</div>
+<div class="td-slide-body">
+
+给定固定策略 $\pi$，用经验 $\{(s_t,a_t,r_{t+1},s_{t+1},a_{t+1})\}_t$ 估计 $q_\pi$。下一动作 $a_{t+1}$ 从同一策略 $\pi(\cdot\mid s_{t+1})$ 采样。
+
+<div class="td-slide-equation">
 
 $$
 \begin{aligned}
-Y_t &= R_{t+1}+\gamma Q_t(S_{t+1},A_{t+1}),\\
-Q_{t+1}(S_t,A_t)&=Q_t(S_t,A_t)
-+\alpha_t\bigl[Y_t-Q_t(S_t,A_t)\bigr].
+q_{t+1}(s_t,a_t)
+&=q_t(s_t,a_t)-\alpha_t(s_t,a_t)\\
+&\quad\times\bigl[q_t(s_t,a_t)
+ -[r_{t+1}+\gamma q_t(s_{t+1},a_{t+1})]\bigr],\\[3pt]
+q_{t+1}(s,a)&=q_t(s,a),\quad (s,a)\ne(s_t,a_t).
 \end{aligned}
 $$
 
-每步只更新当前状态动作对（state–action pair）的动作价值（action value）。期望目标来自 $q_\pi$ 的 Bellman expectation equation。固定策略下的 **policy evaluation** 要收敛，需要充分访问各状态动作对，并使用适当步长。用于 **control** 时，按同一个 $\varepsilon$-greedy 策略采样、评价和改进，属于 **on-policy** 的广义策略迭代（Generalized Policy Iteration，GPI）。固定正探索率时，评价的是仍含探索的策略。
+</div>
 
-### Sarsa · 原课件伪代码
+其中 $t=0,1,2,\ldots$。
+
+- $q_t(s_t,a_t)$ 是 $q_\pi(s_t,a_t)$ 的当前估计。
+- $\alpha_t(s_t,a_t)$ 是当前 **state–action pair** 的学习率（learning rate）。
+
+</div>
+</div>
+
+#### （3）Sarsa 与 TD 的关系
+
+<div class="td-slide">
+<div class="td-slide-body">
+
+- **为什么叫 Sarsa？** 每一步用到的五元组依次是 **State–Action–Reward–State–Action**。
+- **它与 TD 有什么关系？** 把 TD 更新中的状态价值 $v(s)$ 换成动作价值 $q(s,a)$，并输入实际采样的下一动作，就得到 Sarsa。
+- **它在求解什么？** Sarsa 用随机近似（stochastic approximation）求解动作价值形式的 **Bellman expectation equation**。
+
+$$
+q_\pi(s,a)=\mathbb E_\pi\bigl[R+\gamma q_\pi(S',A')\mid S=s,A=a\bigr],
+\qquad \forall(s,a).
+$$
+
+这里 $S'$ 是下一状态，$A'$ 按 $\pi(\cdot\mid S')$ 抽取。Sarsa 每次用一次真实转移和下一动作构造期望右侧的样本目标。
+
+</div>
+</div>
+
+#### （4）Sarsa 的收敛性
+
+<div class="td-slide">
+<div class="td-slide-body">
+<div class="td-theorem">
+<div class="td-theorem-title">定理 · Convergence of Sarsa Learning</div>
+<div class="td-theorem-body">
+
+沿用上一节的表格型折扣设定，固定策略 $\pi$。若对每个待估计的 $(s,a)$ 都满足
+
+$$
+\sum_t\alpha_t(s,a)=\infty,
+\qquad
+\sum_t\alpha_t(s,a)^2<\infty,
+$$
+
+则当 $t\to\infty$ 时，$q_t(s,a)$ 以概率 $1$ 收敛到 $q_\pi(s,a)$。未访问的状态动作对当步的学习率为零，因此条件要求每个待估计的状态动作对都被无限次访问。
+
+</div>
+</div>
+</div>
+</div>
+
+#### （5）用 Sarsa 搜索策略
+
+在 Sarsa 的单步价值更新后接一步 **policy improvement**，就得到用于 control 的 Sarsa。每次交替做一次评价和一次改进，体现了 **Generalized Policy Iteration（GPI）**。
+
+<div class="td-slide sarsa-pseudocode">
+<div class="sarsa-pseudocode-title">伪代码 · Policy Searching by Sarsa</div>
+<div class="td-slide-body">
+
+对每个 episode，从初始状态 $s_0$ 开始，按 $\pi_0(\cdot\mid s_0)$ 采样首个动作 $a_0$。
+
+<div class="sarsa-pseudocode-indent">
+
+当前状态 $s_t$ 尚未到达目标时，重复执行。
+
+<div class="sarsa-pseudocode-indent">
+
+执行已选动作 $a_t$，观察 $r_{t+1}$ 和 $s_{t+1}$，再按当前策略 $\pi_t(\cdot\mid s_{t+1})$ 采样 $a_{t+1}$。到达终止状态时，目标只取即时奖励 $r_{t+1}$，省去下一动作和自举项。
+
+**Update q-value（policy evaluation，但只执行一次）**
+
+$$
+\begin{aligned}
+q_{t+1}(s_t,a_t)
+&=q_t(s_t,a_t)-\alpha_t(s_t,a_t)\\
+&\quad\times\bigl[q_t(s_t,a_t)
+ -[r_{t+1}+\gamma q_t(s_{t+1},a_{t+1})]\bigr].
+\end{aligned}
+$$
+
+**Update policy（policy improvement）**
+
+在 $s_t$ 按更新后的 $q_{t+1}$ 选出一个 greedy action $a^*$，再用 $\varepsilon$-greedy 分配概率。
+
+$$
+\begin{aligned}
+a^*&\in\operatorname*{arg\,max}_{b} q_{t+1}(s_t,b),\\[3pt]
+\pi_{t+1}(a\mid s_t)&=
+\begin{cases}
+1-\dfrac{\varepsilon}{|\mathcal A|}(|\mathcal A|-1),&a=a^*,\\[4pt]
+\dfrac{\varepsilon}{|\mathcal A|},&a\ne a^*.
+\end{cases}
+\end{aligned}
+$$
+
+若回合继续，进入 $s_{t+1}$ 并沿用已采样的 $a_{t+1}$。
+
+</div>
+</div>
+</div>
+</div>
+
+使用同一策略采样并评价，属于 **on-policy** 学习。固定 $\varepsilon>0$ 时，执行的是仍含探索的策略。
+
+#### （6）Gridworld 任务
+
+- 找一条从指定起点到目标状态的好路径。任务只考察这个起点出发的表现，之前的任务要求在每个状态都找到最优策略。
+- 每个 episode 从左上角开始，到达目标状态时结束。
+
+#### （7）实验结果与评价指标
+
+- **左图**显示 Sarsa 最终学得的策略。箭头表示各状态的动作，仍有一些状态上的动作未达到最优。
+- **右图**上方是每回合总奖励（total reward per episode），下方是回合长度（episode length）。每回合总奖励是后续常用的评价指标。
+
+#### （8）学得的策略与 Learning Curves
 
 <figure>
-  <img src="./resources/temporal-difference/sarsa-29.webp" alt="第 29 页 Sarsa 伪代码" loading="lazy">
+  <img src="./resources/temporal-difference/sarsa-gridworld-results.png" alt="Sarsa Gridworld 实验。左图是最终策略与路径，右上是逐回合总奖励，右下是逐回合长度" width="1468" height="630" loading="lazy">
+  <figcaption>随训练推进，回合通常更短，总奖励趋于稳定。探索仍可能让个别回合出现明显波动。</figcaption>
 </figure>
 
 ## 4. Expected Sarsa 与 n-step Sarsa
@@ -476,6 +606,22 @@ MC 的等权样本均值对应第 $N$ 次访问使用 $\alpha=1/N$。课件把 $
 
 .td-theorem-body {
   padding: 0.35rem 0.75rem;
+}
+
+.rl-summary .vp-doc .sarsa-pseudocode {
+  border-color: #a6a6a6;
+  background: #fff;
+}
+
+.sarsa-pseudocode-title {
+  padding: 0.5rem clamp(0.85rem, 4vw, 1.5rem);
+  border-bottom: 1px solid #a6a6a6;
+  background: #e5e5e5;
+  font-weight: 700;
+}
+
+.sarsa-pseudocode-indent {
+  padding-inline-start: clamp(0.55rem, 2vw, 1.2rem);
 }
 
 .rl-summary .vp-doc .td-slide table {
