@@ -1,5 +1,9 @@
 # 强化学习
 
+## Outline
+
+![强化学习课程路线图：从贝尔曼方程与最优方程出发，衔接值迭代与策略迭代、蒙特卡洛、随机近似和时序差分，再到价值函数近似、策略梯度及 Actor–Critic。](./resources/course-outline.png)
+
 ## 目录
 
 - 第 1 课 · 基本概念。[V1（逐页）](basic-concepts-slides.md) · [V2（总结）](basic-concepts.md)

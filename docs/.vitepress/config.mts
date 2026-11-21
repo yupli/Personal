@@ -152,6 +152,7 @@ export default defineConfig({
       ],
       "/reinforcement-learning/": [
         { text: "强化学习", link: "/reinforcement-learning/" },
+        { text: "Outline", link: "/reinforcement-learning/#outline" },
         {
           text: "第 1 课 · 基本概念",
           items: [
