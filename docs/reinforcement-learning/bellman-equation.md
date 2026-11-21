@@ -220,59 +220,105 @@ $$
 
 ## 3. Matrix Form & Policy Evaluation
 
-把动作概率平均进即时奖励和转移概率。设 $r_\pi(s)$ 是从 $s$ 按策略走一步的平均奖励，$p_\pi(s'\mid s)$ 是按策略走一步到达 $s'$ 的概率。
+#### （1）先对动作求平均，再合并各状态的方程
+
+<div class="td-slide">
+<div class="td-slide-title">Matrix-vector form · 从逐状态到矩阵</div>
+<div class="td-slide-body">
+
+固定策略 $\pi$ 后，把动作概率吸收到<strong>平均即时奖励</strong> $r_\pi(s)$ 和<strong>一步转移概率</strong> $p_\pi(s'\mid s)$ 里：
 
 $$
 \begin{aligned}
-r_\pi(s)&=\sum_a\pi(a\mid s)\sum_r p(r\mid s,a)r,\\
-p_\pi(s'\mid s)&=\sum_a\pi(a\mid s)p(s'\mid s,a).
+r_\pi(s)&=\sum_a\pi(a\mid s)\sum_r p(r\mid s,a)\,r,\\
+p_\pi(s'\mid s)&=\sum_a\pi(a\mid s)\,p(s'\mid s,a),\\[3pt]
+v_\pi(s)&=r_\pi(s)+\gamma\sum_{s'}p_\pi(s'\mid s)v_\pi(s').
 \end{aligned}
 $$
 
-把价值和平均奖励排成列向量（column vectors）。转移矩阵（transition matrix） $P_\pi$ 的第 $i$ 行第 $j$ 列是从 $s_i$ 到 $s_j$ 的概率，每行之和为 1。
+把有限个状态编号为 $s_1,\ldots,s_n$。第 $i$ 个状态的方程是 $v_\pi(s_i)=r_\pi(s_i)+\gamma\sum_{j=1}^{n}p_\pi(s_j\mid s_i)v_\pi(s_j)$。按同一顺序排列这些方程：
+
+$$
+\begin{aligned}
+\mathbf v_\pi&=[v_\pi(s_1),\ldots,v_\pi(s_n)]^\mathsf T\in\mathbb R^n,\\
+\mathbf r_\pi&=[r_\pi(s_1),\ldots,r_\pi(s_n)]^\mathsf T\in\mathbb R^n,\\
+P_\pi&\in\mathbb R^{n\times n},\qquad [P_\pi]_{ij}=p_\pi(s_j\mid s_i).
+\end{aligned}
+$$
+
+<strong>状态转移矩阵（state transition matrix）</strong>的行代表当前状态，列代表下一状态，每行概率之和为 $1$。将各状态的方程合起来：
+
+<div class="td-slide-equation">
 
 $$
 \mathbf v_\pi=\mathbf r_\pi+\gamma P_\pi\mathbf v_\pi.
 $$
 
-### Closed-form Solution
+</div>
+</div>
+</div>
 
-把含有 $\mathbf v_\pi$ 的项放在左边。$I$ 是单位矩阵，满足 $I\mathbf v_\pi=\mathbf v_\pi$。
+#### （2）四个状态时矩阵怎样展开
+
+<div class="td-slide">
+<div class="td-slide-title">Matrix-vector form · 四个状态的符号展开</div>
+<div class="td-slide-body">
+
+简写 $v_i=v_\pi(s_i)$、$r_i=r_\pi(s_i)$、$p_{ij}=p_\pi(s_j\mid s_i)$。矩阵式逐项写开就是：
+
+$$
+\underbrace{\begin{bmatrix}v_1\\v_2\\v_3\\v_4\end{bmatrix}}_{\mathbf v_\pi}
+=\underbrace{\begin{bmatrix}r_1\\r_2\\r_3\\r_4\end{bmatrix}}_{\mathbf r_\pi}
++\gamma
+\underbrace{\begin{bmatrix}
+p_{11}&p_{12}&p_{13}&p_{14}\\
+p_{21}&p_{22}&p_{23}&p_{24}\\
+p_{31}&p_{32}&p_{33}&p_{34}\\
+p_{41}&p_{42}&p_{43}&p_{44}
+\end{bmatrix}}_{P_\pi}
+\underbrace{\begin{bmatrix}v_1\\v_2\\v_3\\v_4\end{bmatrix}}_{\mathbf v_\pi}.
+$$
+
+例如第一行就是 $v_1=r_1+\gamma(p_{11}v_1+p_{12}v_2+p_{13}v_3+p_{14}v_4)$。每一行都是同一规则，只是起点不同。
+
+</div>
+</div>
+
+#### （3）策略评估：闭式解与迭代解
+
+<div class="td-slide">
+<div class="td-slide-title">Solve state values · Policy evaluation</div>
+<div class="td-slide-body">
+
+<strong>策略评估（policy evaluation）</strong>是给定策略，求它在各状态的价值。先知道当前策略的表现，才有依据判断怎样改进策略。
+
+#### Closed-form Solution
+
+把含有 $\mathbf v_\pi$ 的项移到左边。$I$ 是单位矩阵；在这里 $I-\gamma P_\pi$ 可逆：
 
 $$
 \begin{aligned}
-\mathbf v_\pi-\gamma P_\pi\mathbf v_\pi&=\mathbf r_\pi,\\
 (I-\gamma P_\pi)\mathbf v_\pi&=\mathbf r_\pi,\\
 \mathbf v_\pi&=(I-\gamma P_\pi)^{-1}\mathbf r_\pi.
 \end{aligned}
 $$
 
-最后一行是<strong>闭式解（closed-form solution）</strong>。因为 $\gamma<1$，若一个非零向量 $\mathbf x$ 满足 $\mathbf x=\gamma P_\pi\mathbf x$，它的最大绝对分量就至多是自身的 $\gamma$ 倍，产生矛盾。因此 $I-\gamma P_\pi$ 可逆。实际可以直接解第二行的线性方程组。
+这是<strong>闭式解（closed-form solution）</strong>。实际计算时，可以用数值工具直接解第一行的线性方程组，无须显式构造逆矩阵。
 
-### Iterative Solution
+#### Iterative Solution
 
-<strong>迭代解（iterative solution）</strong>把第 $k$ 轮的整组价值 $\mathbf v_k$ 放到等式右边，得到下一轮 $\mathbf v_{k+1}=\mathbf r_\pi+\gamma P_\pi\mathbf v_k$。全轮都用旧值，算完一组才一起换新值，这叫同步更新（synchronous update）。
-
-令 $\boldsymbol\delta_k=\mathbf v_k-\mathbf v_\pi$。迭代式减去贝尔曼方程后，奖励项抵消。$P_\pi$ 每行的概率之和是 1，所以加权平均无法放大最大绝对误差。
+<strong>迭代解（iterative solution）</strong>不执行矩阵求逆。从任意初值 $\mathbf v_0$ 出发，用整份旧价值计算整份新价值，之后再一起替换，这叫<strong>同步更新（synchronous update）</strong>：
 
 $$
-\begin{aligned}
-\boldsymbol\delta_{k+1}
-&=\gamma P_\pi(\mathbf v_k-\mathbf v_\pi)\\
-&=\gamma P_\pi\boldsymbol\delta_k,\\
-\|\boldsymbol\delta_k\|_\infty
-&\le\gamma^k\|\boldsymbol\delta_0\|_\infty
-\longrightarrow 0.
-\end{aligned}
+\mathbf v_{k+1}=\mathbf r_\pi+\gamma P_\pi\mathbf v_k,
+\qquad
+\mathbf v_0\longrightarrow\mathbf v_1\longrightarrow\mathbf v_2\longrightarrow\cdots.
 $$
 
-#### Iterative Policy Evaluation · 课件原页
+在 $0\le\gamma<1$ 时，$\mathbf v_k$ 收敛到与闭式解相同的 $\mathbf v_\pi$。实际可检查相邻两轮的最大变化 $\Delta=\|\mathbf v_{k+1}-\mathbf v_k\|_\infty$，由 $\|\mathbf v_{k+1}-\mathbf v_\pi\|_\infty\le\gamma\Delta/(1-\gamma)$ 估计当前误差。[收敛证明见附录](appendix.md#policy-evaluation-convergence)。
 
-<figure>
-  <img src="./resources/bellman-equation/bellman-40-procedure.webp" alt="原课件第 40 页的迭代解与收敛公式" width="571" height="265" loading="lazy">
-</figure>
-
-一轮内固定策略和整份旧价值。误差递推给出 $\|V-v_\pi\|_\infty\le\gamma\Delta/(1-\gamma)$，其中 $V$ 指刚完成更新后的向量。
+</div>
+</div>
 
 ## 4. State Value & Action Value · 双向换算
 
@@ -295,6 +341,7 @@ $$
 v_\pi(s)=\sum_a\pi(a\mid s)q_\pi(s,a).
 $$
 
+<!-- 四状态练习暂时隐藏；恢复时移除此注释边界。
 ## 5. Exercise · 四状态策略评估
 
 <div class="td-slide">
@@ -331,3 +378,4 @@ $$
 
 </div>
 </div>
+-->

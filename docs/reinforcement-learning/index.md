@@ -9,3 +9,4 @@
 - 第 5 课 · 蒙特卡洛方法。[V1（逐页）](monte-carlo-slides.md) · [V2（总结）](monte-carlo.md)
 - 第 6 课 · 随机近似与随机梯度下降。[V1（逐页）](stochastic-approximation-slides.md) · [V2（总结）](stochastic-approximation.md)
 - 第 7 课 · 时序差分方法。[V1（逐页）](temporal-difference-slides.md) · [V2（总结）](temporal-difference.md)
+- [附录](appendix.md)

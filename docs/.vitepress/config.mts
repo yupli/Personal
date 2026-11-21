@@ -201,6 +201,7 @@ export default defineConfig({
             { text: "V2（总结）", link: "/reinforcement-learning/temporal-difference" },
           ],
         },
+        { text: "附录", link: "/reinforcement-learning/appendix" },
       ],
     },
 
