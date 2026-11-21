@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 300" role="img" aria-labelledby="title desc">
+  <title id="title">四状态贝尔曼方程练习</title>
+  <desc id="desc">s1 向右到 s2 和向下到 s3 的概率各为 0.5，奖励分别为 −1 和 0。s2 向下、s3 向右，均到达 s4 并获奖励 1。s4 自环，每步奖励 1。</desc>
+  <defs>
+    <marker id="arrow" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+      <path d="M0 0L7 3.5L0 7z" fill="#245e49"/>
+    </marker>
+  </defs>
+  <rect x="84" y="24" width="252" height="252" rx="3" fill="#fff"/>
+  <path d="M210 24h126v126H210z" fill="#fff0c4"/>
+  <path d="M210 150h126v126H210z" fill="#d6f3f2"/>
+  <path d="M84 24h252v252H84zM210 24v252M84 150h252" fill="none" stroke="#69757f"/>
+  <g fill="#152439" font-family="system-ui,sans-serif" font-size="25" font-weight="600" text-anchor="middle">
+    <text x="147" y="92">s₁</text><text x="273" y="92">s₂</text>
+    <text x="147" y="218">s₃</text><text x="273" y="218">s₄</text>
+  </g>
+  <g fill="none" stroke="#245e49" stroke-width="2.5" marker-end="url(#arrow)">
+    <path d="M166 83H251"/><path d="M147 99V189"/>
+    <path d="M273 99V189"/><path d="M166 209H251"/>
+    <path d="M287 193C335 171 330 249 287 227"/>
+  </g>
+  <g fill="#7b2626" font-family="system-ui,sans-serif" font-size="16" text-anchor="middle">
+    <text x="210" y="63">p = 0.5, r = −1</text>
+    <text x="112" y="128">p = 0.5</text><text x="113" y="171">r = 0</text>
+    <text x="300" y="139">r = 1</text><text x="208" y="193">r = 1</text>
+    <text x="304" y="255">r = 1</text>
+  </g>
+</svg>

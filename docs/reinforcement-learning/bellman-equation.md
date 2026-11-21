@@ -294,3 +294,40 @@ $$
 $$
 v_\pi(s)=\sum_a\pi(a\mid s)q_\pi(s,a).
 $$
+
+## 5. Exercise · 四状态策略评估
+
+<div class="td-slide">
+<div class="td-slide-title">Exercise · 从转移图写出贝尔曼方程</div>
+<div class="td-slide-body">
+
+<figure>
+  <img src="./resources/bellman-equation/four-state-exercise.svg" alt="四状态转移图：从 s₁ 以一半概率右转到 s₂，奖励 −1；以一半概率下转到 s₃，奖励 0。s₂ 和 s₃ 都转到 s₄，奖励 1；s₄ 原地自环，奖励 1。" width="420" height="300" loading="lazy">
+  <figcaption>从 $s_1$ 出发，策略以相同概率选右或下；其余状态只走图示动作。$s_4$ 每步留在原地并获得 $+1$，所以它不是终止状态。</figcaption>
+</figure>
+
+<strong>逐状态列式。</strong> 每条分支的价值是「即时奖励 + 折扣后的下一状态价值」，再按策略概率加权。令 $v_i=v_\pi(s_i)$：
+
+$$
+\begin{aligned}
+v_1&=0.5(0+\gamma v_3)+0.5(-1+\gamma v_2),\\
+v_2&=1+\gamma v_4,\\
+v_3&=1+\gamma v_4,\\
+v_4&=1+\gamma v_4.
+\end{aligned}
+$$
+
+<strong>从最后一行往回代。</strong> 先移项求出 $v_4$，再求 $v_2,v_3$，最后代回 $v_1$：
+
+$$
+\begin{aligned}
+v_4&=\frac{1}{1-\gamma},\\
+v_2=v_3&=1+\frac{\gamma}{1-\gamma}=\frac{1}{1-\gamma},\\
+v_1&=-0.5+\frac{\gamma}{1-\gamma}.
+\end{aligned}
+$$
+
+取 $\gamma=0.9$，得到 $(v_1,v_2,v_3,v_4)=(8.5,10,10,10)$。与课件前一个策略相比，若在 $s_1$ 总是向下且其余动作不变，$v_1=0+0.9\times10=9$。两个分支的下一状态价值相同，随机策略的起点价值<strong>少了 $0.5$，完全来自一半概率的首步惩罚</strong>。
+
+</div>
+</div>
