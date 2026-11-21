@@ -322,24 +322,65 @@ $$
 
 ## 4. State Value & Action Value · 双向换算
 
-### State Value → Action Value
+### Action Value → State Value
 
-指定首步动作 $a$ 后，贝尔曼公式的外层动作平均就暂时不需要了。括号里保留两项，即这个动作的平均即时奖励，以及到达下一状态后继续按 $\pi$ 走的折扣价值。
+<div class="td-slide">
+<div class="td-slide-title">（1）Action value · 按首步动作求平均</div>
+<div class="td-slide-body">
+
+<strong>动作价值（action value）</strong>是从状态 $s$ 出发，先执行指定动作 $a$，再按策略 $\pi$ 行动所得到的期望折扣回报：
+
+$$
+q_\pi(s,a)=\mathbb E_\pi[G_t\mid S_t=s,A_t=a].
+$$
+
+它以<strong>状态动作对（state–action pair）</strong> $(s,a)$ 为输入。即使首步已经固定，之后的动作仍由 $\pi$ 决定，所以它依赖策略。
+
+如果只固定起点 $s$，首步也交给策略。按 $A_t$ 使用全期望公式，每个动作分支的条件期望就是对应的动作价值：
 
 $$
 \begin{aligned}
-q_\pi(s,a)&=\sum_r p(r\mid s,a)r\\
-&\quad+\gamma\sum_{s'}p(s'\mid s,a)v_\pi(s').
+\underbrace{\mathbb E_\pi[G_t\mid S_t=s]}_{v_\pi(s)}
+&=\sum_a \pi(a\mid s)\,
+  \underbrace{\mathbb E_\pi[G_t\mid S_t=s,A_t=a]}_{q_\pi(s,a)}\\[3pt]
+&=\sum_a\pi(a\mid s)q_\pi(s,a).
 \end{aligned}
 $$
 
-### Action Value → State Value
+</div>
+</div>
 
-把首步选择交回策略。每个动作价值描述一个首步分支，用策略选择该分支的概率作为权重。<strong>状态价值是各动作价值的加权平均（weighted average）。</strong>
+### State Value → Action Value
+
+<div class="td-slide">
+<div class="td-slide-title">（2）Action value · 从贝尔曼方程读出单个分支</div>
+<div class="td-slide-body">
+
+回看状态价值的贝尔曼方程。外层按策略对首步动作求平均；括号里算的是<strong>给定首步动作 $a$</strong>后的预期回报：
 
 $$
-v_\pi(s)=\sum_a\pi(a\mid s)q_\pi(s,a).
+v_\pi(s)=\sum_a\pi(a\mid s)
+\underbrace{\left[
+\sum_r p(r\mid s,a)\,r
++\gamma\sum_{s'}p(s'\mid s,a)\,v_\pi(s')
+\right]}_{q_\pi(s,a)}.
 $$
+
+固定 $A_t=a$ 时，直接把 $G_t=R_{t+1}+\gamma G_{t+1}$ 代入动作价值的定义，得到：
+
+$$
+\begin{aligned}
+q_\pi(s,a)
+&=\mathbb E_\pi[R_{t+1}+\gamma G_{t+1}\mid S_t=s,A_t=a]\\
+&=\underbrace{\sum_r p(r\mid s,a)\,r}_{\text{平均即时奖励}}\\
+&\quad+\underbrace{\gamma\sum_{s'}p(s'\mid s,a)\,v_\pi(s')}_{\text{折扣后的平均后续价值}}.
+\end{aligned}
+$$
+
+因此，<strong>从 $q_\pi$ 求 $v_\pi$</strong>时，用策略概率对各动作分支加权；<strong>从 $v_\pi$ 求 $q_\pi$</strong>时，固定首步动作，用环境的奖励和转移概率算这一个分支。
+
+</div>
+</div>
 
 <!-- 四状态练习暂时隐藏；恢复时移除此注释边界。
 ## 5. Exercise · 四状态策略评估
