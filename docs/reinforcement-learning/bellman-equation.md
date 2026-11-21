@@ -8,19 +8,75 @@ pageClass: rl-summary
 
 ## 1. Return, State Value & Action Value
 
-<strong>给定走法后，贝尔曼公式用来算从每一格出发平均能拿多少分。</strong> 记时刻 $t$ 的状态和动作为 $S_t,A_t$。执行 $A_t$ 后收到的第一笔即时奖励（immediate reward）是 $R_{t+1}$。把一条实际轨迹的奖励按 $1,\gamma,\gamma^2,\ldots$ 加权相加，就得到该次运行的折扣回报 $G_t$，其中 $0\le\gamma<1$。同一个起点可能产生不同的轨迹，所以还要看这些回报的平均值。
+#### （1）单步交互与概率记号
 
-<strong>状态价值（state value）</strong>只指定起点 $s$，首步和后续动作都按策略 $\pi$ 选择。
+<div class="td-slide">
+<div class="td-slide-title">Some notations · 单步交互</div>
+<div class="td-slide-body">
+
+在离散时刻 $t$，智能体处于状态 $S_t$，执行动作 $A_t$；环境随后给出即时奖励 $R_{t+1}$ 和下一状态 $S_{t+1}$。
+
+$$
+S_t\xrightarrow{A_t}R_{t+1},\,S_{t+1}.
+$$
+
+大写 $S_t,A_t,R_{t+1},S_{t+1}$ 表示<strong>随机变量（random variables）</strong>；小写 $s,a,r,s'$ 表示它们的具体取值。
+
+- <strong>策略（policy）</strong>：$\pi(a\mid s)=\Pr_\pi(A_t=a\mid S_t=s)$，给定状态后选中动作 $a$ 的概率。
+- <strong>奖励概率（reward probability）</strong>：$p(r\mid s,a)=\Pr(R_{t+1}=r\mid S_t=s,A_t=a)$，给定状态和动作后获得奖励 $r$ 的概率。
+- <strong>状态转移概率（state transition probability）</strong>：$p(s'\mid s,a)=\Pr(S_{t+1}=s'\mid S_t=s,A_t=a)$，给定状态和动作后到达 $s'$ 的概率。
+
+</div>
+</div>
+
+#### （2）多步轨迹与折扣回报
+
+<div class="td-slide">
+<div class="td-slide-title">Some notations · 多步轨迹</div>
+<div class="td-slide-body">
+
+把单步交互接起来，就得到一条<strong>轨迹（trajectory）</strong>：
+
+$$
+S_t\xrightarrow{A_t}R_{t+1},\,S_{t+1}
+\xrightarrow{A_{t+1}}R_{t+2},\,S_{t+2}
+\xrightarrow{A_{t+2}}R_{t+3},\,\ldots
+$$
+
+从时刻 $t$ 算起，<strong>折扣回报（discounted return）</strong>是：
+
+$$
+G_t=R_{t+1}+\gamma R_{t+2}+\gamma^2R_{t+3}+\cdots.
+$$
+
+$\gamma\in[0,1)$ 是<strong>折扣因子（discount factor）</strong>。执行 $A_t$ 后收到的第一笔奖励权重为 $1$，之后每晚一步就多乘一个 $\gamma$。因为各步奖励是随机变量，$G_t$ 也是随机变量；即使起点相同，不同轨迹也可能得到不同的回报。
+
+</div>
+</div>
+
+#### （3）状态价值与动作价值
+
+<div class="td-slide">
+<div class="td-slide-title">State value · 给定起点的平均回报</div>
+<div class="td-slide-body">
+
+给定策略 $\pi$，从状态 $s$ 出发，第一步和后续动作都按 $\pi$ 选择。对可能的折扣回报按概率取平均，得到<strong>状态价值（state value）</strong>：
 
 $$
 v_\pi(s)=\mathbb E_\pi[G_t\mid S_t=s].
 $$
+
+- <strong>为什么是条件期望？</strong>这里只对以 $S_t=s$ 为起点的轨迹取平均；固定策略后，$v_\pi$ 就是以 $s$ 为输入的函数。
+- <strong>为什么要标出策略？</strong>不同策略会选不同的动作。同一状态在不同策略下的价值可能不同；从同一个 $s$ 出发，$v_\pi(s)$ 越高，表示该策略的预期折扣回报越高。
 
 <strong>动作价值（action value）</strong>还指定第一步做 $a$，从第二步起按 $\pi$ 走。即使 $\pi$ 平常不会在 $s$ 选 $a$，也可以计算强制第一步做 $a$ 会怎样。
 
 $$
 q_\pi(s,a)=\mathbb E_\pi[G_t\mid S_t=s,A_t=a].
 $$
+
+</div>
+</div>
 
 ## 2. Bellman Expectation Equation
 
