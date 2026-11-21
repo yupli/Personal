@@ -245,3 +245,154 @@ $$
 
 </div>
 </div>
+
+## 5. Solving the Bellman Optimality Equation
+
+#### （1）把 BOE 写成不动点方程
+
+<div class="td-slide">
+<div class="td-slide-title">Fixed-point form · 把右侧看作一个映射</div>
+<div class="td-slide-body">
+
+把贝尔曼最优方程右侧记为<strong>贝尔曼最优算子（Bellman optimality operator）</strong> $f$：
+
+$$
+f(\mathbf v):=\max_\pi\bigl(\mathbf r_\pi+\gamma P_\pi\mathbf v\bigr),
+\qquad \mathbf v=f(\mathbf v).
+$$
+
+$f$ 输入整组候选价值，输出每个状态做一次最优的一步前瞻后得到的新价值。最大值是逐状态取的，在状态 $s$ 的分量为
+
+$$
+[f(\mathbf v)]_s
+=\max_{\pi(\cdot\mid s)}\sum_a\pi(a\mid s)q_v(s,a)
+=\max_{a\in\mathcal A(s)}q_v(s,a),\qquad s\in\mathcal S.
+$$
+
+因此，解 BOE 就是找一组经 $f$ 更新后保持不变的价值。
+
+</div>
+</div>
+
+#### （2）BOE 的收缩性
+
+<div class="td-theorem">
+<div class="td-theorem-title">Theorem · Contraction Property</div>
+<div class="td-theorem-body">
+
+用<strong>最大范数（sup norm）</strong> $\|\mathbf v\|_\infty=\max_s|v(s)|$ 衡量价值向量。对任意 $\mathbf v_1,\mathbf v_2$，都有
+
+$$
+\|f(\mathbf v_1)-f(\mathbf v_2)\|_\infty
+\le\gamma\|\mathbf v_1-\mathbf v_2\|_\infty.
+$$
+
+收缩系数就是折扣因子 $\gamma$。原因是：固定同一个 $(s,a)$ 时，即时奖励项相减后抵消，剩下的是下一状态价值的差按转移概率加权，再乘 $\gamma$：
+
+$$
+\begin{aligned}
+|q_{v_1}(s,a)-q_{v_2}(s,a)|
+&=\gamma\left|\sum_{s'}p(s'\mid s,a)\,[v_1(s')-v_2(s')]\right|\\
+&\le\gamma\|\mathbf v_1-\mathbf v_2\|_\infty .
+\end{aligned}
+$$
+
+若每个动作值最多变动 $d$，两组动作值的最大值也最多相差 $d$，即使取得最大值的动作变了也一样。于是每个状态的输出都满足同一上界。
+
+</div>
+</div>
+
+#### （3）解存在、唯一，并可通过迭代求出
+
+<div class="td-theorem">
+<div class="td-theorem-title">Theorem · Existence, Uniqueness, and Algorithm</div>
+<div class="td-theorem-body">
+
+有限状态的价值向量空间完备，且 $\gamma<1$，因此可以应用上一节的收缩映射定理：BOE <strong>存在唯一的价值解</strong> $\mathbf v^*$。从任意初值 $\mathbf v_0$ 出发，迭代
+
+$$
+\mathbf v_{k+1}=f(\mathbf v_k)
+=\max_\pi\bigl(\mathbf r_\pi+\gamma P_\pi\mathbf v_k\bigr)
+$$
+
+即可求解。实际每轮用同一份 $\mathbf v_k$ 计算各状态的动作值，再逐状态取最大，得到 $\mathbf v_{k+1}$。这就是<strong>值迭代（value iteration）</strong>。误差以几何速度衰减：
+
+$$
+\|\mathbf v_k-\mathbf v^*\|_\infty
+\le\gamma^k\|\mathbf v_0-\mathbf v^*\|_\infty.
+$$
+
+$\gamma$ 决定这个误差上界的衰减速度；越接近 $1$，上界下降越慢。
+
+</div>
+</div>
+
+## 6. Policy Optimality
+
+#### （1）选出的策略能实现 BOE 的解
+
+<div class="td-slide">
+<div class="td-slide-title">Policy optimality · 把价值解变成一套策略</div>
+<div class="td-slide-body">
+
+先把 BOE 的唯一解 $\mathbf v^*$ 代回右侧，再取一套能在每个状态达到最大值的策略：
+
+$$
+\begin{aligned}
+\mathbf v^*&=\max_\pi(\mathbf r_\pi+\gamma P_\pi\mathbf v^*),\\
+\pi^*&\in\arg\max_\pi(\mathbf r_\pi+\gamma P_\pi\mathbf v^*),\\
+\mathbf v^*&=\mathbf r_{\pi^*}+\gamma P_{\pi^*}\mathbf v^* .
+\end{aligned}
+$$
+
+最后一行是固定策略 $\pi^*$ 的贝尔曼期望方程。由第 2 课，该方程的解唯一，所以 $\mathbf v^*=\mathbf v_{\pi^*}$。这说明<strong>这套策略实际能实现这组价值</strong>。还要证明其他策略无法超过它。
+
+</div>
+</div>
+
+#### （2）其他策略不能超过这组价值
+
+<div class="td-theorem">
+<div class="td-theorem-title">Theorem · Policy Optimality</div>
+<div class="td-theorem-body">
+
+设 $\mathbf v^*$ 是 BOE 的唯一解，$\mathbf v_\pi$ 是任意给定策略 $\pi$ 的价值，满足 $\mathbf v_\pi=\mathbf r_\pi+\gamma P_\pi\mathbf v_\pi$。则
+
+$$
+v^*(s)\ge v_\pi(s),\qquad \forall s\in\mathcal S,\ \forall\pi .
+$$
+
+把固定策略的一次更新记为 $f_\pi(\mathbf v)=\mathbf r_\pi+\gamma P_\pi\mathbf v$。从 $\mathbf v^*$ 出发，任意策略的一步更新都不会超过逐状态的最大值，即 $f_\pi(\mathbf v^*)\le\mathbf v^*$。转移概率非负，所以再应用 $f_\pi$ 仍保持大小关系。反复更新始终不超过 $\mathbf v^*$，而这些更新会收敛到 $\mathbf v_\pi$。
+
+因此，$\pi^*$ 能实现 $\mathbf v^*$，其他策略又不能超过它，$\pi^*$ 就是最优策略。
+
+</div>
+</div>
+
+#### （3）最优策略的具体写法
+
+<div class="td-theorem">
+<div class="td-theorem-title">Theorem · Greedy Optimal Policy</div>
+<div class="td-theorem-body">
+
+求得 $v^*$ 后，对每个状态和可用动作计算<strong>最优动作价值（optimal action value）</strong>。它表示首步固定执行 $a$，从下一状态起按最优策略行动的期望折扣回报：
+
+$$
+q^*(s,a)=\sum_r p(r\mid s,a)r
++\gamma\sum_{s'}p(s'\mid s,a)v^*(s').
+$$
+
+逐状态任选一个达到最大值的动作 $a^*(s)\in\arg\max_{a\in\mathcal A(s)}q^*(s,a)$，把全部概率给它：
+
+$$
+\pi^*(a\mid s)=
+\begin{cases}
+1,& a=a^*(s),\\
+0,& a\ne a^*(s).
+\end{cases}
+$$
+
+这是一个<strong>确定性贪心策略（deterministic greedy policy）</strong>，它在每个状态都达到 BOE 的右侧最大值，因此是最优策略。若动作并列最大，任选一个可得到确定性最优策略；只在并列最大动作之间分配概率也可得到最优策略。唯一的是 $\mathbf v^*$，策略可以有多个。
+
+</div>
+</div>
