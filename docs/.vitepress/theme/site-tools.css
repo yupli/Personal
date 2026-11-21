@@ -27,6 +27,7 @@
   background:var(--vp-c-bg-alt); border:1px solid var(--vp-c-divider); color:var(--vp-c-text-1);
   border-radius:6px; padding:6px 9px; min-height:36px; font:inherit;
 }
+.pk-search-dialog { white-space:normal; }
 .pk-search-dialog .pk-dialog-inner {
   display:flex;
   flex-direction:column;
