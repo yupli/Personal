@@ -61,6 +61,11 @@ function shortcut(e:KeyboardEvent) {
 }
 function goToFirst(e:KeyboardEvent) {
   if (isCompositionKey(e)) return;
+  if (e.key === "Escape") {
+    e.preventDefault();
+    dialog.value?.close();
+    return;
+  }
   if (e.key === "ArrowDown") {
     const first = dialog.value?.querySelector<HTMLElement>(".pk-search-results a");
     if (first) { e.preventDefault(); first.focus(); }
