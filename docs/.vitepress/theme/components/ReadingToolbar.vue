@@ -41,4 +41,5 @@ watch(()=>page.value.relativePath,update);
     </div>
     <button type="button" class="pk-btn" :aria-pressed="bookmark" @click="reading.toggle({path,title:page.title})">{{bookmark?'取消收藏':'收藏本页'}}</button>
   </nav>
+  <p v-if="info?.slides" class="pk-slide-hint">点击课件图片可放大。</p>
 </template>

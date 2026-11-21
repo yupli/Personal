@@ -231,7 +231,7 @@ export default defineConfig({
 
     skipToContentLabel: "跳到正文",
     returnToTopLabel: "回到顶部",
-    sidebarMenuLabel: "菜单",
+    sidebarMenuLabel: "章节导航",
     darkModeSwitchLabel: "外观",
     lightModeSwitchTitle: "浅色",
     darkModeSwitchTitle: "深色",
