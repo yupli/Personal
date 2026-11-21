@@ -6,12 +6,12 @@ pageClass: rl-summary
 
 [切换到 V1（逐页）](bellman-equation-slides.md)
 
-## 1. Return, State Value & Action Value
+## 1. Return & State Value
 
-#### （1）单步交互与概率记号
+#### （1）交互记号、轨迹与折扣回报
 
 <div class="td-slide">
-<div class="td-slide-title">Some notations · 单步交互</div>
+<div class="td-slide-title">Some notations · 从单步交互到多步回报</div>
 <div class="td-slide-body">
 
 在离散时刻 $t$，智能体处于状态 $S_t$，执行动作 $A_t$；环境随后给出即时奖励 $R_{t+1}$ 和下一状态 $S_{t+1}$。
@@ -25,15 +25,6 @@ $$
 - <strong>策略（policy）</strong>：$\pi(a\mid s)=\Pr_\pi(A_t=a\mid S_t=s)$，给定状态后选中动作 $a$ 的概率。
 - <strong>奖励概率（reward probability）</strong>：$p(r\mid s,a)=\Pr(R_{t+1}=r\mid S_t=s,A_t=a)$，给定状态和动作后获得奖励 $r$ 的概率。
 - <strong>状态转移概率（state transition probability）</strong>：$p(s'\mid s,a)=\Pr(S_{t+1}=s'\mid S_t=s,A_t=a)$，给定状态和动作后到达 $s'$ 的概率。
-
-</div>
-</div>
-
-#### （2）多步轨迹与折扣回报
-
-<div class="td-slide">
-<div class="td-slide-title">Some notations · 多步轨迹</div>
-<div class="td-slide-body">
 
 把单步交互接起来，就得到一条<strong>轨迹（trajectory）</strong>：
 
@@ -54,7 +45,7 @@ $\gamma\in[0,1)$ 是<strong>折扣因子（discount factor）</strong>。执行 
 </div>
 </div>
 
-#### （3）状态价值与动作价值
+#### （2）状态价值
 
 <div class="td-slide">
 <div class="td-slide-title">State value · 给定起点的平均回报</div>
@@ -68,12 +59,6 @@ $$
 
 - <strong>为什么是条件期望？</strong>这里只对以 $S_t=s$ 为起点的轨迹取平均；固定策略后，$v_\pi$ 就是以 $s$ 为输入的函数。
 - <strong>为什么要标出策略？</strong>不同策略会选不同的动作。同一状态在不同策略下的价值可能不同；从同一个 $s$ 出发，$v_\pi(s)$ 越高，表示该策略的预期折扣回报越高。
-
-<strong>动作价值（action value）</strong>还指定第一步做 $a$，从第二步起按 $\pi$ 走。即使 $\pi$ 平常不会在 $s$ 选 $a$，也可以计算强制第一步做 $a$ 会怎样。
-
-$$
-q_\pi(s,a)=\mathbb E_\pi[G_t\mid S_t=s,A_t=a].
-$$
 
 </div>
 </div>
@@ -183,7 +168,7 @@ $$
 ### Putting Both Terms Together
 
 <div class="td-slide">
-<div class="td-slide-title">（4）合并两项 · Bellman Expectation Equation</div>
+<div class="td-slide-title">（4）合并两项 · 贝尔曼期望方程与环境模型</div>
 <div class="td-slide-body">
 
 把两项分别代入，再提出共同的动作权重 $\pi(a\mid s)$：
@@ -200,15 +185,6 @@ v_\pi(s)
 $$
 
 贝尔曼期望方程把<strong>当前状态的价值与可能到达的下一状态的价值</strong>联系起来，下一状态也可能是当前状态。有限状态下，每个状态给出一个方程，合起来就是一组关于各状态价值的联立方程。给定策略求这些价值，叫作<strong>策略评估（policy evaluation）</strong>。
-
-</div>
-</div>
-
-#### （5）模型已知与未知
-
-<div class="td-slide">
-<div class="td-slide-title">Dynamics model · 已知与未知</div>
-<div class="td-slide-body">
 
 方程里的 $p(r\mid s,a)$ 和 $p(s'\mid s,a)$ 描述了<strong>环境模型（dynamics model）</strong>中用于这两项期望的奖励概率和转移概率；$\pi(a\mid s)$ 则来自给定的策略。
 
@@ -334,7 +310,7 @@ $$
 q_\pi(s,a)=\mathbb E_\pi[G_t\mid S_t=s,A_t=a].
 $$
 
-它以<strong>状态动作对（state–action pair）</strong> $(s,a)$ 为输入。即使首步已经固定，之后的动作仍由 $\pi$ 决定，所以它依赖策略。
+它以<strong>状态动作对（state–action pair）</strong> $(s,a)$ 为输入。即使首步已经固定，之后的动作仍由 $\pi$ 决定，所以它依赖策略。即使 $\pi(a\mid s)=0$，也可以指定第一步执行这个可用动作，再从下一步起按 $\pi$ 行动。
 
 如果只固定起点 $s$，首步也交给策略。按 $A_t$ 使用全期望公式，每个动作分支的条件期望就是对应的动作价值：
 
