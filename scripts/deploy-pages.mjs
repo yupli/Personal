@@ -20,9 +20,10 @@ function files(dir) {
 }
 const built = new Set(files(source));
 const assets = new Set([...built].filter(x=>x.startsWith("assets/")));
-const keepSpecial = new Set([".nojekyll", "CNAME", manifest]);
 const safeAsset = name => /^assets\/(?:[\w.-]+\/)*[\w.-]+$/.test(name) && !name.split("/").includes("..");
+const generatedPage = name => /^(?:or-opt|reinforcement-learning)\/(?:[\w.-]+\/)*[\w.-]+\.html$/.test(name);
 const legacy = {};
+let publishError;
 await ghPages.publish(source, {
   add:true, nojekyll:true,
   beforeAdd(git) {
@@ -37,7 +38,7 @@ await ghPages.publish(source, {
       if(safeAsset(name)&&!assets.has(name)&&!legacy[name]&&Number.isFinite(expiry)&&expiry>now)legacy[name]=expiry;
     }
     for (const name of tracked) {
-      if (built.has(name)||keepSpecial.has(name)||legacy[name])continue;
+      if (built.has(name)||legacy[name]||!(safeAsset(name)||generatedPage(name)))continue;
       const file=resolve(cwd,name);
       const rel=relative(cwd,file);
       if(!rel||rel.startsWith("..")||isAbsolute(rel))throw new Error("Unexpected deployment path: "+name);
@@ -45,5 +46,6 @@ await ghPages.publish(source, {
     }
     writeFileSync(join(cwd,manifest),JSON.stringify({ current:[...assets],legacy }));
   },
-});
+}, error => { publishError = error; });
+if (publishError) throw publishError;
 console.log("Published; retained",Object.keys(legacy).length,"previous assets for open sessions.");
