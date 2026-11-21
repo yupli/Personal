@@ -8,13 +8,37 @@ pageClass: rl-summary
 
 ## 1. States, Actions & Transitions
 
-智能体（agent）观察当前状态 $s\in\mathcal S$，从可用动作集合 $\mathcal A(s)$ 中选择 $a$。环境返回即时奖励 $r$ 和下一状态 $s'$。
+### （1）状态与状态空间
 
-| Quantity | Definition |
-| --- | --- |
-| Joint distribution | $p(s',r\mid s,a)$ 同时描述落点和奖励 |
-| State transition probability | $p(s'\mid s,a)=\sum_r p(s',r\mid s,a)$ |
-| Reward probability | $p(r\mid s,a)=\sum_{s'}p(s',r\mid s,a)$ |
+- **State（状态）**：智能体（agent）相对于环境所处的情形，记作 $s$。
+- **State space（状态空间）**：所有可能状态的集合，记作 $\mathcal S$，因此 $s\in\mathcal S$。若有 $N$ 个状态，可写成 $\mathcal S=\{s_1,\ldots,s_N\}$。
+
+### （2）动作与动作空间
+
+- **Action（动作）**：智能体在当前状态下可以做出的一项选择，记作 $a$。
+- **Action space of a state（该状态的动作空间）**：状态 $s$ 下所有可用动作的集合，记作 $\mathcal A(s)$。智能体在状态 $s$ 选择的动作满足 $a\in\mathcal A(s)$。不同状态的可用动作可以不同。
+
+### （3）状态转移与转移概率
+
+**State transition（状态转移）**：智能体在状态 $s$ 执行动作 $a$ 后，环境产生下一状态 $s'$，记作 $s\xrightarrow{a}s'$。下一状态也可能仍是 $s$。
+
+**State transition probability（状态转移概率）**：给定当前状态 $s$ 和动作 $a$，下一状态是 $s'$ 的概率。
+
+$$
+p(s'\mid s,a)=\Pr(S_{t+1}=s'\mid S_t=s,A_t=a),
+\qquad \sum_{s'\in\mathcal S}p(s'\mid s,a)=1.
+$$
+
+- **Deterministic transition（确定性转移）**：给定 $(s,a)$ 后，只有一个下一状态的概率为 $1$，其余为 $0$。
+- **Stochastic transition（随机转移）**：即使给定同一个 $(s,a)$，也可能出现多个不同的下一状态，概率分配在这些状态上。
+
+环境同时给出下一状态 $s'$ 和即时奖励 $r$，可用联合分布（joint distribution）$p(s',r\mid s,a)$ 描述。离散情形下，对奖励求和得到状态转移概率；对下一状态求和得到奖励概率：
+
+$$
+p(s'\mid s,a)=\sum_r p(s',r\mid s,a),
+\qquad
+p(r\mid s,a)=\sum_{s'}p(s',r\mid s,a).
+$$
 
 ## 2. Policy
 
