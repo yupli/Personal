@@ -661,66 +661,6 @@ Sarsa 使用行为策略抽出的 $A_{t+1}$ 评价同一策略。Q-learning 的�
 MC 的等权样本均值对应第 $N$ 次访问使用 $\alpha=1/N$。课件把 $\alpha=1$ 写作直接放入单次回报，这只是统一更新式中的单样本情形。
 
 <style>
-.rl-summary .vp-doc .td-slide {
-  --vp-c-text-1: #191919;
-  margin: 0.75rem 0 1.5rem;
-  border: 1px solid #cecece;
-  border-radius: 4px;
-  overflow: hidden;
-  background: #f2f2f2;
-  color: #191919;
-  font-size: 0.96rem;
-  line-height: 1.55;
-}
-
-.td-slide-title {
-  padding: 0.65rem clamp(0.85rem, 4vw, 1.5rem);
-  background: #090875;
-  color: #fff;
-  font-size: 1.1em;
-  line-height: 1.4;
-}
-
-.td-slide-body {
-  padding: 0.9rem clamp(0.85rem, 4vw, 1.5rem);
-}
-
-.rl-summary .vp-doc .td-slide-body h4 {
-  margin: 1rem 0 0.45rem;
-  font-size: 1em;
-  line-height: inherit;
-}
-
-.rl-summary .vp-doc .td-slide-body h4:first-child {
-  margin-top: 0;
-}
-
-.rl-summary .vp-doc .td-slide-body p,
-.rl-summary .vp-doc .td-slide-body ul {
-  margin-block: 0.55rem;
-  line-height: inherit;
-}
-
-.td-slide-emphasis {
-  color: #151590;
-}
-
-.td-slide-equation {
-  color: #911f20;
-}
-
-.rl-summary .vp-doc .td-slide mjx-container[display="true"] {
-  overflow-x: auto;
-  padding: 0.45rem 0;
-  background: transparent;
-}
-
-.rl-summary .vp-doc .td-slide mjx-container[display="true"] > svg {
-  display: block;
-  max-width: none;
-  margin-inline: auto;
-}
-
 .td-theorem {
   overflow: hidden;
   margin-bottom: 1rem;
