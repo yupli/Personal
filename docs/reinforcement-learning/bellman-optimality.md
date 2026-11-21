@@ -8,89 +8,144 @@ pageClass: rl-summary
 
 ## 1. Optimal Policy & Optimal Value
 
-以下讨论有限状态、有限动作、奖励有界且 $0\le\gamma<1$ 的任务。比较两个策略时，要逐状态比较它们的价值。
+<div class="td-slide">
+<div class="td-slide-title">Optimal policy · 怎样比较策略？</div>
+<div class="td-slide-body">
 
-<strong>最优策略（optimal policy）</strong> $\pi^*$ 是一套完整的行动规则，它从每个起点出发都能达到该起点的最高价值。策略可以在不同状态选不同动作，并且允许其他策略在某些状态与它打平。它实现的状态价值称为<strong>最优状态价值（optimal state value）</strong> $v^*$。
+本课讨论有限状态、有限动作、奖励有界、$0\le\gamma<1$ 的任务。若
 
 $$
-\begin{aligned}
-v_{\pi^*}(s)&\ge v_\pi(s) &&\text{对任意 }s,\pi,\\
-v^*(s)&=v_{\pi^*}(s).
-\end{aligned}
+v_{\pi_1}(s)\ge v_{\pi_2}(s),\qquad \forall s\in\mathcal S,
 $$
 
-给定旧策略的动作价值后，逐状态选择最大的动作称为策略改进（policy improvement）。旧价值描述的是后续继续按旧策略行动的回报。贝尔曼最优公式则要求后续价值与最优决策本身一致。
+则策略 $\pi_1$ 从任何起点出发都不比 $\pi_2$ 差。若一个策略在某些状态更好、在另一些状态更差，就无法用这个标准把两者排出先后。
+
+<strong>定义 · 最优策略（optimal policy）</strong>：同一个策略 $\pi^*$ 必须在<strong>每个起点</strong>都达到最高价值，也就是
+
+$$
+v_{\pi^*}(s)\ge v_\pi(s),\qquad \forall s\in\mathcal S,\ \forall\pi.
+$$
+
+它实现的状态价值称为<strong>最优状态价值（optimal state value）</strong>，记为 $v^*(s)=v_{\pi^*}(s)$。在这个设定下，最优价值唯一，最优策略至少有一个是确定性的；如果多个动作并列最优，策略可以不唯一，也可以在并列动作间随机选择。下面先写出方程，第 6 节再说明怎样从它的解得到最优策略。
+
+</div>
+</div>
 
 ## 2. Bellman Optimality Equation
 
 ### Elementwise Form
 
-把回报拆成 $G_t=R_{t+1}+\gamma G_{t+1}$。第一项是当前动作直接带来的奖励，第二项涵盖下一步开始的全部回报。$G_{t+1}$ 是站在下一时刻计价的，所以要再乘一次 $\gamma$ 折回当前。给定当前状态 $s$、动作 $a$，暂用 $v(s')$ 表示到达 $s'$ 后的候选价值。把奖励和下一状态分别按环境给出的概率取平均，得到
+<div class="td-slide">
+<div class="td-slide-title">（1）Elementwise form · 对每个状态写一个方程</div>
+<div class="td-slide-body">
+
+第 2 课的贝尔曼期望方程按<strong>给定策略</strong>的概率对首步动作取平均。<strong>贝尔曼最优方程（Bellman optimality equation，BOE）</strong>则要在所有可行的动作分布中找到能让这一平均值最大的分布：
 
 $$
 \begin{aligned}
-q_v(s,a)
-&=\underbrace{\sum_r p(r\mid s,a)r}_{\text{期望即时奖励}}\\
-&\quad+\gamma\underbrace{\sum_{s'}p(s'\mid s,a)v(s')}_{\text{期望下一状态价值}}.
+v(s)
+&=\max_{\pi(\cdot\mid s)}\sum_a \pi(a\mid s)
+\left[\sum_r p(r\mid s,a)\,r
+ +\gamma\sum_{s'}p(s'\mid s,a)\,v(s')\right]\\
+&=\max_{\pi(\cdot\mid s)}\sum_a \pi(a\mid s)\,q_v(s,a),
+\qquad s\in\mathcal S.
 \end{aligned}
 $$
 
-这里 $p(r\mid s,a)$ 是做完 $a$ 后得到奖励 $r$ 的概率，$p(s'\mid s,a)$ 是到达下一状态 $s'$ 的概率。
+括号里的 $q_v(s,a)$ 是<strong>一步前瞻（one-step lookahead）</strong>：指定首步做 $a$，把平均即时奖励与按候选价值 $v$ 计算的折扣后续价值相加。
 
-上面已经固定了动作，概率来自环境。如果现在只知道起点，给定策略会用 $\pi(a\mid s)$ 选择动作，还要在各个动作值外面再做一层平均。<strong>贝尔曼最优公式（Bellman optimality equation，BOE）</strong>把策略的这层概率也作为待选量，寻找能得到最大值的分配。
+- <strong>已知：</strong>环境的奖励概率 $p(r\mid s,a)$、转移概率 $p(s'\mid s,a)$ 和折扣因子 $\gamma$。
+- <strong>待求：</strong>整组状态价值 $v$ 同时出现在等式两侧；使右侧最大的策略 $\pi$ 也没有预先给定。$v(s)$ 和 $v(s')$ 是同一组未知价值在不同状态上的分量。
 
-$$
-v(s)=\max_{\pi(\cdot\mid s)}
-\sum_a\pi(a\mid s)q_v(s,a).
-$$
-
-左边是从 $s$ 出发的价值，右边用同一组 $v$ 做<strong>一步前瞻（one-step lookahead）</strong>，再选最好首步。解方程时，每个状态的两边都要相等。为什么这个解就是 $v^*$，第 6 节会通过构造策略来验证。
+</div>
+</div>
 
 ### Matrix–Vector Form
 
-把所有状态的价值排成列向量 $\mathbf v$。$\mathbf r_\pi$ 的第 $s$ 项是按策略选动作后的期望即时奖励，$P_\pi$ 的第 $s$ 行是按策略选动作后到各下一状态的概率。
+<div class="td-slide">
+<div class="td-slide-title">（2）Matrix–vector form · 把状态方程合在一起</div>
+<div class="td-slide-body">
+
+沿用第 2 课的记号，$\mathbf v$ 是价值列向量，$\mathbf r_\pi$ 和 $P_\pi$ 分别是按策略平均后的即时奖励向量和状态转移矩阵：
 
 $$
 \begin{aligned}
-r_\pi(s)&=\sum_a\pi(a\mid s)\sum_r p(r\mid s,a)r,\\
-[P_\pi]_{ss'}&=\sum_a\pi(a\mid s)p(s'\mid s,a),\\
+r_\pi(s)&=\sum_a\pi(a\mid s)\sum_r p(r\mid s,a)\,r,\\
+[P_\pi]_{ss'}&=\sum_a\pi(a\mid s)p(s'\mid s,a),\\[3pt]
 \mathbf v&=\max_\pi\bigl(\mathbf r_\pi+\gamma P_\pi\mathbf v\bigr).
 \end{aligned}
 $$
 
-矩阵乘法的第 $s$ 行就是把各个 $v(s')$ 按转移概率加权。
+这里的最大值是<strong>逐分量（componentwise）</strong>取的：每个状态可以选自己的动作分布，再把这些选择合成一套完整策略。这条式子同时刻画了价值和策略；难点是右侧还要做一次最大化，不能直接照搬固定策略时的线性方程求解法。
 
-因此 $\max_\pi$ 要<strong>逐状态分量</strong>计算。每一行可以选自己的动作分布，比如 $s_1$ 选向下、$s_4$ 选停留。把各行的选择合起来就是完整策略。给定策略后，$\mathbf r_\pi$ 和 $P_\pi$ 都已确定，方程就回到第 2 课的策略评价。
+</div>
+</div>
 
 ## 3. Solving for Value and Policy
 
-公式里有两个未知量。<strong>价值 $v$</strong> 同时出现在等式左边和右边的后续价值里。<strong>策略 $\pi$</strong> 则藏在右边的最大化里。处理顺序是先把 $v$ 当作已知，解出右侧最大值的表达式，再用这个表达式求满足整条等式的 $v$。
+#### （1）两个未知量：先处理右边的最大化
+
+<div class="td-slide">
+<div class="td-slide-title">Two unknowns · 先最大化，再解等式</div>
+<div class="td-slide-body">
+
+课件先看 $x,a\in\mathbb R$ 的例子。把 $x$ 暂时当成常数，右侧只有 $-a^2$ 随 $a$ 变化；它在 $a=0$ 时取最大值 $0$。因此可以先消去 $a$，再求 $x$：
+
+$$
+x=\max_a(2x-1-a^2)
+\ \Longrightarrow\ x=2x-1
+\ \Longrightarrow\ x=1,\quad a^*=0.
+$$
+
+BOE 也按这个顺序：<strong>先固定一组候选价值 $v$，算出右侧最大值；再找出使等式成立的整组 $v$。</strong> 与上面的例子不同，BOE 中取得最大值的动作可能随候选 $v$ 变化。
+
+</div>
+</div>
 
 ### Inner Maximization · 从策略到动作
 
-贝尔曼最优公式也按这个顺序处理。固定候选 $v$ 后，每个 $q_v(s,a)$ 都是一个已知数。以 $m=\max_a q_v(s,a)$ 为上界，概率加权平均满足
+<div class="td-slide">
+<div class="td-slide-title">（2）Inner maximization · 加权平均不会超过最大项</div>
+<div class="td-slide-body">
+
+固定候选 $v$ 后，每个动作的 $q_v(s,a)$ 都是已知数。课件把三个动作的概率记为 $c_1,c_2,c_3$，其中 $c_i\ge0$、$\sum_i c_i=1$。若 $q_3$ 最大，则
 
 $$
-\sum_a \pi(a\mid s)q_v(s,a)
-\le \sum_a \pi(a\mid s)m
-=m.
+c_1q_1+c_2q_2+c_3q_3
+\le (c_1+c_2+c_3)q_3=q_3.
 $$
 
-不同的候选价值可能改变最大动作，因此每轮更新价值后都要重新做内层最大化。
-
-内层优化可以直接对动作取最大，逐状态的公式化为
+取 $c_3=1$、$c_1=c_2=0$ 就能达到上界。放回 BOE，策略概率同样非负且和为 $1$，所以
 
 $$
-v(s)=\max_{a\in\mathcal A(s)}q_v(s,a).
+\max_{\pi(\cdot\mid s)}\sum_a\pi(a\mid s)q_v(s,a)
+=\max_{a\in\mathcal A(s)}q_v(s,a).
 $$
 
-把右端记为<strong>贝尔曼最优算子（Bellman optimality operator）</strong> $[Tv](s)=\max_a q_v(s,a)$。整组状态价值的求解问题写成
+对当前候选 $v$，任选一个 $a_v^*(s)\in\arg\max_{a\in\mathcal A(s)}q_v(s,a)$。一种达到最大值的策略是把全部概率给它：
+
+$$
+\pi(a\mid s)=
+\begin{cases}
+1,&a=a_v^*(s),\\
+0,&a\ne a_v^*(s).
+\end{cases}
+$$
+
+如果有多个动作并列最大，在这些动作之间分配概率也能达到同一个上界。这一步求出的是<strong>对当前候选 $v$ 的贪心选择</strong>；等 $v$ 求到最优值后，才能据此得到最优策略。
+
+</div>
+</div>
+
+#### （3）剩下的未知量是整组价值
+
+把右端记成<strong>贝尔曼最优算子（Bellman optimality operator）</strong> $[Tv](s)=\max_{a\in\mathcal A(s)}q_v(s,a)$。原方程现在变为
 
 $$
 v=Tv.
 $$
 
-读作「输入整组 $v$，在每个状态算出所有动作的值并取最大，输出恰好还是这组 $v$」。
+输入一组价值，逐状态找最好的首步，输出仍然是原来这组价值，这就叫一个不动点。接下来用收缩映射说明为什么它有唯一解，以及怎样用迭代找到它。
 
 ## 4. Fixed Points & Contraction
 
