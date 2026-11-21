@@ -271,7 +271,7 @@ $$
 <div class="td-slide-title">TD 状态价值学习 · 算法性质</div>
 <div class="td-slide-body">
 
-TD 和 MC 都是 **model-free（无模型）**方法。
+TD 和 MC 都是 <strong>model-free（无模型）</strong>方法。
 
 **更新时机与适用任务**
 
