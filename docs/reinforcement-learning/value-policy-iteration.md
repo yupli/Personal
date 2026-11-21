@@ -291,7 +291,9 @@ $$
 </div>
 </div>
 
-## 3. Compare Value Iteration and Policy Iteration
+<span id="_3-compare-value-iteration-and-policy-iteration"></span>
+
+## Truncated Policy Iteration
 
 #### （1）把两条更新流程放在一起
 
@@ -348,9 +350,9 @@ $$
 </div>
 </div>
 
-## 4. Truncated Policy Iteration
+<span id="_4-truncated-policy-iteration"></span>
 
-#### （1）在同一条评估序列上选停止位置
+#### （3）在同一条评估序列上选停止位置
 
 <div class="td-slide">
 <div class="td-slide-title">Truncated policy iteration · 只评估有限轮</div>
@@ -378,7 +380,7 @@ $$
 </div>
 </div>
 
-#### （2）Procedure Summary & Pseudocode
+#### （4）Procedure Summary & Pseudocode
 
 <div class="td-slide">
 <div class="td-slide-title">Pseudocode · 用上轮估计作为本轮评估初值</div>
@@ -395,7 +397,7 @@ $$
 </div>
 </div>
 
-#### （3）截断会破坏收敛吗？
+#### （5）截断会破坏收敛吗？
 
 <div class="td-theorem">
 <div class="td-theorem-title">Proposition · Value Improvement</div>
