@@ -4,8 +4,6 @@ pageClass: rl-summary
 
 # 第 1 课 · 基本概念 · V2（总结）
 
-[切换到 V1（逐页）](basic-concepts-slides.md)
-
 ## 1. States, Actions & Transitions
 
 #### （1）状态与状态空间

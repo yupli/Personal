@@ -4,8 +4,6 @@ pageClass: rl-summary
 
 # 第 5 课 · 蒙特卡洛方法 · V2（总结）
 
-[切换到 V1（逐页）](monte-carlo-slides.md)
-
 ## 1. Monte Carlo Estimation · 用样本代替概率模型
 
 第 4 课用已知的奖励和转移概率做<strong>策略评价（policy evaluation）</strong>。如果环境的概率模型未知，但我们可以执行动作、记录奖励，就能改用<strong>样本均值（sample mean）</strong>估计价值。这就是本课的 model-free 思路。

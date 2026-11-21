@@ -1,5 +1,8 @@
 import { defineConfig } from "vitepress";
 import container from "markdown-it-container";
+import { lessonInfo, lessonLink, lessonList } from "./lessons";
+import { writeSearchIndex } from "./site-content.mts";
+import { enhanceMath } from "./site-math.mts";
 
 const BASE = "/Personal/";
 /** 与换色/换标后递增，破 favicon/导航 logo 的强缓存 */
@@ -14,6 +17,20 @@ export default defineConfig({
   appearance: true,
   lastUpdated: true,
 
+  buildEnd: ({ outDir }) => writeSearchIndex(outDir),
+
+  transformPageData({ relativePath, frontmatter }) {
+    const lesson = lessonInfo(relativePath);
+    if (!lesson) return;
+    const { index, slides } = lesson;
+    const neighbor = (i: number) => lessonList[i] ? {
+      text: "第 " + (i + 1) + " 课 · " + lessonList[i][1] + (slides ? " · V1（逐页）" : " · V2（总结）"),
+      link: lessonLink(i, slides),
+    } : false;
+    frontmatter.prev = neighbor(index - 1);
+    frontmatter.next = neighbor(index + 1);
+  },
+
   head: [
     ["link", { rel: "icon", href: LOGO_ASSET, type: "image/svg+xml" }],
     ["link", { rel: "apple-touch-icon", href: LOGO_ASSET }],
@@ -25,6 +42,7 @@ export default defineConfig({
     theme: { light: "github-light", dark: "github-dark" },
     lineNumbers: true,
     config: (md) => {
+      enhanceMath(md);
       // 自定义 algorithm 容器
       md.use(container, "algorithm", {
         render(tokens, idx, _options, env) {
@@ -65,14 +83,14 @@ export default defineConfig({
         { text: "运筹优化", link: "/or-opt/" },
         {
           text: "建模方法",
-          collapsed: false,
+          collapsed: true,
           items: [
             { text: "整数规划建模技巧", link: "/or-opt/modeling/integer-modeling-techniques" },
           ],
         },
         {
           text: "经典问题数学模型",
-          collapsed: false,
+          collapsed: true,
           items: [
             { text: "指派问题", link: "/or-opt/classic-models/assignment-problem" },
             { text: "最短路问题", link: "/or-opt/classic-models/shortest-path-problem" },
@@ -91,7 +109,7 @@ export default defineConfig({
         {
           text: "精确算法",
           link: "/or-opt/exact/exact-algorithms",
-          collapsed: false,
+          collapsed: true,
           items: [
             { text: "单纯形法（Simplex）", link: "/or-opt/exact/simplex-method" },
             { text: "改进单纯形法（Revised Simplex）", link: "/or-opt/exact/revised-simplex" },
@@ -108,12 +126,12 @@ export default defineConfig({
         {
           text: "启发式算法",
           link: "/or-opt/heuristics/heuristic-algorithms",
-          collapsed: false,
+          collapsed: true,
           items: [
             {
               text: "基础启发式（Simple Heuristics）",
               link: "/or-opt/heuristics/simple/simple-heuristics",
-              collapsed: false,
+              collapsed: true,
               items: [
                 { text: "贪心（构造式）", link: "/or-opt/heuristics/simple/greedy-algorithm" },
                 { text: "插入启发式", link: "/or-opt/heuristics/simple/insertion-heuristics" },
@@ -125,7 +143,7 @@ export default defineConfig({
             {
               text: "元启发式（Metaheuristics）",
               link: "/or-opt/heuristics/metaheuristics",
-              collapsed: false,
+              collapsed: true,
               items: [
                 { text: "模拟退火（SA）", link: "/or-opt/heuristics/meta/simulated-annealing" },
                 { text: "禁忌搜索（TS）", link: "/or-opt/heuristics/meta/tabu-search" },
@@ -143,7 +161,7 @@ export default defineConfig({
         },
         {
           text: "图算法",
-          collapsed: false,
+          collapsed: true,
           items: [
             { text: "Dijkstra", link: "/or-opt/graph/dijkstra" },
             { text: "Bellman-Ford", link: "/or-opt/graph/bellman-ford" },
@@ -206,33 +224,12 @@ export default defineConfig({
       ],
     },
 
-    search: {
-      provider: "local",
-      options: {
-        locales: {
-          root: {
-            translations: {
-              button: { buttonText: "搜索", buttonAriaLabel: "搜索文档" },
-              modal: {
-                noResultsText: "未找到结果",
-                resetButtonTitle: "清除",
-                footer: {
-                  selectText: "选择",
-                  navigateText: "切换",
-                  closeText: "关闭",
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-
     /* h2–h4 纳入侧栏目录，长文好跳转 */
     outline: { label: "本页目录", level: [2, 4] },
 
     docFooter: { prev: "上一篇", next: "下一篇" },
 
+    skipToContentLabel: "跳到正文",
     returnToTopLabel: "回到顶部",
     sidebarMenuLabel: "菜单",
     darkModeSwitchLabel: "外观",

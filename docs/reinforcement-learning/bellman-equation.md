@@ -4,8 +4,6 @@ pageClass: rl-summary
 
 # 第 2 课 · 贝尔曼公式 · V2（总结）
 
-[切换到 V1（逐页）](bellman-equation-slides.md)
-
 ## 1. Return & State Value
 
 #### （1）交互记号、轨迹与折扣回报

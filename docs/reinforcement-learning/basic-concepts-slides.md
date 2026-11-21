@@ -4,8 +4,6 @@ outline: [2, 3]
 
 # 第 1 课 · 基本概念 · V1（逐页）
 
-[切换到 V2（总结）](basic-concepts.md)
-
 ## Part 1 · States, Actions & Policies
 
 ### 第 01 页 · 本课要解决什么问题

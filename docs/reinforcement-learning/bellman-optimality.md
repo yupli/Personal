@@ -4,8 +4,6 @@ pageClass: rl-summary
 
 # 第 3 课 · 贝尔曼最优公式 · V2（总结）
 
-[切换到 V1（逐页）](bellman-optimality-slides.md)
-
 ## 1. Optimal Policy {#_1-optimal-policy-optimal-value}
 
 <div class="td-slide">

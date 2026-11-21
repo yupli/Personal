@@ -4,8 +4,6 @@ pageClass: rl-summary
 
 # 第 6 课 · 随机近似与随机梯度下降 · V2（总结）
 
-[切换到 V1（逐页）](stochastic-approximation-slides.md)
-
 ## 1. Incremental Mean Estimation
 
 目标是从样本流 $x_1,x_2,\ldots$ 估计总体均值 $\mu=\mathbb E[X]$。第 5 课用样本均值作为估计量，这里改变的是它的计算方式。按课件的下标，$w_k$ 是读入 $x_k$ **之前**的估计，所以在 $k\ge2$ 时包含前 $k-1$ 个样本。把旧样本和写成 $(k-1)w_k$：

@@ -4,8 +4,6 @@ outline: [2, 3]
 
 # 第 5 课 · 蒙特卡洛方法 · V1（逐页）
 
-[切换到 V2（总结）](monte-carlo.md)
-
 页码按公开课件的 50 页版本编排。视频截图的页脚总页数随分段使用的课件版本而变化。
 
 ## Part 1 · Monte Carlo Estimation

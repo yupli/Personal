@@ -4,8 +4,6 @@ pageClass: rl-summary
 
 # 第 4 课 · 值迭代与策略迭代 · V2（总结）
 
-[切换到 V1（逐页）](value-policy-iteration-slides.md)
-
 ## 1. Value Iteration
 
 #### （1）一轮值迭代可以拆成两步
@@ -103,9 +101,11 @@ $$
 <div class="td-slide-body">
 
 $$
-\mathbf v_k\longrightarrow q_k(s,a)
-\longrightarrow\pi_{k+1}(a\mid s)
-\longrightarrow v_{k+1}(s)=\max_a q_k(s,a).
+\begin{aligned}
+\mathbf v_k&\longrightarrow q_k(s,a)
+\longrightarrow\pi_{k+1}(a\mid s)\\
+&\longrightarrow v_{k+1}(s)=\max_a q_k(s,a).
+\end{aligned}
 $$
 
 <strong>初始化：</strong> 已知各状态动作对的奖励与转移概率，给定初始估计 $\mathbf v_0$。目标是求出 BOE 的最优状态价值和一套最优策略。先做一次更新，再用相邻两轮价值之差是否低于预设阈值判断是否继续。
@@ -139,12 +139,14 @@ $$
 <strong>Policy evaluation（PE，策略评估）</strong>求的是固定策略 $\pi_k$ 的真实状态价值；<strong>policy improvement（PI，策略改进）</strong>用这组价值在各状态做贪心选择。两步交替：
 
 $$
-\pi_0\xrightarrow{\mathrm{PE}}\mathbf v_{\pi_0}
+\begin{aligned}
+\pi_0&\xrightarrow{\mathrm{PE}}\mathbf v_{\pi_0}
 \xrightarrow{\mathrm{PI}}\pi_1
-\xrightarrow{\mathrm{PE}}\mathbf v_{\pi_1}
-\xrightarrow{\mathrm{PI}}\pi_2
+\xrightarrow{\mathrm{PE}}\mathbf v_{\pi_1}\\
+&\xrightarrow{\mathrm{PI}}\pi_2
 \xrightarrow{\mathrm{PE}}\mathbf v_{\pi_2}
 \xrightarrow{\mathrm{PI}}\cdots .
+\end{aligned}
 $$
 
 课件接着问四个问题：<strong>Q1</strong> 怎样求 $v_{\pi_k}$？<strong>Q2</strong> 为什么新策略不比旧策略差？<strong>Q3</strong> 为什么最后能达到最优？<strong>Q4</strong> 它和值迭代有什么关系？
@@ -237,10 +239,12 @@ $$
 $$
 
 $$
-v_{\pi_k}^{(j+1)}(s)=\sum_a\pi_k(a\mid s)
-\left[\sum_r p(r\mid s,a)\,r
-+\gamma\sum_{s'}p(s'\mid s,a)v_{\pi_k}^{(j)}(s')\right],
+\begin{aligned}
+v_{\pi_k}^{(j+1)}(s)&=\sum_a\pi_k(a\mid s)\biggl[
+  \sum_r p(r\mid s,a)\,r\\
+&\qquad+\gamma\sum_{s'}p(s'\mid s,a)v_{\pi_k}^{(j)}(s')\biggr],
 \qquad s\in\mathcal S.
+\end{aligned}
 $$
 
 理论上取 $j\to\infty$ 得到准确值；实际可在内层轮数足够多，或相邻两轮的最大变化 $\|\mathbf v_{\pi_k}^{(j+1)}-\mathbf v_{\pi_k}^{(j)}\|_\infty$ 小于预设阈值时停止，得到近似值。
@@ -303,14 +307,15 @@ $$
 
 $$
 \begin{aligned}
-\text{Policy iteration:}\quad&
-\pi_0\xrightarrow{\mathrm{PE}}\mathbf v_{\pi_0}
+\text{Policy iteration:}\quad&\\
+&\pi_0\xrightarrow{\mathrm{PE}}\mathbf v_{\pi_0}
 \xrightarrow{\mathrm{PI}}\pi_1
-\xrightarrow{\mathrm{PE}}\mathbf v_{\pi_1}
-\xrightarrow{\mathrm{PI}}\pi_2
-\xrightarrow{\mathrm{PE}}\mathbf v_{\pi_2}\xrightarrow{\mathrm{PI}}\cdots\\
-\text{Value iteration:}\quad&
-\mathbf u_0\xrightarrow{\mathrm{PU}}\pi'_1
+\xrightarrow{\mathrm{PE}}\mathbf v_{\pi_1}\\
+&\xrightarrow{\mathrm{PI}}\pi_2
+\xrightarrow{\mathrm{PE}}\mathbf v_{\pi_2}
+\xrightarrow{\mathrm{PI}}\cdots\\[4pt]
+\text{Value iteration:}\quad&\\
+&\mathbf u_0\xrightarrow{\mathrm{PU}}\pi'_1
 \xrightarrow{\mathrm{VU}}\mathbf u_1
 \xrightarrow{\mathrm{PU}}\pi'_2
 \xrightarrow{\mathrm{VU}}\mathbf u_2\xrightarrow{\mathrm{PU}}\cdots .
@@ -438,3 +443,9 @@ $$
 
 </div>
 </div>
+
+<script setup>
+import IterationDemo from '../.vitepress/theme/components/IterationDemo.vue'
+</script>
+
+<IterationDemo />

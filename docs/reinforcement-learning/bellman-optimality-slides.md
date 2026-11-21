@@ -4,8 +4,6 @@ outline: [2, 3]
 
 # 第 3 课 · 贝尔曼最优公式 · V1（逐页）
 
-[切换到 V2（总结）](bellman-optimality.md)
-
 ## Part 1 · Policy Evaluation & Improvement
 
 ### 第 01 页 · 从策略评估到最优策略

@@ -4,8 +4,6 @@ outline: [2, 3]
 
 # 第 7 课 · 时序差分方法 · V1（逐页）
 
-[切换到 V2（总结）](temporal-difference.md)
-
 按公开视频分段排列，页号采用公开课件编号。**课件补充**表示使用公开课件原页；第 7 课部分视频的页脚总数与公开课件不同。
 
 ## Part 1 · Motivating Examples

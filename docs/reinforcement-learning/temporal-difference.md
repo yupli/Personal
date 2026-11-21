@@ -4,8 +4,6 @@ pageClass: rl-summary
 
 # 第 7 课 · 时序差分方法 · V2（总结）
 
-[切换到 V1（逐页）](temporal-difference-slides.md)
-
 ## 1. 时序差分（Temporal-Difference，TD）· State-value Prediction
 
 #### （1）算法描述

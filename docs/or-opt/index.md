@@ -6,67 +6,69 @@
 
 ## 算法目录
 
+[建模方法](#建模方法) · [经典模型](#经典问题数学模型) · [精确算法](#精确算法) · [启发式算法](#启发式算法) · [图算法](#图算法)
+
 ### 建模方法
 
-| 主题 | 说明 | 链接 |
-|------|------|------|
-| 整数规划建模技巧 | 逻辑约束、二选一、指示约束、布尔运算的线性化等 | [查看](modeling/integer-modeling-techniques.md) |
+| 主题 | 说明 |
+|------|------|
+| [整数规划建模技巧](modeling/integer-modeling-techniques.md) | 逻辑约束、二选一、指示约束、布尔运算的线性化等 |
 
 ### 经典问题数学模型
 
-| 问题 | 说明 | 链接 |
-|------|------|------|
-| 指派问题 | N 对 N 一一指派；二部图匹配、0–1 模型；匈牙利算法与图解示例 | [查看](classic-models/assignment-problem.md) |
-| 最短路问题 | $G=(V,E)$、$s$–$t$ 最短路；IP/LP 模型与整数最优解性质 | [查看](classic-models/shortest-path-problem.md) |
-| 最大流问题 | 源汇网络、表 2.1 油运例；图 2.4/2.5；LP 与一般形 | [查看](classic-models/max-flow-problem.md) |
-| 最优整数解特性与幺模矩阵 | 凸包与整数性；幺模/全幺模定义与定理 2.4.1–2.4.3 | [查看](classic-models/integer-solutions-unimodular-matrices.md) |
-| 多商品网络流问题 | $G=(V,A)$、$K$ 与 $d_k$、$u_{ij}$、$c_{ij}^k$；LP (1)–(4)；图 2.13 示例网络 | [查看](classic-models/multicommodity-network-flow.md) |
-| 多商品流运输问题 | MCNF 在直接配送、二部 $S$–$C$ 上的退化；LP (1)–(5)；去容量、单商品则退化为运输问题 TP (6)–(9) | [查看](classic-models/multicommodity-transportation.md) |
-| 设施选址问题 | 选址-分配；图 2.17 多/少设施权衡；UFLP 目标 (1) 与约束 (2)–(4) | [查看](classic-models/facility-location.md) |
-| 旅行商问题 | 问题陈述与 TSP 建模方法 1–3；SEC (1)–(5)、MTZ (6)–(8)、拆点 (9)–(13)、1-tree+STSP (14)–(18) | [查看](classic-models/traveling-salesman-problem.md) |
-| 车辆路径问题 | 背景；CVRP (1)–(9) 含 MTZ 累计载重 $u_{ik}$ (6)–(8)；VRPTW 叠加 (10)–(12)（$s_{ik}$、$M_{ij}^{t}$） | [查看](classic-models/vehicle-routing-problem.md) |
+| 问题 | 说明 |
+|------|------|
+| [指派问题](classic-models/assignment-problem.md) | N 对 N 一一指派；二部图匹配、0–1 模型；匈牙利算法与图解示例 |
+| [最短路问题](classic-models/shortest-path-problem.md) | $G=(V,E)$、$s$–$t$ 最短路；IP/LP 模型与整数最优解性质 |
+| [最大流问题](classic-models/max-flow-problem.md) | 源汇网络、表 2.1 油运例；图 2.4/2.5；LP 与一般形 |
+| [最优整数解特性与幺模矩阵](classic-models/integer-solutions-unimodular-matrices.md) | 凸包与整数性；幺模/全幺模定义与定理 2.4.1–2.4.3 |
+| [多商品网络流问题](classic-models/multicommodity-network-flow.md) | $G=(V,A)$、$K$ 与 $d_k$、$u_{ij}$、$c_{ij}^k$；LP (1)–(4)；图 2.13 示例网络 |
+| [多商品流运输问题](classic-models/multicommodity-transportation.md) | MCNF 在直接配送、二部 $S$–$C$ 上的退化；LP (1)–(5)；去容量、单商品则退化为运输问题 TP (6)–(9) |
+| [设施选址问题](classic-models/facility-location.md) | 选址-分配；图 2.17 多/少设施权衡；UFLP 目标 (1) 与约束 (2)–(4) |
+| [旅行商问题](classic-models/traveling-salesman-problem.md) | 问题陈述与 TSP 建模方法 1–3；SEC (1)–(5)、MTZ (6)–(8)、拆点 (9)–(13)、1-tree+STSP (14)–(18) |
+| [车辆路径问题](classic-models/vehicle-routing-problem.md) | 背景；CVRP (1)–(9) 含 MTZ 累计载重 $u_{ik}$ (6)–(8)；VRPTW 叠加 (10)–(12)（$s_{ik}$、$M_{ij}^{t}$） |
 
 ### 精确算法
 
 [总览：方法关系与阅读顺序 →](exact/exact-algorithms.md)
 
-| 算法 | 说明 | 链接 |
-|------|------|------|
-| 单纯形法（Simplex Method） | 线性规划顶点迭代；正文含对偶单纯形骨架；LP 松弛与列生成主问题的经典内核 | [查看](exact/simplex-method.md) |
-| 改进单纯形法（Revised Simplex） | 不显式存表的修正单纯形；$\pi$、定价、比值与基逆/LU 更新概要 | [查看](exact/revised-simplex.md) |
-| 分支定界（Branch and Bound） | 求解整数规划的经典方法，通过分支和定界剪枝搜索解空间 | [查看](exact/branch-and-bound.md) |
-| 分支切割（Branch and Cut） | 在分支定界基础上加入割平面，加速收敛 | [查看](exact/branch-and-cut.md) |
-| 列生成（Column Generation） | 求解大规模线性规划，按需生成变量列 | [查看](exact/column-generation.md) |
-| 分支定价（Branch-and-Price） | 分支定界与列生成的结合，求解大规模整数规划 | [查看](exact/branch-and-price.md) |
-| 分支定价切割（Branch-Price-and-Cut, BPC） | 在分支定价各节点上加入有效不等式（割）以收紧 LP 界 | [查看](exact/branch-price-and-cut.md) |
-| Dantzig-Wolfe 分解（Dantzig–Wolfe Decomposition） | 将问题分解为主问题和子问题，利用块角结构 | [查看](exact/dantzig-wolfe.md) |
-| Benders 分解（Benders Decomposition） | 将混合整数规划分解为主问题和子问题，通过割平面迭代 | [查看](exact/benders.md) |
-| 拉格朗日（Lagrangian Relaxation） | 通过松弛复杂约束，将问题分解为易求解的子问题 | [查看](exact/lagrangian.md) |
+| 算法 | 说明 |
+|------|------|
+| [单纯形法（Simplex Method）](exact/simplex-method.md) | 线性规划顶点迭代；正文含对偶单纯形骨架；LP 松弛与列生成主问题的经典内核 |
+| [改进单纯形法（Revised Simplex）](exact/revised-simplex.md) | 不显式存表的修正单纯形；$\pi$、定价、比值与基逆/LU 更新概要 |
+| [分支定界（Branch and Bound）](exact/branch-and-bound.md) | 求解整数规划的经典方法，通过分支和定界剪枝搜索解空间 |
+| [分支切割（Branch and Cut）](exact/branch-and-cut.md) | 在分支定界基础上加入割平面，加速收敛 |
+| [列生成（Column Generation）](exact/column-generation.md) | 求解大规模线性规划，按需生成变量列 |
+| [分支定价（Branch-and-Price）](exact/branch-and-price.md) | 分支定界与列生成的结合，求解大规模整数规划 |
+| [分支定价切割（Branch-Price-and-Cut, BPC）](exact/branch-price-and-cut.md) | 在分支定价各节点上加入有效不等式（割）以收紧 LP 界 |
+| [Dantzig-Wolfe 分解（Dantzig–Wolfe Decomposition）](exact/dantzig-wolfe.md) | 将问题分解为主问题和子问题，利用块角结构 |
+| [Benders 分解（Benders Decomposition）](exact/benders.md) | 将混合整数规划分解为主问题和子问题，通过割平面迭代 |
+| [拉格朗日（Lagrangian Relaxation）](exact/lagrangian.md) | 通过松弛复杂约束，将问题分解为易求解的子问题 |
 
 ### 启发式算法
 
 [总览：分类与三类的边界 →](heuristics/heuristic-algorithms.md)
 
-| 子类 | 说明 | 链接 |
-|------|------|------|
-| 基础启发式（Simple Heuristics） | 问题特化的构造/贪心/单阶段局部搜索等，常作初始解与热启动；子篇见下表 | [总览](heuristics/simple/simple-heuristics.md) |
-| 元启发式（Metaheuristics） | 通用高层迭代框架；已写 [模拟退火](heuristics/meta/simulated-annealing.md)、[禁忌搜索](heuristics/meta/tabu-search.md)、[遗传算法](heuristics/meta/genetic-algorithm.md)、[变邻域搜索](heuristics/meta/vns.md)、[ILS/迭代局搜](heuristics/meta/iterated-local-search.md)、[贪婪随机自适应搜索过程（GRASP）](heuristics/meta/grasp.md)、[粒子群](heuristics/meta/particle-swarm-optimization.md)、[蚁群](heuristics/meta/ant-colony-optimization.md)、[ALNS/自适应大邻域](heuristics/meta/alns.md)，其余见元启发式页 | [查看](heuristics/metaheuristics.md) |
-| 超启发式（Hyper-heuristics） | 在启发式算子/邻域层做选择或生成，强调与问题解耦、可迁移 | [查看](heuristics/hyper-heuristics.md) |
+| 子类 | 说明 |
+|------|------|
+| [基础启发式（Simple Heuristics）](heuristics/simple/simple-heuristics.md) | 问题特化的构造/贪心/单阶段局部搜索等，常作初始解与热启动；子篇见下表 |
+| [元启发式（Metaheuristics）](heuristics/metaheuristics.md) | 通用高层迭代框架；已写 [模拟退火](heuristics/meta/simulated-annealing.md)、[禁忌搜索](heuristics/meta/tabu-search.md)、[遗传算法](heuristics/meta/genetic-algorithm.md)、[变邻域搜索](heuristics/meta/vns.md)、[ILS/迭代局搜](heuristics/meta/iterated-local-search.md)、[贪婪随机自适应搜索过程（GRASP）](heuristics/meta/grasp.md)、[粒子群](heuristics/meta/particle-swarm-optimization.md)、[蚁群](heuristics/meta/ant-colony-optimization.md)、[ALNS/自适应大邻域](heuristics/meta/alns.md)，其余见元启发式页 |
+| [超启发式（Hyper-heuristics）](heuristics/hyper-heuristics.md) | 在启发式算子/邻域层做选择或生成，强调与问题解耦、可迁移 |
 
-| 子篇（基础启发式） | 说明 | 链接 |
-|-------------------|------|------|
-| 贪心（构造式） | 逐步取当前最好一步的构造，不回溯 | [查看](heuristics/simple/greedy-algorithm.md) |
-| 插入启发式 | 将客户逐点插入弧上，兼容 TSP/带约束 VRP | [查看](heuristics/simple/insertion-heuristics.md) |
-| Clarke–Wright 节约 | CVRP 边合并、按 savings 从大到小并线 | [查看](heuristics/simple/clarke-wright-savings.md) |
-| 爬山 | 邻域内只接受改进、至局部最优 | [查看](heuristics/simple/hill-climbing.md) |
-| 2-opt / 3-opt / k-opt | 路径边交换邻域，常用局搜子过程 | [查看](heuristics/simple/k-opt.md) |
+| 子篇（基础启发式） | 说明 |
+|-------------------|------|
+| [贪心（构造式）](heuristics/simple/greedy-algorithm.md) | 逐步取当前最好一步的构造，不回溯 |
+| [插入启发式](heuristics/simple/insertion-heuristics.md) | 将客户逐点插入弧上，兼容 TSP/带约束 VRP |
+| [Clarke–Wright 节约](heuristics/simple/clarke-wright-savings.md) | CVRP 边合并、按 savings 从大到小并线 |
+| [爬山](heuristics/simple/hill-climbing.md) | 邻域内只接受改进、至局部最优 |
+| [2-opt / 3-opt / k-opt](heuristics/simple/k-opt.md) | 路径边交换邻域，常用局搜子过程 |
 
 ### 图算法
 
-| 算法 | 说明 | 链接 |
-|------|------|------|
-| Dijkstra | 非负权图上的单源最短路，贪心+优先队列 | [查看](graph/dijkstra.md) |
-| Bellman-Ford | 一般边权单源最短路、负边与负圈检测 | [查看](graph/bellman-ford.md) |
+| 算法 | 说明 |
+|------|------|
+| [Dijkstra](graph/dijkstra.md) | 非负权图上的单源最短路，贪心+优先队列 |
+| [Bellman-Ford](graph/bellman-ford.md) | 一般边权单源最短路、负边与负圈检测 |
 
 **注**：为与侧栏一致，`docs/or-opt/` 下已按 `modeling`（建模）、`classic-models`（经典问题数学模型）、`exact`（精确算法）、`heuristics`（启发式，内含 `simple` / `meta`）、`graph`（图算法）分文件夹存放，便于在仓库中浏览。
 

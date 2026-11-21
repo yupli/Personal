@@ -6,7 +6,7 @@
     "dev": "vitepress dev docs",
     "build": "vitepress build docs",
     "preview": "vitepress preview docs",
-    "deploy:gh": "vitepress build docs && gh-pages -d docs/.vitepress/dist"
+    "deploy:gh": "node scripts/deploy-pages.mjs"
   },
   "devDependencies": {
     "gh-pages": "^6.3.0",

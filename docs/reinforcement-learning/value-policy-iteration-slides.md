@@ -4,8 +4,6 @@ outline: [2, 3]
 
 # 第 4 课 · 值迭代与策略迭代 · V1（逐页）
 
-[切换到 V2（总结）](value-policy-iteration.md)
-
 ## Part 1 · Value Iteration
 
 ### 第 01 页 · 从求解方程到实际算法

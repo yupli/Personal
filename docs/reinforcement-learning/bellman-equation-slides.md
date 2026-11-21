@@ -4,8 +4,6 @@ outline: [2, 3]
 
 # 第 2 课 · 贝尔曼公式 · V1（逐页）
 
-[切换到 V2（总结）](bellman-equation.md)
-
 ## Part 1 · Why Return Matters
 
 ### 第 01 页 · 贝尔曼公式在课程中的位置
