@@ -396,3 +396,60 @@ $$
 
 </div>
 </div>
+
+## 7. Analyzing Optimal Policies
+
+#### （1）最优策略由什么决定？
+
+<div class="td-slide">
+<div class="td-slide-title">Analyzing optimal policies · 从 BOE 看三个因素</div>
+<div class="td-slide-body">
+
+回看贝尔曼最优方程。右侧先算各动作的「平均即时奖励 + 折扣后的后续价值」，再找使这个平均值最大的动作分布：
+
+$$
+v(s)=\max_{\pi(\cdot\mid s)}\sum_a\pi(a\mid s)
+\left[\sum_r p(r\mid s,a)\,r
++\gamma\sum_{s'}p(s'\mid s,a)\,v(s')\right].
+$$
+
+- <strong>奖励设计（reward design）</strong>：奖励值 $r$ 决定哪些结果受到鼓励或惩罚，以及程度有多大。
+- <strong>系统模型（system model）</strong>：$p(s'\mid s,a)$ 描述执行动作后可能到哪里，$p(r\mid s,a)$ 描述可能收到什么奖励、各有多大概率。
+- <strong>折扣因子（discount factor）</strong>：$\gamma$ 决定后续价值相对于即时奖励的权重。
+
+给定这些量之后，$v(s)$ 与 $v(s')$ 是同一组待求价值的不同分量；$\pi(a\mid s)$ 是待求的策略概率。
+
+</div>
+</div>
+
+#### （2）奖励变换何时不改变最优策略？
+
+<div class="td-theorem">
+<div class="td-theorem-title">Theorem · Optimal Policy Invariance</div>
+<div class="td-theorem-body">
+
+考虑 $0\le\gamma<1$ 的持续折扣任务，保持状态转移规则与 $\gamma$ 不变，对每一步的奖励统一做<strong>正仿射变换（positive affine transformation）</strong>：
+$r'=\alpha r+\beta$，其中 $\alpha>0$、$\beta\in\mathbb R$。原最优价值 $\mathbf v^*$ 满足 BOE，变换后的最优价值为
+
+$$
+\mathbf v'^{*}=\alpha\mathbf v^*+\frac{\beta}{1-\gamma}\,\mathbf 1,
+\qquad \mathbf 1=[1,\ldots,1]^\mathsf T.
+$$
+
+<strong>最优策略集合保持不变。</strong> 对于任意一条轨迹，乘上 $\alpha$ 会按同一倍数缩放原回报，每一步加上的 $\beta$ 则合成一个与轨迹无关的常数：
+
+$$
+\begin{aligned}
+G_t'
+&=\sum_{k=0}^{\infty}\gamma^k(\alpha R_{t+k+1}+\beta)\\
+&=\alpha G_t+\beta(1+\gamma+\gamma^2+\cdots)\\
+&=\alpha G_t+\frac{\beta}{1-\gamma}.
+\end{aligned}
+$$
+
+固定起点与策略取期望，得到 $v_\pi'(s)=\alpha v_\pi(s)+\beta/(1-\gamma)$。同一起点下比较两套策略时，加上的常数相同，原有价值差只乘了一个正数，所以先后次序和并列关系都不变。
+
+课件写的是 $a\ne 0$（这里记作 $\alpha$），但 $\alpha<0$ 会反转不相等的价值排序，不能保证最优策略不变。若只给终止前的奖励加 $\beta$，且回合长短不一，累加的常数也可能不同，上述结论不能直接套用。
+
+</div>
+</div>
