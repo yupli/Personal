@@ -111,7 +111,7 @@ $$
 <strong>初始化：</strong> 已知各状态动作对的奖励与转移概率，给定初始估计 $\mathbf v_0$。目标是求出 BOE 的最优状态价值和一套最优策略。先做一次更新，再用相邻两轮价值之差是否低于预设阈值判断是否继续。
 
 <figure>
-  <img src="./resources/value-policy-iteration/iteration-09-procedure.webp" alt="课件原版 Value Iteration 伪代码：初始化模型与初值，逐状态遍历动作计算 q 值，更新贪心策略与价值，检查相邻两轮价值差。" width="559" height="343" loading="lazy">
+  <img src="./resources/value-policy-iteration/value-iteration-pseudocode.png" alt="课件原版 Value Iteration 伪代码：初始化模型与初值，逐状态遍历动作计算 q 值，更新贪心策略与价值，检查相邻两轮价值差。" width="1610" height="984" loading="lazy">
 </figure>
 
 </div>
@@ -283,7 +283,7 @@ $$
 已知奖励与转移模型并给定初始策略。外层反复执行评估与改进，直到策略稳定；内层只评估当前策略，达到精度要求后才进行下一次改进。
 
 <figure>
-  <img src="./resources/value-policy-iteration/policy-iteration-pseudocode.png" alt="课件原版 Policy Iteration 伪代码：外层循环先评估固定策略，内层遍历状态直到价值收敛，再逐状态对动作价值做贪心改进。" loading="lazy">
+  <img src="./resources/value-policy-iteration/policy-iteration-pseudocode.png" alt="课件原版 Policy Iteration 伪代码：外层循环先评估固定策略，内层遍历状态直到价值收敛，再逐状态对动作价值做贪心改进。" width="1610" height="1180" loading="lazy">
 </figure>
 
 <strong>Q4 · 与值迭代的联系：</strong>两者都逐状态做贪心选择。值迭代每轮只按贪心策略更新一次价值；策略迭代先充分评估固定策略，再用评估结果做下一次贪心选择。
