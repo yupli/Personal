@@ -676,9 +676,6 @@ MC 的等权样本均值对应第 $N$ 次访问使用 $\alpha=1/N$。课件把 $
 }
 
 .rl-summary .vp-doc .td-slide table {
-  display: table;
-  width: 100%;
-  table-layout: fixed;
   margin-block: 0.85rem 0.5rem;
   border-block: 3px double #4e4e4e;
 }

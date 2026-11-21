@@ -263,6 +263,7 @@ html:not(.dark) .VPDoc .aside-curtain {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   font-family: var(--vp-font-family-base);
+  overflow-wrap: anywhere;
 }
 
 .vp-doc :is(code, kbd),
@@ -282,6 +283,23 @@ html:not(.dark) .VPDoc .aside-curtain {
   line-height: 1.3;
   margin-bottom: 0.65rem;
   color: var(--vp-c-text-1);
+}
+
+/* Direct links use native scrolling, which must also clear sticky navigation. */
+.vp-doc :is(h1, h2, h3, h4, h5, h6)[id] {
+  scroll-margin-top: 64px;
+}
+
+@media (min-width: 960px) {
+  .vp-doc :is(h1, h2, h3, h4, h5, h6)[id] {
+    scroll-margin-top: calc(var(--vp-nav-height) + 64px);
+  }
+}
+
+@media (min-width: 1280px) {
+  .vp-doc :is(h1, h2, h3, h4, h5, h6)[id] {
+    scroll-margin-top: calc(var(--vp-nav-height) + 16px);
+  }
 }
 
 /* Material 式 h2：下边框分隔节，不依赖过多上边距 */
@@ -373,6 +391,29 @@ html:not(.dark) .VPDoc .aside-curtain {
   overflow-y: hidden;
 }
 
+.vp-doc mjx-container[display="true"] > svg {
+  display: block;
+  max-inline-size: none;
+  margin-inline: auto;
+}
+
+/* MathJax gives numbered equations an inline minimum width on both elements.
+   Constrain the scroll container while preserving the SVG's intrinsic width. */
+.vp-doc mjx-container[display="true"][width="full"] {
+  min-inline-size: 0 !important;
+}
+
+.vp-doc mjx-container:not([display]):not(table mjx-container) {
+  display: inline-block;
+  max-inline-size: 100%;
+}
+
+.vp-doc mjx-container.pk-wide-math {
+  overflow-x: auto;
+  overflow-y: hidden;
+  vertical-align: middle;
+}
+
 /* 引用：Material 常见为左侧色条 + 略浅底，不抢正文 */
 .vp-doc blockquote {
   margin: 1em 0;
@@ -439,11 +480,6 @@ html:not(.dark) .VPDoc .aside-curtain {
   padding: 0.45rem 0.65rem;
   background: var(--vp-c-bg-soft);
   border-radius: 8px;
-}
-
-.rl-summary .vp-doc mjx-container[display="true"] > svg {
-  max-width: 100%;
-  height: auto;
 }
 
 @media (max-width: 640px) {
@@ -683,12 +719,6 @@ div[class*="language-"] {
   overflow-x: auto;
   padding: 0.45rem 0;
   background: transparent;
-}
-
-.rl-summary .vp-doc .td-slide mjx-container[display="true"] > svg {
-  display: block;
-  max-width: none;
-  margin-inline: auto;
 }
 
 .td-theorem {

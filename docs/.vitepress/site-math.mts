@@ -1,16 +1,9 @@
 type Rule = (...args: any[]) => string;
-type Renderer = { rules: Record<string, Rule>; render: Rule };
+type Renderer = { render: Rule };
 type Markdown = { renderer: Renderer };
-
-const escapeAttribute = (text: string) => text.replaceAll("&","&amp;").replaceAll('"',"&quot;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll("\n","&#10;");
 
 export function enhanceMath(md: Markdown) {
   const { renderer } = md;
-  const block = renderer.rules.math_block;
-  if (!block) return;
-  renderer.rules.math_block = (tokens, index, ...args) =>
-    block(tokens,index,...args).replace("<mjx-container ", '<mjx-container data-tex="'+escapeAttribute(tokens[index].content.trim())+'" ');
-
   const render = renderer.render.bind(renderer);
   renderer.render = (...args) => {
     const html = render(...args);

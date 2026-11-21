@@ -1,7 +1,7 @@
 /* Reading aids inherit the site palette in both appearances. */
 :root { --pk-focus:var(--vp-c-brand-1); }
 :focus-visible { outline:2px solid var(--pk-focus); outline-offset:3px; }
-.pk-sr-only,.site-math-defs { position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); pointer-events:none; }
+.site-math-defs { position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); pointer-events:none; }
 .pk-btn {
   display:inline-flex; align-items:center; justify-content:center; gap:6px;
   padding:5px 10px; min-height:32px; border-radius:7px;
@@ -35,7 +35,9 @@
 .pk-search-results a:is(:hover,:focus-visible) { background:var(--vp-c-brand-soft); }
 .pk-search-results :is(small,strong) { display:block; }
 .pk-image-dialog { width:min(96vw,72rem); max-height:94dvh; }
-.pk-image-dialog img { display:block; margin:auto; width:auto; max-width:100%; max-height:80dvh; object-fit:contain; }
+.pk-image-dialog .pk-dialog-inner { display:flex; flex-direction:column; max-height:calc(94dvh - 2px); }
+.pk-image-dialog .pk-dialog-bar { flex:none; }
+.pk-image-dialog img { display:block; margin-inline:auto; width:auto; min-height:0; max-width:100%; max-height:80dvh; object-fit:contain; }
 .pk-image-dialog a { color:var(--vp-c-brand-1); text-decoration:underline; }
 .pk-doc-tools { display:flex; gap:8px 12px; flex-wrap:wrap; align-items:center; justify-content:space-between; margin-bottom:16px; }
 .pk-version { display:flex; gap:5px; flex-wrap:wrap; }
@@ -47,14 +49,10 @@
 .pk-inline-tools { display:flex; flex-wrap:wrap; justify-content:space-between; align-items:start; gap:6px; margin:-.4em 0 .5em; font-family:system-ui,sans-serif; font-size:12px; color:var(--vp-c-text-2); }
 .pk-inline-tools > :last-child { margin-inline-start:auto; }
 .pk-inline-tools:not(:has(> :not([hidden]))) { display:none; }
-.pk-formula-source summary { cursor:pointer; text-align:end; }
-.pk-formula-source[open] { width:100%; }
-.pk-formula-panel { display:grid; gap:6px; padding:6px; background:var(--vp-c-bg-alt); color:var(--vp-c-text-1); border-radius:6px; }
-.pk-formula-panel button { justify-self:end; }
-.pk-formula-panel textarea { width:100%; min-height:4.5em; padding:6px; font-family:var(--vp-font-family-mono); overflow:auto; background:var(--vp-c-bg-soft); }
 .pk-zoom-trigger { display:flex; width:fit-content; margin:6px auto; }
 .pk-scroll-note { white-space:nowrap; font-weight:600; }
 .pk-comparison-mobile { display:none; }
+.td-slide-body:has(> .pk-comparison-table) { container:pk-comparison / inline-size; }
 .pk-comparison-mobile details { margin:8px 0; padding:8px; border:1px solid var(--vp-c-border); border-radius:6px; }
 .pk-comparison-mobile details summary { cursor:pointer; font-weight:650; }
 .pk-comparison-mobile details div { overflow:auto; margin-bottom:5px; }
@@ -77,9 +75,11 @@
 @media(max-width:640px) {
   .pk-search-trigger kbd { display:none; }
   .pk-search-trigger { min-height:40px; margin-inline-end:3px; }
+  .pk-shelf { margin-top:18px; }
+}
+@container pk-comparison (max-width:36rem) {
   .pk-comparison-mobile { display:block; }
   .rl-summary .vp-doc .td-slide table.pk-comparison-table,.pk-comparison-table + .pk-inline-tools { display:none; }
-  .pk-shelf { margin-top:18px; }
 }
 @media(prefers-reduced-motion:reduce) {
   html { scroll-behavior:auto!important; }

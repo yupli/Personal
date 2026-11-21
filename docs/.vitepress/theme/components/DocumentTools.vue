@@ -5,7 +5,6 @@ import { useRoute } from "vitepress";
 const route=useRoute();
 const lightbox=ref<HTMLDialogElement>();
 const image=ref({src:"",alt:""});
-const status=ref("");
 let imageTrigger:HTMLElement|undefined;
 let resize:ResizeObserver|undefined;
 let mutation:MutationObserver|undefined;
@@ -18,23 +17,27 @@ function show(img:HTMLImageElement,button:HTMLElement) {
   imageTrigger=button;
   lightbox.value?.showModal();
 }
-async function copy(text:string) {
-  try { await navigator.clipboard.writeText(text); status.value="已复制 LaTeX"; }
-  catch { status.value="浏览器没有允许复制，可以在公式源码框中手动复制。"; }
-}
 function note(text:string) {
   const el=document.createElement("div");
   el.className="pk-scroll-note";
   el.textContent=text;
   return el;
 }
+function setScrollable(el:HTMLElement,label:string,wide:boolean) {
+  if(wide) {
+    el.tabIndex=0;
+    el.setAttribute("aria-label",label+"，可横向滚动");
+  } else {
+    el.removeAttribute("tabindex");
+    el.removeAttribute("aria-label");
+  }
+}
 function addResizeHint(el:HTMLElement,label:string,tools:HTMLElement) {
   const hint=note("可横向滑动"); tools.prepend(hint);
   const update=()=>{
     const wide=el.scrollWidth>el.clientWidth+3;
     hint.hidden=!wide;
-    if(wide) {el.tabIndex=0;el.setAttribute("aria-label",label+"，可横向滚动");}
-    else {el.removeAttribute("tabindex");el.removeAttribute("aria-label");}
+    setScrollable(el,label,wide);
   };
   update();
   const target=el.firstElementChild;
@@ -88,22 +91,20 @@ function decorate() {
   for(const el of doc.querySelectorAll<HTMLElement>('mjx-container[display="true"], table')){
     const tools=document.createElement("div");tools.className="pk-inline-tools pk-enhancement";el.after(tools);
     addResizeHint(el,el.matches("table")?"表格":"公式",tools);
-    if(el.dataset.tex){
-      const details=document.createElement("details"); details.className="pk-formula-source";
-      const summary=document.createElement("summary"); summary.textContent="LaTeX";
-      details.append(summary);tools.append(details);
-      details.addEventListener("toggle",()=>{
-        if(!details.open || details.childElementCount>1)return;
-        const button=document.createElement("button");button.type="button";button.className="pk-btn";
-        button.textContent="复制 LaTeX";button.addEventListener("click",()=>void copy(el.dataset.tex!));
-        const field=document.createElement("textarea");field.readOnly=true;field.value=el.dataset.tex!;
-        field.setAttribute("aria-label","公式 LaTeX 源码");
-        const panel=document.createElement("div");panel.className="pk-formula-panel";panel.append(button,field);
-        details.append(panel);
-      });
-    }
   }
   narrowComparison(doc);
+  for(const el of doc.querySelectorAll<HTMLElement>("mjx-container:not([display]):not(table mjx-container)")){
+    const glyph=el.querySelector(":scope > svg");
+    if(!glyph)continue;
+    const update=()=>{
+      const wide=glyph.getBoundingClientRect().width>el.clientWidth+1;
+      el.classList.toggle("pk-wide-math",wide);
+      setScrollable(el,"公式",wide);
+    };
+    update();
+    observeResize.set(el,update);
+    resize?.observe(el);
+  }
   for(const img of doc.querySelectorAll<HTMLImageElement>("img")){
     if(img.closest("a") || !img.alt)continue;
     const button=document.createElement("button");button.type="button";
@@ -131,7 +132,6 @@ onBeforeUnmount(()=>{resize?.disconnect();mutation?.disconnect();cancelAnimation
 </script>
 
 <template>
-  <div class="pk-sr-only" role="status">{{status}}</div>
   <dialog ref="lightbox" class="pk-dialog pk-image-dialog" aria-label="原图预览" @click.self="lightbox?.close()" @close="imageTrigger?.focus()">
     <div class="pk-dialog-inner">
       <div class="pk-dialog-bar"><a :href="image.src" target="_blank" rel="noopener">在新页面查看原图</a><button type="button" class="pk-btn" autofocus @click="lightbox?.close()">关闭</button></div>
