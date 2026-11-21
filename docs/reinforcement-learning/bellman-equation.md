@@ -80,105 +80,143 @@ $$
 
 ## 2. Bellman Expectation Equation
 
-先从单条轨迹做代数拆分。从 $t+1$ 开始计算时，$R_{t+2}$ 是它的第一笔奖励，权重是 1。换回时刻 $t$ 计价时，它已是第二笔，所以换算时要把整串后续奖励一起乘 $\gamma$。
+#### （1）把回报拆成两项
+
+<div class="td-slide">
+<div class="td-slide-title">Deriving the Bellman equation · 从轨迹到期望</div>
+<div class="td-slide-body">
+
+沿用上一节的随机轨迹：在时刻 $t$ 执行动作 $A_t$，先收到 $R_{t+1}$，再从 $S_{t+1}$ 继续。把第一笔奖励单独拿出来：
 
 $$
 \begin{aligned}
-G_t&=R_{t+1}+\gamma R_{t+2}+\gamma^2R_{t+3}+\cdots\\
-   &=R_{t+1}+\gamma\bigl(R_{t+2}+\gamma R_{t+3}+\cdots\bigr)\\
-   &=R_{t+1}+\gamma G_{t+1}.
+G_t &= R_{t+1}+\gamma R_{t+2}+\gamma^2 R_{t+3}+\cdots\\
+    &= R_{t+1}+\gamma(R_{t+2}+\gamma R_{t+3}+\cdots)\\
+    &= R_{t+1}+\gamma G_{t+1}.
 \end{aligned}
 $$
 
-再固定起点 $S_t=s$，求这些结果的<strong>条件期望（conditional expectation）</strong>。这表示只在给定起点的条件下按概率取平均。即时奖励和后续回报可以分别取期望，再相加。
+$R_{t+2}$ 在 $G_{t+1}$ 中是第一笔奖励，权重为 $1$；换回时刻 $t$ 计价时，整段后续回报要再乘一次 $\gamma$。
+
+固定起点 $S_t=s$，把上式代入状态价值定义。由条件期望的线性性质，两项可以分别计算，无须假设它们独立：
 
 $$
 \begin{aligned}
-v_\pi(s)
-&=\underbrace{\mathbb E_\pi[R_{t+1}\mid S_t=s]}_{\text{平均即时奖励}}\\
-&\quad+\gamma\underbrace{\mathbb E_\pi[G_{t+1}\mid S_t=s]}_{\text{下一时刻的平均回报}}.
+v_\pi(s)&=\mathbb E_\pi[G_t\mid S_t=s]\\
+&=\mathbb E_\pi[R_{t+1}+\gamma G_{t+1}\mid S_t=s]\\
+&=\underbrace{\mathbb E_\pi[R_{t+1}\mid S_t=s]}_{\text{平均即时奖励}}
++\gamma\underbrace{\mathbb E_\pi[G_{t+1}\mid S_t=s]}_{\text{下一时刻的平均回报}}.
 \end{aligned}
 $$
+
+</div>
+</div>
 
 ### Expected Immediate Reward
 
-只知道起点 $s$ 时，动作由策略选，奖励由环境给。$\pi(a\mid s)$ 是选中 $a$ 的概率，$p(r\mid s,a)$ 是选中 $a$ 后得到 $r$ 的概率。<strong>先按环境概率求每个动作的平均奖励，再按策略概率把各动作合起来。</strong>
+<div class="td-slide">
+<div class="td-slide-title">（2）第一项 · 平均即时奖励</div>
+<div class="td-slide-body">
 
-$$
-\mathbb E[R_{t+1}\mid S_t=s,A_t=a]=\sum_r p(r\mid s,a)r.
-$$
-
-用动作的选择概率加权，得到从 $s$ 出发按策略走一步的平均奖励 $r_\pi(s)$。
+只固定了起点 $s$，因此第一步动作仍由策略 $\pi$ 选择。按动作使用<strong>全期望公式（law of total expectation）</strong>：
 
 $$
 \begin{aligned}
 r_\pi(s)
 &=\mathbb E_\pi[R_{t+1}\mid S_t=s]\\
-&=\sum_a\pi(a\mid s)\sum_r p(r\mid s,a)r.
+&=\sum_a\pi(a\mid s)\,\mathbb E[R_{t+1}\mid S_t=s,A_t=a]\\
+&=\sum_a\pi(a\mid s)\sum_r p(r\mid s,a)\,r.
 \end{aligned}
 $$
 
+给定 $a$ 后，内层按环境的奖励概率计算平均奖励；外层再按策略选择各动作的概率加权。这一项只计算执行 $A_t$ 后收到的 $R_{t+1}$。
+
+</div>
+</div>
+
 ### Expected Future Return
 
-课件先按<strong>下一状态（next state）</strong>分组，再展开转移概率。这里求的是 $\mathbb E_\pi[G_{t+1}\mid S_t=s]$，也就是已知当前状态 $s$ 时，从下一时刻开始的平均回报。
+<div class="td-slide">
+<div class="td-slide-title">（3）第二项 · 下一时刻的平均回报</div>
+<div class="td-slide-body">
 
-<strong>1. 按下一状态使用全期望公式（law of total expectation）。</strong> 现在只知道 $S_t=s$，还不知道 $S_{t+1}$。先固定一个可能的落点 $s'$，求这一组轨迹的平均后续回报，再乘上落到 $s'$ 的条件概率 $p_\pi(s'\mid s)$。对所有可能的 $s'$ 求和。
+第一项按<strong>动作</strong>分组，这一项先按<strong>下一状态</strong>分组。令 $p_\pi(s'\mid s)$ 表示按策略从 $s$ 走一步到达 $s'$ 的概率。
 
 $$
 \begin{aligned}
 &\mathbb E_\pi[G_{t+1}\mid S_t=s]\\
 &=\sum_{s'}p_\pi(s'\mid s)\,
-\mathbb E_\pi[G_{t+1}\mid S_t=s,S_{t+1}=s'].
+   \mathbb E_\pi[G_{t+1}\mid S_t=s,S_{t+1}=s']\\
+&=\sum_{s'}p_\pi(s'\mid s)\,
+   \mathbb E_\pi[G_{t+1}\mid S_{t+1}=s']\\
+&=\sum_{s'}p_\pi(s'\mid s)\,v_\pi(s').
 \end{aligned}
 $$
 
-<strong>2. 用马尔可夫性质（Markov property）去掉旧状态。</strong> 给定 $S_{t+1}=s'$ 后，后续动作由同一个只依赖当前状态的策略 $\pi$ 选择，环境也从 $s'$ 按马尔可夫规则继续。因此，知道先前的 $S_t=s$ 不会再改变后续回报的条件分布。课件在这一步划掉了条件里的 $S_t=s$。剩下的期望正是从 $s'$ 出发的状态价值。
+这三步分别是：<strong>按落点取全期望</strong>；利用马尔可夫性质和只依赖当前状态的策略去掉旧状态 $S_t=s$；认出剩下的条件期望正是 $v_\pi(s')$。
 
-$$
-\begin{aligned}
-&\mathbb E_\pi[G_{t+1}\mid S_t=s,S_{t+1}=s']\\
-&=\mathbb E_\pi[G_{t+1}\mid S_{t+1}=s']\\
-&=v_\pi(s').
-\end{aligned}
-$$
-
-<strong>3. 展开落点的概率。</strong> $p_\pi(s'\mid s)$ 是按策略走一步时到达 $s'$ 的概率。它包含所有能到达 $s'$ 的动作。把事件「选 $a$ 且到达 $s'$」对 $a$ 求和，再用条件概率的乘法规则拆开每一项。
+下一步的落点概率由所有可能的动作共同决定。对「选中 $a$ 且到达 $s'$」求和：
 
 $$
 \begin{aligned}
 p_\pi(s'\mid s)
-&=\sum_a \Pr_\pi(A_t=a,S_{t+1}=s'\mid S_t=s)\\
-&=\sum_a \pi(a\mid s)\,p(s'\mid s,a).
+&=\sum_a\Pr_\pi(A_t=a,S_{t+1}=s'\mid S_t=s)\\
+&=\sum_a\pi(a\mid s)\,p(s'\mid s,a).
 \end{aligned}
 $$
 
-<strong>4. 代回并交换求和顺序。</strong> 课件先保留下一状态在外层。与即时奖励项合并时，再把动作概率放到外层。
+代回后，把求和顺序从「先列落点」改成「先列动作」，方便与第一项合并：
 
 $$
 \begin{aligned}
 \mathbb E_\pi[G_{t+1}\mid S_t=s]
-&=\sum_{s'}v_\pi(s')\,p_\pi(s'\mid s)\\
-&=\sum_{s'}v_\pi(s')\sum_a p(s'\mid s,a)\pi(a\mid s)\\
-&=\sum_a\pi(a\mid s)\sum_{s'}p(s'\mid s,a)v_\pi(s').
+&=\sum_{s'}v_\pi(s')\sum_a \pi(a\mid s)\,p(s'\mid s,a)\\
+&=\sum_a\pi(a\mid s)\sum_{s'}p(s'\mid s,a)\,v_\pi(s').
 \end{aligned}
 $$
 
-$G_{t+1}$ 的第一笔奖励是 $R_{t+2}$，它在 $G_{t+1}$ 里的权重是 1。回到时刻 $t$ 计价时，这整项乘一次 $\gamma$。$R_{t+1}$ 已经由即时奖励项单独计算。
+这项包含从下一时刻开始的奖励（第一笔是 $R_{t+2}$）。合回 $v_\pi(s)$ 时再乘一次 $\gamma$。
+
+</div>
+</div>
 
 ### Putting Both Terms Together
 
-合并两项，得到每个状态都满足的贝尔曼期望方程（Bellman expectation equation）。
+<div class="td-slide">
+<div class="td-slide-title">（4）合并两项 · Bellman Expectation Equation</div>
+<div class="td-slide-body">
+
+把两项分别代入，再提出共同的动作权重 $\pi(a\mid s)$：
 
 $$
 \begin{aligned}
-v_\pi(s)&=\sum_a\pi(a\mid s)\biggl[
-  \sum_r p(r\mid s,a)r\\
-&\qquad+\gamma\sum_{s'}p(s'\mid s,a)v_\pi(s')
-\biggr].
+v_\pi(s)
+&=\underbrace{\sum_a\pi(a\mid s)\sum_r p(r\mid s,a)\,r}_{\text{平均即时奖励}}\\
+&\quad+\underbrace{\gamma\sum_a\pi(a\mid s)\sum_{s'}p(s'\mid s,a)\,v_\pi(s')}_{\text{折扣后的平均后续回报}}\\[4pt]
+&=\sum_a\pi(a\mid s)\left[\sum_r p(r\mid s,a)\,r
+   +\gamma\sum_{s'}p(s'\mid s,a)\,v_\pi(s')\right],
+   \qquad \forall s\in\mathcal S .
 \end{aligned}
 $$
 
-左边是当前状态的价值，右边还含有下一状态的未知价值。下一状态也可能是当前状态。有限状态下，每个状态各给出一个方程，合起来就能求解。<strong>策略评估（policy evaluation）</strong>指给定策略，求它在各个起点的价值。
+贝尔曼期望方程把<strong>当前状态的价值与可能到达的下一状态的价值</strong>联系起来，下一状态也可能是当前状态。有限状态下，每个状态给出一个方程，合起来就是一组关于各状态价值的联立方程。给定策略求这些价值，叫作<strong>策略评估（policy evaluation）</strong>。
+
+</div>
+</div>
+
+#### （5）模型已知与未知
+
+<div class="td-slide">
+<div class="td-slide-title">Dynamics model · 已知与未知</div>
+<div class="td-slide-body">
+
+方程里的 $p(r\mid s,a)$ 和 $p(s'\mid s,a)$ 描述了<strong>环境模型（dynamics model）</strong>中用于这两项期望的奖励概率和转移概率；$\pi(a\mid s)$ 则来自给定的策略。
+
+- <strong>模型已知</strong>：可以直接按概率求和，再用下一节的矩阵形式或迭代法求状态价值。
+- <strong>模型未知</strong>：贝尔曼方程仍然成立，但无法直接代入真实概率。可以用交互数据估计模型再求解，也可以直接从采样的回报或转移中估计价值，例如后面的 Monte Carlo 和 Temporal-Difference 方法。
+
+</div>
+</div>
 
 ## 3. Matrix Form & Policy Evaluation
 
