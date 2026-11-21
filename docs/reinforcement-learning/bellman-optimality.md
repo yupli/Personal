@@ -6,7 +6,7 @@ pageClass: rl-summary
 
 [切换到 V1（逐页）](bellman-optimality-slides.md)
 
-## 1. Optimal Policy & Optimal Value
+## 1. Optimal Policy {#_1-optimal-policy-optimal-value}
 
 <div class="td-slide">
 <div class="td-slide-title">Optimal policy · 怎样比较策略？</div>
@@ -35,7 +35,7 @@ $$
 </div>
 </div>
 
-## 2. Bellman Optimality Equation
+## 2. Bellman Optimality Equation(BOE) {#_2-bellman-optimality-equation}
 
 ### Elementwise Form
 
@@ -85,7 +85,7 @@ $$
 </div>
 </div>
 
-## 3. Solving for Value and Policy
+## 3. BOE: Maximization on the right-hand side {#_3-solving-for-value-and-policy}
 
 #### （1）两个未知量：先处理右边的最大化
 
@@ -246,7 +246,7 @@ $$
 </div>
 </div>
 
-## 5. Solving the Bellman Optimality Equation
+## 5. BOE: Solution {#_5-solving-the-bellman-optimality-equation}
 
 #### （1）把 BOE 写成不动点方程
 
@@ -327,7 +327,7 @@ $\gamma$ 决定这个误差上界的衰减速度；越接近 $1$，上界下降�
 </div>
 </div>
 
-## 6. Policy Optimality
+## 6. BOE: Optimality {#_6-policy-optimality}
 
 #### （1）选出的策略能实现 BOE 的解
 
