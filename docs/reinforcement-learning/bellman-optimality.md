@@ -453,3 +453,29 @@ $$
 
 </div>
 </div>
+
+#### （3）折扣因子为什么重要？
+
+<div class="td-slide">
+<div class="td-slide-title">Discount rate · 决策目标与求解速度</div>
+<div class="td-slide-body">
+
+- <strong>决定什么值得选。</strong> 未来第 $k+1$ 步奖励的权重为 $\gamma^k$。$\gamma=0$ 时只比较平均即时奖励；$\gamma$ 越接近 $1$，远期奖励的权重衰减越慢。若两个动作在近期和远期各有优势，改变 $\gamma$ 可能改变它们的排序，进而改变最优策略。
+- <strong>决定误差上界下降多快。</strong> 在本课的折扣设定下，$\gamma$ 也是 BOE 的收缩系数。做 $k$ 轮值迭代后，误差上界为 $\gamma^k\|\mathbf v_0-\mathbf v^*\|_\infty$。$\gamma$ 越接近 $1$，这个上界降得越慢；取 $\gamma=1$ 时，本课的收缩论证便不能直接使用。
+
+</div>
+</div>
+
+## 8. Summary
+
+<div class="td-slide">
+<div class="td-slide-title">Summary · 关于 BOE 的四个问题</div>
+<div class="td-slide-body">
+
+- <strong>Existence（有没有解？）</strong> 有。贝尔曼最优算子是收缩映射，收缩映射定理保证存在不动点 $\mathbf v^*$。
+- <strong>Uniqueness（解是否唯一？）</strong> 同一定理保证<strong>最优价值 $\mathbf v^*$ 唯一</strong>。多个动作并列最优时，最优策略可以有多个。
+- <strong>Algorithm（怎样求解？）</strong> 从任意初值 $\mathbf v_0$ 反复做值迭代 $\mathbf v_{k+1}=f(\mathbf v_k)$，价值向量会收敛到 $\mathbf v^*$。
+- <strong>Optimality（为什么要解这个方程？）</strong> 它的解就是每个状态能达到的最高期望折扣回报。用 $\mathbf v^*$ 算出 $q^*(s,a)$，再逐状态选择最大动作值对应的动作，就得到一套能实现该价值的最优策略。
+
+</div>
+</div>
