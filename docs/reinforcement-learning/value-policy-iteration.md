@@ -290,3 +290,149 @@ $$
 
 </div>
 </div>
+
+## 3. Compare Value Iteration and Policy Iteration
+
+#### （1）把两条更新流程放在一起
+
+<div class="td-slide">
+<div class="td-slide-title">Policy iteration vs. Value iteration</div>
+<div class="td-slide-body">
+
+$$
+\begin{aligned}
+\text{Policy iteration:}\quad&
+\pi_0\xrightarrow{\mathrm{PE}}\mathbf v_{\pi_0}
+\xrightarrow{\mathrm{PI}}\pi_1
+\xrightarrow{\mathrm{PE}}\mathbf v_{\pi_1}
+\xrightarrow{\mathrm{PI}}\pi_2
+\xrightarrow{\mathrm{PE}}\mathbf v_{\pi_2}\xrightarrow{\mathrm{PI}}\cdots\\
+\text{Value iteration:}\quad&
+\mathbf u_0\xrightarrow{\mathrm{PU}}\pi'_1
+\xrightarrow{\mathrm{VU}}\mathbf u_1
+\xrightarrow{\mathrm{PU}}\pi'_2
+\xrightarrow{\mathrm{VU}}\mathbf u_2\xrightarrow{\mathrm{PU}}\cdots .
+\end{aligned}
+$$
+
+PE 是 policy evaluation，PI 是 policy improvement；PU 是 policy update，VU 是 value update。这里用 $\mathbf u_k$ 表示值迭代的中间估计，以免与固定策略的真实价值 $\mathbf v_{\pi_k}$ 混淆。
+
+</div>
+</div>
+
+#### （2）从同一组价值出发：在哪一步分开？
+
+<div class="td-slide">
+<div class="td-slide-title">Step-by-step comparison · 前三步对齐，第四步分开</div>
+<div class="td-slide-body">
+
+为了对齐起点，<strong>特意取 $\mathbf u_0=\mathbf v_{\pi_0}$</strong>。值迭代本身无须先给定策略，也不要求初值是某个策略的价值。表中的 $\arg\max$ 都按状态取，并列时使用同一选择规则。
+
+| 步骤 | Policy Iteration | Value Iteration | 对比 |
+| --- | --- | --- | --- |
+| 1. 初始策略 | $\pi_0$ | 不需要 | $\pi_0$ 用于确定比较时的共同初值。 |
+| 2. 初始价值 | $\mathbf v_{\pi_0}=\mathbf r_{\pi_0}+\gamma P_{\pi_0}\mathbf v_{\pi_0}$ | $\mathbf u_0:=\mathbf v_{\pi_0}$ | 两者用同一组价值。 |
+| 3. 贪心选策略 | $\pi_1\in\arg\max_\pi(\mathbf r_\pi+\gamma P_\pi\mathbf v_{\pi_0})$ | $\pi'_1\in\arg\max_\pi(\mathbf r_\pi+\gamma P_\pi\mathbf u_0)$ | 选到同一策略，记为 $\pi_1$。 |
+| 4. 更新价值 | $\mathbf v_{\pi_1}=\mathbf r_{\pi_1}+\gamma P_{\pi_1}\mathbf v_{\pi_1}$ | $\mathbf u_1=\mathbf r_{\pi_1}+\gamma P_{\pi_1}\mathbf u_0$ | 左边完整评估 $\pi_1$；右边只更新一次。 |
+| 5. 再选策略 | $\pi_2\in\arg\max_\pi(\mathbf r_\pi+\gamma P_\pi\mathbf v_{\pi_1})$ | $\pi'_2\in\arg\max_\pi(\mathbf r_\pi+\gamma P_\pi\mathbf u_1)$ | 输入价值不同，得到的策略可能不同。 |
+
+为什么第四步有 $\mathbf v_{\pi_1}\ge\mathbf u_1$？策略改进保证 $\mathbf v_{\pi_1}\ge\mathbf v_{\pi_0}=\mathbf u_0$。用同一个非负转移矩阵加权后，仍有
+
+$$
+\mathbf v_{\pi_1}-\mathbf u_1
+=\gamma P_{\pi_1}(\mathbf v_{\pi_1}-\mathbf u_0)\ge\mathbf 0.
+$$
+
+若用迭代做完整评估，第 4 步的 $\mathbf v_{\pi_1}$ 是内层迭代的极限，也可以直接解线性方程。值迭代的 $\mathbf u_1$ 则是从同一起点做完第一步时得到的值。
+
+</div>
+</div>
+
+## 4. Truncated Policy Iteration
+
+#### （1）在同一条评估序列上选停止位置
+
+<div class="td-slide">
+<div class="td-slide-title">Truncated policy iteration · 只评估有限轮</div>
+<div class="td-slide-body">
+
+固定刚选出的 $\pi_1$，令 $\mathbf v_{\pi_1}^{(0)}=\mathbf u_0$，每次按同一个映射 $T_{\pi_1}(\mathbf w)=\mathbf r_{\pi_1}+\gamma P_{\pi_1}\mathbf w$ 更新。三种算法的区别在于拿哪一轮的结果去做下一次贪心选择：
+
+$$
+\begin{aligned}
+\mathbf v_{\pi_1}^{(0)}&=\mathbf u_0,\\
+\mathbf v_{\pi_1}^{(1)}&=T_{\pi_1}(\mathbf v_{\pi_1}^{(0)})=\mathbf u_1,\\
+\mathbf v_{\pi_1}^{(2)}&=T_{\pi_1}(\mathbf v_{\pi_1}^{(1)}),\\
+&\ \vdots\\
+\mathbf v_{\pi_1}^{(j)}&=T_{\pi_1}(\mathbf v_{\pi_1}^{(j-1)})=\bar{\mathbf v}_1,\\
+&\ \vdots\\
+\mathbf v_{\pi_1}^{(\infty)}&=\mathbf v_{\pi_1}
+=\mathbf r_{\pi_1}+\gamma P_{\pi_1}\mathbf v_{\pi_1}.
+\end{aligned}
+$$
+
+- <strong>Value iteration：</strong>做一次更新，就用 $\mathbf u_1$ 选下一套贪心策略。
+- <strong>Truncated policy iteration：</strong>做有限次更新（例如 $j>1$ 次），用 $\bar{\mathbf v}_1$ 选下一套策略，余下的内层更新省略。
+- <strong>Policy iteration：</strong>用完整评估的结果 $\mathbf v_{\pi_1}$ 再选下一套策略。
+
+</div>
+</div>
+
+#### （2）Procedure Summary & Pseudocode
+
+<div class="td-slide">
+<div class="td-slide-title">Pseudocode · 用上轮估计作为本轮评估初值</div>
+<div class="td-slide-body">
+
+已知奖励与转移模型，给定初始策略 $\pi_0$ 和起始价值估计。每轮固定当前策略 $\pi_k$，以上一轮的估计 $\mathbf v_{k-1}$ 作为内层初值，只评估 $j_{\mathrm{truncate}}$ 轮。令 $\mathbf v_k=\mathbf v_k^{(j_{\mathrm{truncate}})}$，再据此算 $q_k(s,a)$，逐状态选出新的贪心策略 $\pi_{k+1}$。$\mathbf v_k$ 一般只是 $\mathbf v_{\pi_k}$ 的近似值。
+
+<figure>
+  <img src="./resources/value-policy-iteration/truncated-policy-iteration-pseudocode.png" alt="原课件截断策略迭代伪代码：用上轮价值初始化，固定策略评估到截断轮数，再用所得价值做贪心改进。" width="1610" height="1150" loading="lazy">
+</figure>
+
+课件用「策略收敛」描述外层停止。因为这里的评估尚未做完，策略恰好有一轮没变并不保证已经最优；实际也可检查最优方程残差 $\|f(\mathbf v_k)-\mathbf v_k\|_\infty$ 是否足够小。
+
+</div>
+</div>
+
+#### （3）截断会破坏收敛吗？
+
+<div class="td-theorem">
+<div class="td-theorem-title">Proposition · Value Improvement</div>
+<div class="td-theorem-body">
+
+设 $\pi_k$ 由上一套策略的真实价值 $\mathbf v_{\pi_{k-1}}$ 贪心选出。用这个真实价值作为评估 $\pi_k$ 的初值：
+
+$$
+\begin{aligned}
+\mathbf v_{\pi_k}^{(0)}&=\mathbf v_{\pi_{k-1}},\\
+\mathbf v_{\pi_k}^{(j+1)}&=\mathbf r_{\pi_k}
++\gamma P_{\pi_k}\mathbf v_{\pi_k}^{(j)},
+\qquad j=0,1,2,\ldots .
+\end{aligned}
+$$
+
+那么对每一轮 $j$，都有逐状态的<strong>价值改进</strong>：
+
+$$
+\mathbf v_{\pi_k}^{(j+1)}\ge\mathbf v_{\pi_k}^{(j)} .
+$$
+
+第一次更新不低于初值：贪心选择的一步前瞻值不低于沿用旧策略，而旧策略对其真实价值做一次更新会得到原值。之后固定 $\pi_k$，非负的转移概率使每次更新都保留上一轮的大小关系。因此，截断时拿到的价值至少和第一轮更新一样高。
+
+</div>
+</div>
+
+<div class="td-slide">
+<div class="td-slide-title">Convergence · 三种算法怎样接近最优值</div>
+<div class="td-slide-body">
+
+实际截断时，下一轮用的是上轮的<strong>近似价值</strong>。若起始估计 $\mathbf w$ 满足 $\mathbf w\le f(\mathbf w)$，以它选出的贪心策略做第一轮更新就得到 $f(\mathbf w)$。继续用同一策略做有限轮，结果 $\mathbf w_{\mathrm{new}}$ 不会更低，也仍满足 $\mathbf w_{\mathrm{new}}\le f(\mathbf w_{\mathrm{new}})$。在这个条件下，只要每次至少评估一轮，从同一初值出发的截断迭代就逐轮不低于值迭代，同时不会超过 $\mathbf v^*$。值迭代收敛到 $\mathbf v^*$，截断迭代也收敛到它。
+
+<figure>
+  <img src="./resources/value-policy-iteration/iteration-convergence-comparison.png" alt="课件收敛示意图：横轴是外层迭代轮数 k，蓝线是策略迭代，黑线是截断策略迭代，紫线是值迭代，红色水平线是最优状态价值。" width="805" height="722" loading="lazy">
+  <figcaption>示意图中，做更多内层评估会更早接近红色最优价值线，但横轴只计外层轮数。每轮计算量不同，不能从图中直接判断哪种算法运行时间最短。</figcaption>
+</figure>
+
+</div>
+</div>
