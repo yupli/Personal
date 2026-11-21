@@ -690,3 +690,21 @@ div[class*="language-"] {
   max-width: none;
   margin-inline: auto;
 }
+
+.td-theorem {
+  overflow: hidden;
+  margin-bottom: 1rem;
+  border: 1px solid #c9c4a7;
+  border-radius: 6px;
+  background: #e9e6d7;
+}
+
+.td-theorem-title {
+  padding: 0.45rem 0.75rem;
+  background: #f4e99b;
+  font-weight: 700;
+}
+
+.td-theorem-body {
+  padding: 0.35rem 0.75rem;
+}

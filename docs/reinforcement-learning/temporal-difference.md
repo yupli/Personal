@@ -661,24 +661,6 @@ Sarsa 使用行为策略抽出的 $A_{t+1}$ 评价同一策略。Q-learning 的�
 MC 的等权样本均值对应第 $N$ 次访问使用 $\alpha=1/N$。课件把 $\alpha=1$ 写作直接放入单次回报，这只是统一更新式中的单样本情形。
 
 <style>
-.td-theorem {
-  overflow: hidden;
-  margin-bottom: 1rem;
-  border: 1px solid #c9c4a7;
-  border-radius: 6px;
-  background: #e9e6d7;
-}
-
-.td-theorem-title {
-  padding: 0.45rem 0.75rem;
-  background: #f4e99b;
-  font-weight: 700;
-}
-
-.td-theorem-body {
-  padding: 0.35rem 0.75rem;
-}
-
 .rl-summary .vp-doc .sarsa-pseudocode {
   border-color: #a6a6a6;
   background: #fff;

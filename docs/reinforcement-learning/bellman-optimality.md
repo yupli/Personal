@@ -179,3 +179,69 @@ $$
 
 </div>
 </div>
+
+## 4. Contraction Mapping Theorem
+
+#### （1）不动点与收缩映射
+
+<div class="td-slide">
+<div class="td-slide-title">Preliminaries · Fixed point &amp; Contraction mapping</div>
+<div class="td-slide-body">
+
+设 $f:X\to X$。若 $x^*\in X$ 经 $f$ 作用后仍是自己，即 $f(x^*)=x^*$，就称 $x^*$ 为 $f$ 的<strong>不动点（fixed point）</strong>。
+
+若存在同一个常数 $\gamma\in(0,1)$，使得对任意 $x_1,x_2\in X$ 都有
+
+$$
+\|f(x_1)-f(x_2)\|\le\gamma\|x_1-x_2\|,
+$$
+
+就称 $f$ 为<strong>收缩映射（contraction mapping，也称压缩映射）</strong>。每应用一次 $f$，两点距离至多是原来的 $\gamma$ 倍；连续应用 $k$ 次后，缩小因子至多是 $\gamma^k$。正因为 $\gamma<1$，才有 $\gamma^k\to 0$（当 $k\to\infty$）。
+
+$\|\cdot\|$ 可以选用任一种向量范数，但整个不等式要用同一种范数，并在所选范数下验证收缩性。
+
+</div>
+</div>
+
+#### （2）例：线性映射
+
+<div class="td-slide">
+<div class="td-slide-title">Example · 验证线性映射的收缩性</div>
+<div class="td-slide-body">
+
+设 $x\in\mathbb R^n$、$A\in\mathbb R^{n\times n}$，且 $\|A\|\le\gamma<1$，其中 $\|A\|$ 是由所选向量范数诱导的矩阵范数。因 $A0=0$，零向量是 $x=f(x)=Ax$ 的一个不动点。另一方面，
+
+$$
+\begin{aligned}
+\|Ax_1-Ax_2\|
+&=\|A(x_1-x_2)\|\\
+&\le\|A\|\,\|x_1-x_2\|\\
+&\le\gamma\|x_1-x_2\|.
+\end{aligned}
+$$
+
+第二行用到诱导范数的性质 $\|Az\|\le\|A\|\|z\|$。同一个 $\gamma<1$ 对所有输入都成立，因此 $f(x)=Ax$ 是收缩映射。
+
+</div>
+</div>
+
+#### （3）定理给出的三条结论
+
+<div class="td-theorem">
+<div class="td-theorem-title">Theorem · Contraction Mapping Theorem</div>
+<div class="td-theorem-body">
+
+若 $X$ 非空且完备，$f:X\to X$ 是收缩映射，则方程 $x=f(x)$ 有以下三条结论。这里「完备」指空间中的柯西序列在空间内有极限；本课用到的有限维实向量空间满足这个条件。
+
+1. <strong>Existence（存在性）：</strong> 至少存在一个 $x^*\in X$，使 $f(x^*)=x^*$。
+2. <strong>Uniqueness（唯一性）：</strong> 这样的不动点只有一个。
+3. <strong>Algorithm（迭代求解）：</strong> 从任意 $x_0\in X$ 出发，反复执行 $x_{k+1}=f(x_k)$，就有 $x_k\to x^*$，且误差按几何速度衰减：
+
+$$
+\|x_k-x^*\|\le\gamma^k\|x_0-x^*\|.
+$$
+
+这个上界来自每轮对不动点的距离都至多乘一次 $\gamma$，因为 $f(x^*)=x^*$。
+
+</div>
+</div>
