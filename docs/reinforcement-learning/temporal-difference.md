@@ -357,66 +357,9 @@ $$
 
 ### 3.4 动作价值形式的 Bellman Expectation Equation {#action-value-bellman-expectation}
 
-<div class="td-slide">
-<div class="td-slide-title">对动作取期望 · State Value 与 Action Value 的关系</div>
-<div class="td-slide-body">
-
-从状态价值与动作价值的关系出发
-
-$$
-\boxed{v_\pi(s)=\sum_a\pi(a\mid s)q_\pi(s,a)}.
-$$
-
-这个等式来自**全期望公式**。在状态 $s$，先按首个动作对 return 分组，再用 $\pi(a\mid s)$ 加权。下文用 $\mathbb E_{s,a}$ 简记固定当前状态和动作 $(S_t,A_t)=(s,a)$ 时的期望。
-
-$$
-\begin{aligned}
-v_\pi(s)
-&=\mathbb E_\pi[G_t\mid S_t=s]\\
-&=\sum_a \pi(a\mid s)\,\mathbb E_{s,a}[G_t]\\
-&=\sum_a \pi(a\mid s)\,q_\pi(s,a).
-\end{aligned}
-$$
-
-把同样的关系用在下一状态 $S'$。如果下一动作 $A'$ 按 $\pi(\cdot\mid S')$ 采样，那么
-
-$$
-v_\pi(S')=\mathbb E_\pi[q_\pi(S',A')\mid S'].
-$$
-
-</div>
-</div>
-
-<div class="td-slide">
-<div class="td-slide-title">拆开 Return · 即时奖励与下一步的 Action Value</div>
-<div class="td-slide-body">
-
-现在固定当前的 $(S_t,A_t)=(s,a)$，记 $R$ 为这次转移的即时奖励。把 return 写成 $G_t=R+\gamma G_{t+1}$。先对 $(R,S')$ 条件化，由 **Markov property**，给定 $S'$ 后，按 $\pi$ 继续得到的期望回报就是 $v_\pi(S')$。因此
-
-$$
-\begin{aligned}
-q_\pi(s,a)
-&=\mathbb E_{s,a}[R+\gamma G_{t+1}]\\
-&=\mathbb E_{s,a}[R+\gamma v_\pi(S')].
-\end{aligned}
-$$
-
-再代入上面 $v_\pi(S')$ 的表达式。给定这次转移的结果，$A'$ 只按 $\pi(\cdot\mid S')$ 抽取，所以可以用**全期望公式**把下一动作的条件期望并入外层期望
-
-$$
-\begin{aligned}
-q_\pi(s,a)
-&=\mathbb E_{s,a}[R]\\
-&\quad+\gamma\mathbb E_{s,a}\bigl[
-\mathbb E_\pi[q_\pi(S',A')\mid S']\bigr]\\
-&=\mathbb E_{s,a}\bigl[R+\gamma q_\pi(S',A')\bigr].
-\end{aligned}
-$$
-
-这就是动作价值形式的 **Bellman expectation equation**。Sarsa 用一次实际观测的 $(r,s',a')$，以及当前估计 $q_t$，构造单步 **target** $r+\gamma q_t(s',a')$。
-
-</div>
-</div>
+<figure>
+  <img src="./resources/temporal-difference/sarsa-bellman-expectation.png" alt="由下一状态的动作价值加权平均得到状态价值，再代入并用全期望公式得到动作价值形式的 Bellman expectation equation。" width="1410" height="756" loading="lazy">
+</figure>
 
 ### 3.5 Sarsa 的收敛性 {#_4-sarsa-的收敛性}
 
