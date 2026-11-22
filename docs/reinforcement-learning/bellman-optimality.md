@@ -35,7 +35,7 @@ $$
 
 ## 2. Bellman Optimality Equation(BOE) {#_2-bellman-optimality-equation}
 
-### Elementwise Form
+### 2.1 Elementwise Form {#elementwise-form}
 
 <div class="td-slide">
 <div class="td-slide-title">（1）Elementwise form · 对每个状态写一个方程</div>
@@ -62,7 +62,7 @@ $$
 </div>
 </div>
 
-### Matrix–Vector Form
+### 2.2 Matrix–Vector Form {#matrix–vector-form}
 
 <div class="td-slide">
 <div class="td-slide-title">（2）Matrix–vector form · 把状态方程合在一起</div>
@@ -85,7 +85,7 @@ $$
 
 ## 3. BOE: Maximization on the right-hand side {#_3-solving-for-value-and-policy}
 
-#### （1）两个未知量：先处理右边的最大化
+### 3.1 两个未知量：先处理右边的最大化 {#_1-两个未知量-先处理右边的最大化}
 
 <div class="td-slide">
 <div class="td-slide-title">Two unknowns · 先最大化，再解等式</div>
@@ -114,7 +114,7 @@ $$
 </div>
 </div>
 
-### Inner Maximization · 三个已知数的加权平均
+### 3.2 Inner Maximization · 三个已知数的加权平均 {#inner-maximization-·-三个已知数的加权平均}
 
 <div class="td-slide">
 <div class="td-slide-title">（2）Inner maximization · 加权平均不会超过最大项</div>
@@ -144,7 +144,7 @@ $$
 </div>
 </div>
 
-### From Policy to Action · 把结论用回 BOE
+### 3.3 From Policy to Action · 把结论用回 BOE {#from-policy-to-action-·-把结论用回-boe}
 
 <div class="td-slide">
 <div class="td-slide-title">（3）从对策略取最大到对动作取最大</div>
@@ -180,7 +180,7 @@ $$
 
 ## 4. Contraction Mapping Theorem
 
-#### （1）不动点与收缩映射
+### 4.1 不动点与收缩映射 {#_1-不动点与收缩映射}
 
 <div class="td-slide">
 <div class="td-slide-title">Preliminaries · Fixed point &amp; Contraction mapping</div>
@@ -201,7 +201,7 @@ $\|\cdot\|$ 可以选用任一种向量范数，但整个不等式要用同一�
 </div>
 </div>
 
-#### （2）例：线性映射
+### 4.2 例：线性映射 {#_2-例-线性映射}
 
 <div class="td-slide">
 <div class="td-slide-title">Example · 验证线性映射的收缩性</div>
@@ -223,7 +223,7 @@ $$
 </div>
 </div>
 
-#### （3）定理给出的三条结论
+### 4.3 定理给出的三条结论 {#_3-定理给出的三条结论}
 
 <div class="td-theorem">
 <div class="td-theorem-title">Theorem · Contraction Mapping Theorem</div>
@@ -246,7 +246,7 @@ $$
 
 ## 5. BOE: Solution {#_5-solving-the-bellman-optimality-equation}
 
-#### （1）把 BOE 写成不动点方程
+### 5.1 把 BOE 写成不动点方程 {#_1-把-boe-写成不动点方程}
 
 <div class="td-slide">
 <div class="td-slide-title">Fixed-point form · 把右侧看作一个映射</div>
@@ -272,7 +272,7 @@ $$
 </div>
 </div>
 
-#### （2）BOE 的收缩性
+### 5.2 BOE 的收缩性 {#_2-boe-的收缩性}
 
 <div class="td-theorem">
 <div class="td-theorem-title">Theorem · Contraction Property</div>
@@ -300,7 +300,7 @@ $$
 </div>
 </div>
 
-#### （3）解存在、唯一，并可通过迭代求出
+### 5.3 解存在、唯一，并可通过迭代求出 {#_3-解存在、唯一-并可通过迭代求出}
 
 <div class="td-theorem">
 <div class="td-theorem-title">Theorem · Existence, Uniqueness, and Algorithm</div>
@@ -327,7 +327,7 @@ $\gamma$ 决定这个误差上界的衰减速度；越接近 $1$，上界下降�
 
 ## 6. BOE: Optimality {#_6-policy-optimality}
 
-#### （1）选出的策略能实现 BOE 的解
+### 6.1 选出的策略能实现 BOE 的解 {#_1-选出的策略能实现-boe-的解}
 
 <div class="td-slide">
 <div class="td-slide-title">Policy optimality · 把价值解变成一套策略</div>
@@ -348,7 +348,7 @@ $$
 </div>
 </div>
 
-#### （2）其他策略不能超过这组价值
+### 6.2 其他策略不能超过这组价值 {#_2-其他策略不能超过这组价值}
 
 <div class="td-theorem">
 <div class="td-theorem-title">Theorem · Policy Optimality</div>
@@ -367,7 +367,7 @@ $$
 </div>
 </div>
 
-#### （3）最优策略的具体写法
+### 6.3 最优策略的具体写法 {#_3-最优策略的具体写法}
 
 <div class="td-theorem">
 <div class="td-theorem-title">Theorem · Greedy Optimal Policy</div>
@@ -397,7 +397,7 @@ $$
 
 ## 7. Analyzing Optimal Policies
 
-#### （1）最优策略由什么决定？
+### 7.1 最优策略由什么决定？ {#_1-最优策略由什么决定}
 
 <div class="td-slide">
 <div class="td-slide-title">Analyzing optimal policies · 从 BOE 看三个因素</div>
@@ -420,7 +420,7 @@ $$
 </div>
 </div>
 
-#### （2）奖励变换何时不改变最优策略？
+### 7.2 奖励变换何时不改变最优策略？ {#_2-奖励变换何时不改变最优策略}
 
 <div class="td-theorem">
 <div class="td-theorem-title">Theorem · Optimal Policy Invariance</div>
@@ -452,7 +452,7 @@ $$
 </div>
 </div>
 
-#### （3）折扣因子为什么重要？
+### 7.3 折扣因子为什么重要？ {#_3-折扣因子为什么重要}
 
 <div class="td-slide">
 <div class="td-slide-title">Discount rate · 决策目标与求解速度</div>

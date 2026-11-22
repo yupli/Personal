@@ -6,7 +6,7 @@ pageClass: rl-summary
 
 ## 1. Value Iteration
 
-#### （1）一轮值迭代可以拆成两步
+### 1.1 一轮值迭代可以拆成两步 {#_1-一轮值迭代可以拆成两步}
 
 <div class="td-slide">
 <div class="td-slide-title">Value iteration algorithm · 两步更新</div>
@@ -35,7 +35,7 @@ $$
 </div>
 </div>
 
-#### （2）Step 1 · Policy update
+### 1.2 Step 1 · Policy update {#_2-step-1-·-policy-update}
 
 <div class="td-slide">
 <div class="td-slide-title">Policy update · 用旧价值选贪心动作</div>
@@ -71,7 +71,7 @@ $$
 </div>
 </div>
 
-#### （3）Step 2 · Value update
+### 1.3 Step 2 · Value update {#_3-step-2-·-value-update}
 
 <div class="td-slide">
 <div class="td-slide-title">Value update · 用选定动作更新价值</div>
@@ -94,7 +94,7 @@ $$
 </div>
 </div>
 
-#### （4）Procedure Summary & Pseudocode
+### 1.4 Procedure Summary & Pseudocode {#_4-procedure-summary-pseudocode}
 
 <div class="td-slide">
 <div class="td-slide-title">Procedure summary · 一轮的输入与输出</div>
@@ -119,7 +119,7 @@ $$
 
 ## 2. Policy Iteration
 
-#### （1）从一套初始策略开始
+### 2.1 从一套初始策略开始 {#_1-从一套初始策略开始}
 
 <div class="td-slide">
 <div class="td-slide-title">Policy iteration algorithm · 先评估，再改进</div>
@@ -154,7 +154,7 @@ $$
 </div>
 </div>
 
-#### （2）Q1 · 怎样求解策略评估？
+### 2.2 Q1 · 怎样求解策略评估？ {#_2-q1-·-怎样求解策略评估}
 
 <div class="td-slide">
 <div class="td-slide-title">Policy evaluation · 两种求解方式</div>
@@ -178,7 +178,7 @@ $k$ 是外层的策略轮次，$j$ 是评估同一策略时的内层轮次。评
 </div>
 </div>
 
-#### （3）Q2 · 为什么贪心更新能改进策略？
+### 2.3 Q2 · 为什么贪心更新能改进策略？ {#_3-q2-·-为什么贪心更新能改进策略}
 
 <div class="td-theorem">
 <div class="td-theorem-title">Lemma · Policy Improvement</div>
@@ -199,7 +199,7 @@ $$
 </div>
 </div>
 
-#### （4）Q3 · 为什么最终能达到最优？
+### 2.4 Q3 · 为什么最终能达到最优？ {#_4-q3-·-为什么最终能达到最优}
 
 <div class="td-theorem">
 <div class="td-theorem-title">Theorem · Convergence of Policy Iteration</div>
@@ -225,7 +225,7 @@ $$
 </div>
 </div>
 
-#### （5）展开 Step 1 与 Step 2
+### 2.5 展开 Step 1 与 Step 2 {#_5-展开-step-1-与-step-2}
 
 <div class="td-slide">
 <div class="td-slide-title">Step 1 · Policy evaluation（矩阵式与逐状态式）</div>
@@ -278,7 +278,7 @@ $$
 </div>
 </div>
 
-#### （6）Procedure Summary & Pseudocode
+### 2.6 Procedure Summary & Pseudocode {#_6-procedure-summary-pseudocode}
 
 <div class="td-slide">
 <div class="td-slide-title">Procedure summary · 两层循环</div>
@@ -297,9 +297,9 @@ $$
 
 <span id="_3-compare-value-iteration-and-policy-iteration"></span>
 
-## Truncated Policy Iteration
+## 3. Truncated Policy Iteration {#truncated-policy-iteration}
 
-#### （1）把两条更新流程放在一起
+### 3.1 把两条更新流程放在一起 {#_1-把两条更新流程放在一起}
 
 <div class="td-slide">
 <div class="td-slide-title">Policy iteration vs. Value iteration</div>
@@ -327,7 +327,7 @@ PE 是 policy evaluation，PI 是 policy improvement；PU 是 policy update，VU
 </div>
 </div>
 
-#### （2）从同一组价值出发：在哪一步分开？
+### 3.2 从同一组价值出发：在哪一步分开？ {#_2-从同一组价值出发-在哪一步分开}
 
 <div class="td-slide">
 <div class="td-slide-title">Step-by-step comparison · 前三步对齐，第四步分开</div>
@@ -357,7 +357,7 @@ $$
 
 <span id="_4-truncated-policy-iteration"></span>
 
-#### （3）在同一条评估序列上选停止位置
+### 3.3 在同一条评估序列上选停止位置 {#_3-在同一条评估序列上选停止位置}
 
 <div class="td-slide">
 <div class="td-slide-title">Truncated policy iteration · 只评估有限轮</div>
@@ -385,7 +385,7 @@ $$
 </div>
 </div>
 
-#### （4）Procedure Summary & Pseudocode
+### 3.4 Procedure Summary & Pseudocode {#_4-procedure-summary-pseudocode-1}
 
 <div class="td-slide">
 <div class="td-slide-title">Pseudocode · 用上轮估计作为本轮评估初值</div>
@@ -402,7 +402,7 @@ $$
 </div>
 </div>
 
-#### （5）截断会破坏收敛吗？
+### 3.5 截断会破坏收敛吗？ {#_5-截断会破坏收敛吗}
 
 <div class="td-theorem">
 <div class="td-theorem-title">Proposition · Value Improvement</div>

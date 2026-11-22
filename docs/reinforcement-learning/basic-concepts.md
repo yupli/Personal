@@ -6,7 +6,7 @@ pageClass: rl-summary
 
 ## 1. States, Actions & Transitions
 
-#### （1）状态与状态空间
+### 1.1 状态与状态空间 {#_1-状态与状态空间}
 
 <div class="td-slide">
 <div class="td-slide-title">状态与状态空间</div>
@@ -18,7 +18,7 @@ pageClass: rl-summary
 </div>
 </div>
 
-#### （2）动作与动作空间
+### 1.2 动作与动作空间 {#_2-动作与动作空间}
 
 <div class="td-slide">
 <div class="td-slide-title">动作与动作空间</div>
@@ -30,7 +30,7 @@ pageClass: rl-summary
 </div>
 </div>
 
-#### （3）状态转移与转移概率
+### 1.3 状态转移与转移概率 {#_3-状态转移与转移概率}
 
 <div class="td-slide">
 <div class="td-slide-title">状态转移与转移概率</div>
@@ -61,7 +61,7 @@ $$
 
 ## 2. Policy
 
-#### （1）策略怎样选动作
+### 2.1 策略怎样选动作 {#_1-策略怎样选动作}
 
 <div class="td-slide">
 <div class="td-slide-title">Policy · 从状态到动作</div>
@@ -87,7 +87,7 @@ $$
 
 ## 3. Rewards, Trajectories & Returns
 
-#### （1）Reward、Trajectory 与 Return
+### 3.1 Reward、Trajectory 与 Return {#_1-reward、trajectory-与-return}
 
 <div class="td-slide">
 <div class="td-slide-title">从单步奖励到整条轨迹的回报</div>
@@ -108,7 +108,7 @@ $$
 </div>
 </div>
 
-#### （2）Discounted return 与折扣因子
+### 3.2 Discounted return 与折扣因子 {#_2-discounted-return-与折扣因子}
 
 <div class="td-slide">
 <div class="td-slide-title">Discounted return · 折扣回报</div>
@@ -133,7 +133,7 @@ $$
 
 ## 4. Episodic & Continuing Tasks
 
-#### （1）Episode 与两种任务
+### 4.1 Episode 与两种任务 {#_1-episode-与两种任务}
 
 <div class="td-slide">
 <div class="td-slide-title">Episode · 从开始到终止</div>
@@ -146,7 +146,7 @@ $$
 </div>
 </div>
 
-#### （2）怎样用持续形式表示回合任务
+### 4.2 怎样用持续形式表示回合任务 {#_2-怎样用持续形式表示回合任务}
 
 <div class="td-slide">
 <div class="td-slide-title">两种处理目标状态的方式</div>
@@ -160,7 +160,7 @@ $$
 
 ## 5. Markov Decision Process (MDP)
 
-#### （1）MDP 的组成与 Markov property
+### 5.1 MDP 的组成与 Markov property {#_1-mdp-的组成与-markov-property}
 
 <div class="td-slide">
 <div class="td-slide-title">Markov Decision Process · 基本要素</div>
@@ -185,7 +185,7 @@ $$
 </div>
 </div>
 
-#### （2）固定策略后得到 Markov process
+### 5.2 固定策略后得到 Markov process {#_2-固定策略后得到-markov-process}
 
 <div class="td-slide">
 <div class="td-slide-title">从 MDP 到 Markov process</div>

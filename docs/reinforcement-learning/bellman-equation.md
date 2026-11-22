@@ -6,7 +6,7 @@ pageClass: rl-summary
 
 ## 1. Return & State Value
 
-#### （1）交互记号、轨迹与折扣回报
+### 1.1 交互记号、轨迹与折扣回报 {#_1-交互记号、轨迹与折扣回报}
 
 <div class="td-slide">
 <div class="td-slide-title">Some notations · 从单步交互到多步回报</div>
@@ -43,7 +43,7 @@ $\gamma\in[0,1)$ 是<strong>折扣因子（discount factor）</strong>。执行 
 </div>
 </div>
 
-#### （2）状态价值
+### 1.2 状态价值 {#_2-状态价值}
 
 <div class="td-slide">
 <div class="td-slide-title">State value · 给定起点的平均回报</div>
@@ -63,7 +63,7 @@ $$
 
 ## 2. Bellman Expectation Equation
 
-#### （1）把回报拆成两项
+### 2.1 把回报拆成两项 {#_1-把回报拆成两项}
 
 <div class="td-slide">
 <div class="td-slide-title">Deriving the Bellman equation · 从轨迹到期望</div>
@@ -95,7 +95,7 @@ $$
 </div>
 </div>
 
-### Expected Immediate Reward
+### 2.2 Expected Immediate Reward {#expected-immediate-reward}
 
 <div class="td-slide">
 <div class="td-slide-title">（2）第一项 · 平均即时奖励</div>
@@ -117,7 +117,7 @@ $$
 </div>
 </div>
 
-### Expected Future Return
+### 2.3 Expected Future Return {#expected-future-return}
 
 <div class="td-slide">
 <div class="td-slide-title">（3）第二项 · 下一时刻的平均回报</div>
@@ -163,7 +163,7 @@ $$
 </div>
 </div>
 
-### Putting Both Terms Together
+### 2.4 Putting Both Terms Together {#putting-both-terms-together}
 
 <div class="td-slide">
 <div class="td-slide-title">（4）合并两项 · 贝尔曼期望方程与环境模型</div>
@@ -194,7 +194,7 @@ $$
 
 ## 3. Matrix Form & Policy Evaluation
 
-#### （1）先对动作求平均，再合并各状态的方程
+### 3.1 先对动作求平均，再合并各状态的方程 {#_1-先对动作求平均-再合并各状态的方程}
 
 <div class="td-slide">
 <div class="td-slide-title">Matrix-vector form · 从逐状态到矩阵</div>
@@ -232,7 +232,7 @@ $$
 </div>
 </div>
 
-#### （2）四个状态时矩阵怎样展开
+### 3.2 四个状态时矩阵怎样展开 {#_2-四个状态时矩阵怎样展开}
 
 <div class="td-slide">
 <div class="td-slide-title">Matrix-vector form · 四个状态的符号展开</div>
@@ -258,7 +258,7 @@ $$
 </div>
 </div>
 
-#### （3）策略评估：闭式解与迭代解
+### 3.3 策略评估：闭式解与迭代解 {#_3-策略评估-闭式解与迭代解}
 
 <div class="td-slide">
 <div class="td-slide-title">Solve state values · Policy evaluation</div>
@@ -266,7 +266,7 @@ $$
 
 <strong>策略评估（policy evaluation）</strong>是给定策略，求它在各状态的价值。先知道当前策略的表现，才有依据判断怎样改进策略。
 
-#### Closed-form Solution
+#### 3.3.1 Closed-form Solution {#closed-form-solution}
 
 把含有 $\mathbf v_\pi$ 的项移到左边。$I$ 是单位矩阵；在这里 $I-\gamma P_\pi$ 可逆：
 
@@ -279,7 +279,7 @@ $$
 
 这是<strong>闭式解（closed-form solution）</strong>。实际计算时，可以用数值工具直接解第一行的线性方程组，无须显式构造逆矩阵。
 
-#### Iterative Solution
+#### 3.3.2 Iterative Solution {#iterative-solution}
 
 <strong>迭代解（iterative solution）</strong>不执行矩阵求逆。从任意初值 $\mathbf v_0$ 出发，用整份旧价值计算整份新价值，之后再一起替换，这叫<strong>同步更新（synchronous update）</strong>：
 
@@ -296,7 +296,7 @@ $$
 
 ## 4. State Value & Action Value · 双向换算
 
-### Action Value → State Value
+### 4.1 Action Value → State Value {#action-value-→-state-value}
 
 <div class="td-slide">
 <div class="td-slide-title">（1）Action value · 按首步动作求平均</div>
@@ -324,7 +324,7 @@ $$
 </div>
 </div>
 
-### State Value → Action Value
+### 4.2 State Value → Action Value {#state-value-→-action-value}
 
 <div class="td-slide">
 <div class="td-slide-title">（2）Action value · 从贝尔曼方程读出单个分支</div>

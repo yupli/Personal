@@ -6,7 +6,7 @@ pageClass: rl-summary
 
 ## 1. From Policy Iteration to Model-Free RL
 
-#### （1）From Model-Based to Model-Free
+### 1.1 From Model-Based to Model-Free {#_1-from-model-based-to-model-free}
 
 <div class="td-slide">
 <div class="td-slide-title">From Model-Based to Model-Free</div>
@@ -17,7 +17,7 @@ pageClass: rl-summary
 </div>
 </div>
 
-#### （2）Policy Evaluation and Policy Improvement {#_1-回顾策略迭代的两步}
+### 1.2 Policy Evaluation and Policy Improvement {#_1-回顾策略迭代的两步}
 
 <div class="td-slide">
 <div class="td-slide-title">Policy Evaluation and Policy Improvement</div>
@@ -51,7 +51,7 @@ $$
 </div>
 </div>
 
-#### （3）Two Expressions of Action Value {#_2-动作价值的两种写法}
+### 1.3 Two Expressions of Action Value {#_2-动作价值的两种写法}
 
 <div class="td-slide">
 <div class="td-slide-title">Two Expressions of Action Value</div>
@@ -79,9 +79,9 @@ $$
 
 ## 2. MC Basic and MC Exploring Starts
 
-### MC Basic {#_2-mc-basic}
+### 2.1 MC Basic {#_2-mc-basic}
 
-#### （1）Monte Carlo Estimation of Action Values {#monte-carlo-estimation-of-action-values}
+#### 2.1.1 Monte Carlo Estimation of Action Values {#monte-carlo-estimation-of-action-values}
 
 <div class="td-slide">
 <div class="td-slide-title">Monte Carlo Estimation of Action Values</div>
@@ -102,7 +102,7 @@ $$
 </div>
 </div>
 
-#### （2）The MC Basic Algorithm {#policy-evaluation-policy-improvement}
+#### 2.1.2 The MC Basic Algorithm {#policy-evaluation-policy-improvement}
 
 <div class="td-slide">
 <div class="td-slide-title">The MC Basic Algorithm</div>
@@ -127,7 +127,7 @@ $$
 </div>
 </div>
 
-#### （3）MC Basic Pseudocode {#procedure-summary-pseudocode}
+#### 2.1.3 MC Basic Pseudocode {#procedure-summary-pseudocode}
 
 <div class="td-slide">
 <div class="td-slide-title">MC Basic Pseudocode</div>
@@ -142,7 +142,7 @@ $$
 </div>
 </div>
 
-#### （4）Episode Length {#episode-length-·-回合长度怎么设}
+#### 2.1.4 Episode Length {#episode-length-·-回合长度怎么设}
 
 <div class="td-slide">
 <div class="td-slide-title">Episode Length</div>
@@ -158,9 +158,9 @@ $$
 </div>
 </div>
 
-### MC Exploring Starts {#_3-mc-exploring-starts}
+### 2.2 MC Exploring Starts {#_3-mc-exploring-starts}
 
-#### （1）Visits and the Initial-Visit Method {#一条回合里的多次访问}
+#### 2.2.1 Visits and the Initial-Visit Method {#一条回合里的多次访问}
 
 <div class="td-slide">
 <div class="td-slide-title">Visits and the Initial-Visit Method</div>
@@ -179,7 +179,7 @@ $$
 </div>
 </div>
 
-#### （2）First-Visit and Every-Visit
+#### 2.2.2 First-Visit and Every-Visit {#_2-first-visit-and-every-visit}
 
 <div class="td-slide">
 <div class="td-slide-title">First-Visit and Every-Visit</div>
@@ -193,7 +193,7 @@ $$
 </div>
 </div>
 
-#### （3）When to Update the Policy {#什么时候改进策略}
+#### 2.2.3 When to Update the Policy {#什么时候改进策略}
 
 <div class="td-slide">
 <div class="td-slide-title">When to Update the Policy</div>
@@ -205,7 +205,7 @@ $$
 </div>
 </div>
 
-#### （4）Generalized Policy Iteration
+#### 2.2.4 Generalized Policy Iteration {#_4-generalized-policy-iteration}
 
 <div class="td-slide">
 <div class="td-slide-title">Generalized Policy Iteration</div>
@@ -216,7 +216,7 @@ $$
 </div>
 </div>
 
-#### （5）MC Exploring Starts Pseudocode {#mc-exploring-starts-伪代码}
+#### 2.2.5 MC Exploring Starts Pseudocode {#mc-exploring-starts-伪代码}
 
 <div class="td-slide">
 <div class="td-slide-title">MC Exploring Starts Pseudocode</div>
@@ -243,7 +243,7 @@ $$
 </div>
 </div>
 
-#### （6）Why Exploring Starts? {#为什么需要探索性起始}
+#### 2.2.6 Why Exploring Starts? {#为什么需要探索性起始}
 
 <div class="td-slide">
 <div class="td-slide-title">Why Exploring Starts?</div>
@@ -256,7 +256,7 @@ $$
 
 ## 3. MC ε-Greedy {#_4-mc-ε-greedy}
 
-#### （1）Soft Policies {#soft-policies-·-把探索放到回合途中}
+### 3.1 Soft Policies {#soft-policies-·-把探索放到回合途中}
 
 <div class="td-slide">
 <div class="td-slide-title">Soft Policies</div>
@@ -272,7 +272,7 @@ $$
 </div>
 </div>
 
-#### （2）ε-Greedy Policies {#ε-greedy-·-平衡探索与利用}
+### 3.2 ε-Greedy Policies {#ε-greedy-·-平衡探索与利用}
 
 <div class="td-slide">
 <div class="td-slide-title">ε-Greedy Policies</div>
@@ -298,7 +298,7 @@ Greedy action 的概率至少和其他 actions 一样大。
 </div>
 </div>
 
-#### （3）Policy Improvement over All Policies
+### 3.3 Policy Improvement over All Policies {#_3-policy-improvement-over-all-policies}
 
 <div class="td-slide">
 <div class="td-slide-title">Policy Improvement over All Policies</div>
@@ -316,7 +316,7 @@ $$
 </div>
 </div>
 
-#### （4）Policy Improvement over ε-Greedy Policies {#policy-improvement-·-在固定-ε-的策略中选}
+### 3.4 Policy Improvement over ε-Greedy Policies {#policy-improvement-·-在固定-ε-的策略中选}
 
 <div class="td-slide">
 <div class="td-slide-title">Policy Improvement over ε-Greedy Policies</div>
@@ -334,7 +334,7 @@ $$
 </div>
 </div>
 
-#### （5）MC ε-Greedy Pseudocode {#mc-ε-greedy-伪代码}
+### 3.5 MC ε-Greedy Pseudocode {#mc-ε-greedy-伪代码}
 
 <div class="td-slide">
 <div class="td-slide-title">MC ε-Greedy Pseudocode</div>

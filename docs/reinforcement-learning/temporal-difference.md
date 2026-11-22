@@ -6,7 +6,7 @@ pageClass: rl-summary
 
 ## 1. 时序差分（Temporal-Difference，TD）· State-value Prediction
 
-#### （1）算法描述
+### 1.1 算法描述 {#_1-算法描述}
 
 <div class="td-slide">
 <div class="td-slide-title">TD 状态价值学习 · 算法描述</div>
@@ -37,7 +37,7 @@ $$
 </div>
 </div>
 
-#### （2）TD target 与 TD error
+### 1.2 TD target 与 TD error {#_2-td-target-与-td-error}
 
 <div class="td-slide">
 <div class="td-slide-body">
@@ -104,7 +104,7 @@ $$
 </div>
 </div>
 
-#### （3）TD error 的含义
+### 1.3 TD error 的含义 {#_3-td-error-的含义}
 
 <div class="td-slide">
 <div class="td-slide-body">
@@ -138,7 +138,7 @@ $$
 
 ## 2. TD 算法的收敛性、与 MC 的比较
 
-#### （1）Bellman Equation 的期望形式
+### 2.1 Bellman Equation 的期望形式 {#_1-bellman-equation-的期望形式}
 
 <div class="td-slide">
 <div class="td-slide-body">
@@ -169,7 +169,7 @@ $$
 </div>
 </div>
 
-#### （2）用 Robbins–Monro 求解 Bellman Equation
+### 2.2 用 Robbins–Monro 求解 Bellman Equation {#_2-用-robbins–monro-求解-bellman-equation}
 
 <div class="td-slide">
 <div class="td-slide-body">
@@ -214,7 +214,7 @@ $$
 </div>
 </div>
 
-#### （3）从 RM 更新到 TD 更新
+### 2.3 从 RM 更新到 TD 更新 {#_3-从-rm-更新到-td-更新}
 
 <div class="td-slide">
 <div class="td-slide-body">
@@ -232,7 +232,7 @@ $$
 </div>
 </div>
 
-#### （4）收敛定理与逐状态学习率
+### 2.4 收敛定理与逐状态学习率 {#_4-收敛定理与逐状态学习率}
 
 <div class="td-slide">
 <div class="td-slide-body">
@@ -263,7 +263,7 @@ $$
 </div>
 </div>
 
-#### （5）与蒙特卡洛（Monte Carlo，MC）的比较
+### 2.5 与蒙特卡洛（Monte Carlo，MC）的比较 {#_5-与蒙特卡洛-monte-carlo-mc-的比较}
 
 <div class="td-slide">
 <div class="td-slide-title">TD 状态价值学习 · 算法性质</div>
@@ -296,13 +296,13 @@ TD 和 MC 都是 <strong>model-free（无模型）</strong>方法。
 
 ## 3. Sarsa · Action-value Learning
 
-#### （1）从 State Values 到 Action Values
+### 3.1 从 State Values 到 Action Values {#_1-从-state-values-到-action-values}
 
 - 前两节的 TD 算法估计的是 **state value** $v_\pi(s)$。
 - Sarsa 直接估计给定策略 $\pi$ 的 **action value** $q_\pi(s,a)$，可以比较同一状态下不同动作的价值。这一步是 **policy evaluation**。
 - 在实际做 **control** 时，通常把这一步更新与 **policy improvement** 结合，用更新后的 action value 改进策略。组合后的算法也叫 **Sarsa**。
 
-#### （2）Sarsa 更新公式
+### 3.2 Sarsa 更新公式 {#_2-sarsa-更新公式}
 
 <div class="td-slide">
 <div class="td-slide-title">Sarsa · 算法</div>
@@ -332,7 +332,7 @@ $$
 </div>
 </div>
 
-#### （3）Sarsa 与 TD 的关系
+### 3.3 Sarsa 与 TD 的关系 {#_3-sarsa-与-td-的关系}
 
 <div class="td-slide">
 <div class="td-slide-body">
@@ -351,7 +351,7 @@ $$
 </div>
 </div>
 
-#### （4）Sarsa 的收敛性
+### 3.4 Sarsa 的收敛性 {#_4-sarsa-的收敛性}
 
 <div class="td-slide">
 <div class="td-slide-body">
@@ -374,7 +374,7 @@ $$
 </div>
 </div>
 
-#### （5）用 Sarsa 搜索策略
+### 3.5 用 Sarsa 搜索策略 {#_5-用-sarsa-搜索策略}
 
 在 Sarsa 的单步价值更新后接一步 **policy improvement**，就得到用于 control 的 Sarsa。每次交替做一次评价和一次改进，体现了 **Generalized Policy Iteration（GPI）**。
 
@@ -427,7 +427,7 @@ $$
 
 使用同一策略采样并评价，属于 **on-policy** 学习。固定 $\varepsilon>0$ 时，执行的是仍含探索的策略。
 
-#### （6）Gridworld 实验
+### 3.6 Gridworld 实验 {#_6-gridworld-实验}
 
 **任务设定**
 
@@ -446,7 +446,7 @@ $$
 
 ## 4. Expected Sarsa
 
-#### （1）更新公式：对下一动作取期望
+### 4.1 更新公式：对下一动作取期望 {#_1-更新公式-对下一动作取期望}
 
 <div class="td-slide">
 <div class="td-slide-title">TD 动作价值学习 · Expected Sarsa</div>
@@ -483,7 +483,7 @@ $$
 </div>
 </div>
 
-#### （2）它求解什么：两层期望
+### 4.2 它求解什么：两层期望 {#_2-它求解什么-两层期望}
 
 <div class="td-slide">
 <div class="td-slide-body">
@@ -512,7 +512,7 @@ $$
 
 ## 5. n-step Sarsa
 
-#### （1）Action value：从单步形式到 n-step 形式
+### 5.1 Action value：从单步形式到 n-step 形式 {#_1-action-value-从单步形式到-n-step-形式}
 
 <div class="td-slide">
 <div class="td-slide-title">TD 动作价值学习 · n-step Sarsa</div>
@@ -560,7 +560,7 @@ $$
 </div>
 </div>
 
-#### （2）求解目标与实际更新
+### 5.2 求解目标与实际更新 {#_2-求解目标与实际更新}
 
 <div class="td-slide">
 <div class="td-slide-body">
@@ -604,7 +604,7 @@ $$
 </div>
 </div>
 
-#### （3）怎样理解 n 的取舍
+### 5.3 怎样理解 n 的取舍 {#_3-怎样理解-n-的取舍}
 
 - **$n$ 较小，接近 Sarsa**：用到的采样奖励少，目标方差通常较低；但更依赖当前 action value 的估计，训练早期更容易受初值的偏差影响。
 - **$n$ 较大，接近 MC**：用到的采样奖励多，对当前估计的依赖较小，通常减轻由 bootstrapping 引入的偏差，但方差也可能更高。
@@ -634,7 +634,7 @@ Sarsa 使用行为策略抽出的 $A_{t+1}$ 评价同一策略。Q-learning 的�
 
 课件的实验在比较探索（exploration）如何改变状态动作对的覆盖（coverage）。均匀探索生成的轨迹能覆盖更多状态动作对。若行为策略长期偏向少数动作，延长轨迹也可能只增加已常见的访问，稀少表项仍难学好。图中的纵轴比较训练中提取的 greedy policy 的价值与已知最优价值的差距。
 
-### Q-learning · 原课件两种实现
+### 6.1 Q-learning · 原课件两种实现 {#q-learning-·-原课件两种实现}
 
 <figure>
   <img src="./resources/temporal-difference/q-learning-50.webp" alt="第 50 页 Q-learning 在线采样伪代码" loading="lazy">
