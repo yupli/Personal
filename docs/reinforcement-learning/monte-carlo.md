@@ -135,3 +135,47 @@ $$
 ### 为什么需要探索性起始
 
 如果一直按贪心策略行动，某个动作可能始终没被尝试，即使它实际上是最优动作也会被漏掉。让各个状态动作对都有机会成为首步，可以为这些动作提供样本。真实环境往往难以重置到任意状态并指定首步，因此下一步会用**软策略（soft policy）**，让智能体在回合途中也有机会尝试其他动作。
+
+## 4. MC ε-Greedy
+
+### Soft Policies · 把探索放到回合途中
+
+如果策略在每个状态 $s$ 对每个可用动作 $a$ 都有 $\pi(a\mid s)>0$，就称它为**软策略（soft policy）**。这样，从环境允许的起点出发，智能体在回合途中到达某个状态时，仍有机会尝试该状态的所有动作。只要有关状态能够到达，就可以通过多次交互收集这些状态动作对的样本，省去把每一对都设为起点的要求。实际能采到多少，取决于可达性、回合长度和采样次数。
+
+### ε-Greedy · 平衡探索与利用
+
+记 $m=|\mathcal A(s)|$，从估计值最大的动作中选定一个 $a^*(s)$。以 $1-\varepsilon$ 的概率直接选它，以 $\varepsilon$ 的概率在全部 $m$ 个动作中均匀抽取。均匀抽取也可能选中 $a^*(s)$，所以
+
+$$
+\pi(a\mid s)=
+\begin{cases}
+1-\varepsilon+\dfrac{\varepsilon}{m},&a=a^*(s),\\[3pt]
+\dfrac{\varepsilon}{m},&a\ne a^*(s).
+\end{cases}
+$$
+
+$\varepsilon\in[0,1]$。贪心动作的概率至少与其他动作一样大。$\varepsilon=0$ 时只选贪心动作，$\varepsilon=1$ 时所有动作等概率。取 $0<\varepsilon<1$ 时，既优先利用当前估计最好的动作，又持续探索其他动作。
+
+### Policy Improvement · 在固定 ε 的策略中选
+
+MC Basic 和 MC Exploring Starts 在所有策略 $\Pi$ 中最大化 $\sum_a \pi(a\mid s)q_{\pi_k}(s,a)$，可以把全部概率给当前最优动作。MC ε-Greedy 的目标相同，但将候选策略限制为固定 $\varepsilon$ 的策略集合 $\Pi_\varepsilon$。用实际采样得到的估计 $\widehat q_{\pi_k}$ 写成
+
+$$
+\pi_{k+1}(\cdot\mid s)
+\in\arg\max_{\pi\in\Pi_\varepsilon}
+\sum_a\pi(a\mid s)\widehat q_{\pi_k}(s,a).
+$$
+
+每个动作先分到 $\varepsilon/m$，剩下的 $1-\varepsilon$ 分给估计值最大的动作，便得到上面的概率分布。评价时仍用完整回合的回报更新动作价值，改进时保留随机探索，下一条回合再按改进后的策略采样。
+
+### MC ε-Greedy 伪代码
+
+给定初始策略和 $\varepsilon$，从允许的起点生成一条回合。回合结束后，仍从 $g=0$ 开始倒序递推 $g\leftarrow r_{t+1}+\gamma g$，把取到的回报加入对应状态动作对的样本均值，再用更新后的价值设置 ε-greedy 动作概率。
+
+<figure>
+  <img src="./resources/monte-carlo/mc-epsilon-greedy-pseudocode.png" alt="课件原版 MC ε-Greedy 伪代码，展示逐回合采样、倒序累计回报与 ε-greedy 策略更新" width="1536" height="1086" loading="lazy">
+</figure>
+
+**为什么这里用 every-visit？** 采用软策略后，样本可以主要来自回合途中。若起点有限、回合较长，同一个状态动作对可能在一条回合里出现多次。每次访问都计入均值，就能利用这些回报。沿用上一节的例子，every-visit 会同时计入 $(s_1,a_2)$ 的 $G_0$ 和 $G_2$，first-visit 只计入 $G_0$。同一回合的两段回报可能共享后续奖励，因此多计入一个回报，未必等于多获得一个独立样本。ε-greedy 决定**怎么选动作**，访问方式决定**哪些回报计入估计**，所以这里也可以使用 first-visit。
+
+**图中有一处不一致。** 标题行写的是 every-visit，下面的 `If` 却只在 $(s_t,a_t)$ 此前未出现时才更新，照这个条件执行就是 first-visit。要实现图中标注的 every-visit，应删除这条检查，在倒序计算出每个 $G_t$ 后都更新对应的回报统计。
