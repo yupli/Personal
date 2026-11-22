@@ -4,6 +4,10 @@ pageClass: rl-summary
 
 # 第 7 课 · 时序差分方法 · V2（总结）
 
+TD 算法最重要的思想可以概括为：
+
+**不需要等到一条 Episode（完整轨迹）结束，就可以利用当前获得的奖励和下一状态的价值估计，更新当前状态的价值。**
+
 ## 1. 时序差分（Temporal-Difference，TD）· State-value Prediction
 
 ### 1.1 算法描述 {#_1-算法描述}
