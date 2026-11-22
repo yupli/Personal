@@ -367,14 +367,13 @@ $$
 \boxed{v_\pi(s)=\sum_a\pi(a\mid s)q_\pi(s,a)}.
 $$
 
-这个等式来自**全期望公式**。在状态 $s$，先按首个动作对 return 分组，再用 $\pi(a\mid s)$ 加权。
+这个等式来自**全期望公式**。在状态 $s$，先按首个动作对 return 分组，再用 $\pi(a\mid s)$ 加权。下文用 $\mathbb E_{s,a}$ 简记固定当前状态和动作 $(S_t,A_t)=(s,a)$ 时的期望。
 
 $$
 \begin{aligned}
 v_\pi(s)
 &=\mathbb E_\pi[G_t\mid S_t=s]\\
-&=\sum_a \pi(a\mid s)\,
-  \mathbb E_\pi[G_t\mid S_t=s,A_t=a]\\
+&=\sum_a \pi(a\mid s)\,\mathbb E_{s,a}[G_t]\\
 &=\sum_a \pi(a\mid s)\,q_\pi(s,a).
 \end{aligned}
 $$
@@ -392,7 +391,7 @@ $$
 <div class="td-slide-title">拆开 Return · 即时奖励与下一步的 Action Value</div>
 <div class="td-slide-body">
 
-现在固定当前的 $(S,A)=(s,a)$，记 $R$ 为这次转移的即时奖励。把 return 写成 $G_t=R+\gamma G_{t+1}$。先对 $(R,S')$ 条件化，由 **Markov property**，给定 $S'$ 后，按 $\pi$ 继续得到的期望回报就是 $v_\pi(S')$。用 $\mathbb E_{s,a}$ 简记给定当前 $(S,A)=(s,a)$ 的期望，则
+现在固定当前的 $(S_t,A_t)=(s,a)$，记 $R$ 为这次转移的即时奖励。把 return 写成 $G_t=R+\gamma G_{t+1}$。先对 $(R,S')$ 条件化，由 **Markov property**，给定 $S'$ 后，按 $\pi$ 继续得到的期望回报就是 $v_\pi(S')$。因此
 
 $$
 \begin{aligned}
@@ -407,8 +406,9 @@ $$
 $$
 \begin{aligned}
 q_\pi(s,a)
-&=\mathbb E_{s,a}\bigl[
-R+\gamma\,\mathbb E_\pi[q_\pi(S',A')\mid S']\bigr]\\
+&=\mathbb E_{s,a}[R]\\
+&\quad+\gamma\mathbb E_{s,a}\bigl[
+\mathbb E_\pi[q_\pi(S',A')\mid S']\bigr]\\
 &=\mathbb E_{s,a}\bigl[R+\gamma q_\pi(S',A')\bigr].
 \end{aligned}
 $$
