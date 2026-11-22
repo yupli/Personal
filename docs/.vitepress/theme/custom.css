@@ -408,6 +408,11 @@ html:not(.dark) .VPDoc .aside-curtain {
   max-inline-size: 100%;
 }
 
+/* Subpixel glyph overflow can trigger native vertical scrollbars on inline math. */
+.vp-doc mjx-container:not([display]):not(.pk-wide-math) {
+  overflow: visible;
+}
+
 .vp-doc mjx-container.pk-wide-math {
   overflow-x: auto;
   overflow-y: hidden;
