@@ -77,7 +77,9 @@ $$
 </div>
 </div>
 
-## 2. MC Basic
+## 2. MC Basic and MC Exploring Starts
+
+### MC Basic {#_2-mc-basic}
 
 #### （1）Monte Carlo Estimation of Action Values {#monte-carlo-estimation-of-action-values}
 
@@ -85,7 +87,11 @@ $$
 <div class="td-slide-title">Monte Carlo Estimation of Action Values</div>
 <div class="td-slide-body">
 
-固定 policy $\pi_k$ 和一个 **state–action pair** $(s,a)$。每次从 $s$ 开始，首步执行 $a$，随后按 $\pi_k$ 行动直到 episode 结束。第 $i$ 条 episode 的 **discounted return** $g^{(i)}(s,a)$ 就是同一条件下 $G_t$ 的一次观测。采集 $N$ 条 episode 后，用 **sample mean** 估计 $q_{\pi_k}(s,a)$：
+固定 policy $\pi_k$ 和一个 **state–action pair** $(s,a)$。
+
+1. **Generate an episode**。从 $s$ 开始，首步执行 $a$，随后按 $\pi_k$ 行动到 episode 结束。
+2. **Calculate its return**。第 $i$ 条 episode 的 **discounted return** $g^{(i)}(s,a)$ 是 $G_t$ 的一次观测。
+3. **Average the returns**。用 $N$ 条 episode 的 **sample mean** 估计 $q_{\pi_k}(s,a)$：
 
 $$
 \widehat q_{\pi_k}(s,a)=\frac1N\sum_{i=1}^N g^{(i)}(s,a).
@@ -142,14 +148,17 @@ $$
 <div class="td-slide-title">Episode Length</div>
 <div class="td-slide-body">
 
-在课件的例子中，只有到达 target 才获得 reward。Episode 太短时，只有靠近 target 的 states 有机会在截止前获得 reward，较远 states 的 **state value estimates** 会保持为零。随着步数上限增大，近处的 states 通常先出现非零估计。
+在课件的例子中，只有到达 target 才获得 reward。
+
+- **Short episodes**。只有靠近 target 的 states 有机会在截止前拿到 reward，较远 states 的 **state value estimates** 会保持为零。
+- **Longer episodes**。随着步数上限增大，近处的 states 通常先出现非零估计，远处的 states 随后才可能采到 reward。
 
 例如，从某个 state 最少需要 8 步到达 target，设 5 步上限时，采再多条 episodes 也观察不到这笔 reward。设到至少 8 步才有机会，实际所需的长度还取决于当前 policy 通常怎样走。**Episode length 要足够覆盖重要的延迟 rewards，有限的步数上限就可以做到。** 增加 episode 数量可以减少采样波动，延长单条 episode 才能把原先截掉的 reward 纳入估计。
 
 </div>
 </div>
 
-## 3. MC Exploring Starts
+### MC Exploring Starts {#_3-mc-exploring-starts}
 
 #### （1）Visits and the Initial-Visit Method {#一条回合里的多次访问}
 
@@ -190,7 +199,8 @@ $$
 <div class="td-slide-title">When to Update the Policy</div>
 <div class="td-slide-body">
 
-MC Basic 在 policy evaluation 中为各 state–action pairs 收齐所需的 episodes，再用平均 return 做一轮 policy improvement。另一种安排是每采完一条 episode，就把这条 episode 提供的 returns 加入已有样本，更新 action value estimates，并在本轮更新过的 states 上做 greedy improvement。下一条 episode 使用更新后的 policy。
+- **After a batch of episodes**。MC Basic 为各 state–action pairs 收齐所需的 episodes，再用平均 return 做一轮 policy improvement。
+- **Episode by episode**。每采完一条 episode，就用新的 returns 更新 action value estimates，并在更新过的 states 上做 greedy improvement。下一条 episode 使用更新后的 policy。
 
 </div>
 </div>
@@ -224,7 +234,11 @@ $$
 G_T=0,\qquad G_t=r_{t+1}+\gamma G_{t+1}.
 $$
 
-这样一趟即可算完所有 returns。**First-visit 仍按时间正序判定。** 倒序先碰到 $t=2$ 的 $(s_1,a_2)$，因为它在 $t=0$ 已经出现，所以跳过 $t=2$ 的 action value 更新，最后用 $G_0$ 更新。即使跳过更新，也要把当步的 reward 计入递推。
+这样一趟即可算完所有 returns。
+
+**First-visit 仍按时间正序判定。** 倒序先碰到 $t=2$ 的 $(s_1,a_2)$，因为它在 $t=0$ 已经出现，所以跳过 $t=2$ 的 action value 更新，最后用 $G_0$ 更新。
+
+即使跳过更新，也要把当步的 reward 计入递推。
 
 </div>
 </div>
@@ -240,7 +254,7 @@ $$
 </div>
 </div>
 
-## 4. MC ε-Greedy
+## 3. MC ε-Greedy {#_4-mc-ε-greedy}
 
 #### （1）Soft Policies {#soft-policies-·-把探索放到回合途中}
 
@@ -248,7 +262,12 @@ $$
 <div class="td-slide-title">Soft Policies</div>
 <div class="td-slide-body">
 
-**Soft policy** 在每个 state 对所有可用 actions 分配正概率，即 $\pi(a\mid s)>0$。从环境允许的起点出发，智能体在途中到达一个 state 后，就有机会尝试其中的每个 action。这样可以从途中的 visits 收集数据，省去把每个 pair 都设为起点的要求。能否采到足够样本仍取决于 state 的可达性、episode length 和采样次数。
+**Soft policy** 在每个 state 对所有可用 actions 分配正概率，即 $\pi(a\mid s)>0$。
+
+- **Explore during an episode**。到达一个 state 后，有机会尝试其中的每个 action。
+- **Collect data from visits**。利用中途的 visits，可以省去把每个 pair 都设为起点的要求。
+
+能否采到足够 samples，取决于 state 的可达性、episode length 和采样次数。
 
 </div>
 </div>
@@ -269,7 +288,12 @@ $$
 \end{cases}
 $$
 
-Greedy action 的概率至少和其他 actions 一样大。$\varepsilon=0$ 对应 **greedy policy**，$\varepsilon=1$ 对应 **uniform distribution**。两者之间的取值用来平衡 **exploitation** 和 **exploration**。
+Greedy action 的概率至少和其他 actions 一样大。
+
+- **$\varepsilon=0$**。只选 greedy action，采用 **greedy policy**。
+- **$\varepsilon=1$**。所有 actions 等概率，采用 **uniform distribution**。
+
+中间取值用来平衡 **exploitation** 和 **exploration**。
 
 </div>
 </div>
@@ -322,7 +346,12 @@ $$
   <img src="./resources/monte-carlo/mc-epsilon-greedy-pseudocode.png" alt="课件原版 MC ε-Greedy Pseudocode" width="1536" height="1086" loading="lazy">
 </figure>
 
-**为什么这里用 every-visit？** 使用 soft policy 后，一条较长的 episode 可能在途中多次访问同一个 pair。Every-visit 把这些 returns 都用上，例如同时计入 $(s_1,a_2)$ 的 $G_0$ 和 $G_2$。First-visit 只计入 $G_0$。同一条轨迹内的 returns 可能共享后续 rewards，因此它们可能相关。ε-greedy 决定怎样选 action，visit method 决定哪些 returns 进入估计，所以 ε-greedy 也可以搭配 first-visit。
+**为什么这里用 every-visit？** 使用 soft policy 后，一条较长的 episode 可能在途中多次访问同一个 pair。以上一节的 $(s_1,a_2)$ 为例：
+
+- **Every-visit** 同时计入 $G_0$ 和 $G_2$。
+- **First-visit** 只计入 $G_0$。
+
+同一条轨迹内的 returns 可能共享后续 rewards，因此它们可能相关。ε-greedy 决定怎样选 action，visit method 决定哪些 returns 进入估计，所以 ε-greedy 也可以搭配 first-visit。
 
 **课件图里的两行写法不一致。** 图中写着 every-visit，但下面的 `If` 只在 $(s_t,a_t)$ 之前没有出现时更新，实际对应 first-visit。要执行 every-visit，删掉这条检查，算出每个 $G_t$ 后都更新一次。
 
