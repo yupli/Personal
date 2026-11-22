@@ -2,63 +2,77 @@
 pageClass: rl-summary
 ---
 
-# 第 5 课 · 蒙特卡洛方法 · V2（总结）
+# 第 5 课 · Monte Carlo Methods · V2（总结）
 
 ## 1. From Policy Iteration to Model-Free RL
 
-#### （1）回顾策略迭代的两步
+#### （1）From Model-Based to Model-Free
 
 <div class="td-slide">
-<div class="td-slide-title">Policy iteration · 策略评价与策略改进</div>
+<div class="td-slide-title">From Model-Based to Model-Free</div>
 <div class="td-slide-body">
 
-第四课的[策略迭代](value-policy-iteration.md#_2-policy-iteration)交替进行策略评价（policy evaluation）和策略改进（policy improvement）。第 $k$ 轮先求当前策略 $\pi_k$ 的状态价值，再找使一步前瞻值最大的策略。用矩阵形式写为
+第五课从第四课的 [Policy Iteration](value-policy-iteration.md#_2-policy-iteration) 出发。仍然交替进行 **policy evaluation** 和 **policy improvement**，要解决的问题是怎样在不知道环境模型时完成这两步。
+
+</div>
+</div>
+
+#### （2）Policy Evaluation and Policy Improvement {#_1-回顾策略迭代的两步}
+
+<div class="td-slide">
+<div class="td-slide-title">Policy Evaluation and Policy Improvement</div>
+<div class="td-slide-body">
+
+第 $k$ 轮先求当前 policy $\pi_k$ 的 **state value**，再选使一步前瞻值最大的 policy：
 
 $$
 \begin{aligned}
 \mathbf v_{\pi_k}
 &=\mathbf r_{\pi_k}+\gamma P_{\pi_k}\mathbf v_{\pi_k},\\
 \pi_{k+1}
-&\in\arg\max_{\pi}
-\bigl(\mathbf r_{\pi}+\gamma P_{\pi}\mathbf v_{\pi_k}\bigr).
+&\in\arg\max_{\pi}\bigl(\mathbf r_{\pi}+\gamma P_{\pi}\mathbf v_{\pi_k}\bigr).
 \end{aligned}
 $$
 
-</div>
-</div>
-
-#### （2）动作价值的两种写法
-
-<div class="td-slide">
-<div class="td-slide-title">Action values · 从模型求和到回报取期望</div>
-<div class="td-slide-body">
-
-上式中的最大化逐状态进行。在状态 $s$，把策略改进的目标展开为各动作一步前瞻值的加权平均。令
+把 policy improvement 展开到单个 state $s$，括号里的两项合起来就是 **action value** $q_{\pi_k}(s,a)$：
 
 $$
 \begin{aligned}
-q_{\pi_k}(s,a)
-&=\sum_r p(r\mid s,a)\,r\\
-&\quad+\gamma\sum_{s'}p(s'\mid s,a)\,v_{\pi_k}(s').
+\pi_{k+1}(\cdot\mid s)
+&\in\arg\max_{\pi(\cdot\mid s)}\sum_a \pi(a\mid s)
+\Bigl[\sum_r p(r\mid s,a)r\\
+&\qquad\qquad +\gamma\sum_{s'}p(s'\mid s,a)v_{\pi_k}(s')\Bigr]\\
+&=\arg\max_{\pi(\cdot\mid s)}\sum_a \pi(a\mid s)q_{\pi_k}(s,a).
 \end{aligned}
 $$
 
-于是策略改进可写为
+因此，只要拿到各 action 的 $q_{\pi_k}(s,a)$，就可以完成 policy improvement。
+
+</div>
+</div>
+
+#### （3）Two Expressions of Action Value {#_2-动作价值的两种写法}
+
+<div class="td-slide">
+<div class="td-slide-title">Two Expressions of Action Value</div>
+<div class="td-slide-body">
+
+**Model-based expression** 用 **reward distribution** $p(r\mid s,a)$ 和 **state transition probabilities** $p(s'\mid s,a)$ 加权：
 
 $$
-\pi_{k+1}(\cdot\mid s)
-\in\arg\max_{\pi(\cdot\mid s)}
-\sum_{a\in\mathcal A(s)}\pi(a\mid s)q_{\pi_k}(s,a).
+\begin{aligned}
+q_{\pi_k}(s,a)&=\sum_r p(r\mid s,a)r\\
+&\quad +\gamma\sum_{s'}p(s'\mid s,a)v_{\pi_k}(s').
+\end{aligned}
 $$
 
-所以，只要得到各动作的 $q_{\pi_k}(s,a)$，就能比较动作并改进策略。上面的一步前瞻式用到了奖励分布 $p(r\mid s,a)$ 和状态转移概率 $p(s'\mid s,a)$。同一个动作价值还可以直接写成回报的条件期望：
+**Model-free expression** 从 state $s$ 出发，首步执行 action $a$，之后按 $\pi_k$ 行动，对 **return** $G_t$ 取条件期望：
 
 $$
-q_{\pi_k}(s,a)
-=\mathbb E_{\pi_k}[G_t\mid S_t=s,\ A_t=a].
+q_{\pi_k}(s,a)=\mathbb E_{\pi_k}[G_t\mid S_t=s,\ A_t=a].
 $$
 
-这里固定的是状态 $s$ 和首步动作 $a$，从下一次选动作起才按 $\pi_k$ 行动。只要能与环境交互并观察奖励，就可以用采到的回报估计这个期望，无须事先知道奖励分布和状态转移概率。
+第二种写法给出了采样办法。与环境交互，记录实际获得的 return，就可以用数据估计这个期望。
 
 </div>
 </div>
@@ -68,29 +82,28 @@ $$
 #### （1）Monte Carlo Estimation of Action Values {#monte-carlo-estimation-of-action-values}
 
 <div class="td-slide">
-<div class="td-slide-title">Monte Carlo estimation · 用回报均值估计动作价值</div>
+<div class="td-slide-title">Monte Carlo Estimation of Action Values</div>
 <div class="td-slide-body">
 
-固定 $\pi_k$ 和一个状态动作对 $(s,a)$。从 $s$ 开始，首步执行 $a$，随后按 $\pi_k$ 一直走到回合结束。第 $i$ 条回合从首步开始的折扣回报 $g^{(i)}(s,a)$，就是随机变量 $G_t$ 在同一条件下的一次观测。重复采集 $N$ 条回合，用样本均值估计动作价值：
+固定 policy $\pi_k$ 和一个 **state–action pair** $(s,a)$。每次从 $s$ 开始，首步执行 $a$，随后按 $\pi_k$ 行动直到 episode 结束。第 $i$ 条 episode 的 **discounted return** $g^{(i)}(s,a)$ 就是同一条件下 $G_t$ 的一次观测。采集 $N$ 条 episode 后，用 **sample mean** 估计 $q_{\pi_k}(s,a)$：
 
 $$
-\widehat q_{\pi_k}(s,a)
-=\frac{1}{N}\sum_{i=1}^{N}g^{(i)}(s,a).
+\widehat q_{\pi_k}(s,a)=\frac1N\sum_{i=1}^N g^{(i)}(s,a).
 $$
 
-在这一轮的评价期间保持 $\pi_k$ 固定。若这些回合独立地按相同规则采集且回报期望有限，样本均值会随 $N$ 增大趋近 $q_{\pi_k}(s,a)$。实际运行时用足够多的有限回合做近似。
+估计期间保持 $\pi_k$ 固定。如果各 episode 独立地按相同规则采集且 return 的期望有限，sample mean 会随 $N$ 增大趋近真实的 action value。实际计算使用数量足够的有限样本。
 
 </div>
 </div>
 
-#### （2）Policy Evaluation & Policy Improvement {#policy-evaluation-policy-improvement}
+#### （2）The MC Basic Algorithm {#policy-evaluation-policy-improvement}
 
 <div class="td-slide">
-<div class="td-slide-title">Policy evaluation &amp; improvement · 一轮怎样更新</div>
+<div class="td-slide-title">The MC Basic Algorithm</div>
 <div class="td-slide-body">
 
-1. **策略评价**。给定初始策略 $\pi_0$，在第 $k$ 轮为每个 $(s,a)$ 分别从该对出发采集回合，直接用平均回报估计 $\widehat q_{\pi_k}(s,a)$。
-2. **策略改进**。评价完成后，对每个状态从估计值最大的动作中选一个 $a_k^*(s)$，构造贪心策略 $\pi_{k+1}$，再进入下一轮。
+1. **Policy evaluation**。从 $\pi_0$ 开始，第 $k$ 轮为每个 $(s,a)$ 单独收集 episodes，用平均 return 估计 $\widehat q_{\pi_k}(s,a)$。
+2. **Policy improvement**。每个 state 选取估计值最大的 action $a_k^*(s)$，得到 **greedy policy**，然后进入下一轮。
 
 $$
 \begin{aligned}
@@ -103,50 +116,48 @@ a_k^*(s)&\in\arg\max_{a\in\mathcal A(s)}\widehat q_{\pi_k}(s,a),\\
 \end{aligned}
 $$
 
-MC Basic 保留了策略迭代的评价与改进循环。评价时直接用回合样本估计动作价值，省去了先解 $\mathbf v_{\pi_k}$ 再借助模型计算 $q_{\pi_k}$ 的步骤。有限样本下，贪心改进依据的是估计值，估计接近的动作可能排错顺序。
+这两步沿用 Policy Iteration 的结构。MC Basic 直接通过 samples 估计 action value，省去了先解 state value、再用模型计算 action value 的步骤。
 
 </div>
 </div>
 
-#### （3）Procedure Summary & Pseudocode {#procedure-summary-pseudocode}
+#### （3）MC Basic Pseudocode {#procedure-summary-pseudocode}
 
 <div class="td-slide">
-<div class="td-slide-title">Procedure summary · 先估计所有动作，再改进</div>
+<div class="td-slide-title">MC Basic Pseudocode</div>
 <div class="td-slide-body">
 
-课件从 $\pi_0$ 开始，以求最优策略为目标，在价值估计稳定前反复评价和改进。每个状态的所有候选动作都估计完后，才比较它们并写入新策略。本轮用于评价的回合始终按旧策略 $\pi_k$ 继续执行。
+目标是找到 **optimal policy**。每轮先用固定的 $\pi_k$ 采样，为每个 state 的全部可用 actions 算出平均 return，再做 greedy update。课件以 action value 的估计趋于稳定作为停止条件。有限样本仍可能把数值接近的 actions 排错顺序。
 
 <figure>
-  <img src="./resources/monte-carlo/mc-basic-pseudocode.png" alt="课件原版 MC Basic 伪代码，展示逐状态动作对采集回合、取回报均值及贪心更新" width="2120" height="1334" loading="lazy">
+  <img src="./resources/monte-carlo/mc-basic-pseudocode.png" alt="课件原版 MC Basic Pseudocode" width="2120" height="1334" loading="lazy">
 </figure>
 
 </div>
 </div>
 
-#### （4）Episode Length · 回合长度怎么设 {#episode-length-·-回合长度怎么设}
+#### （4）Episode Length {#episode-length-·-回合长度怎么设}
 
 <div class="td-slide">
-<div class="td-slide-title">Episode length · 给延迟奖励留够步数</div>
+<div class="td-slide-title">Episode Length</div>
 <div class="td-slide-body">
 
-在课件的例子里，只有到达目标才获得奖励。回合太短时，只有靠近目标的状态有机会在截止前拿到奖励。较远状态的样本回报都为零，估计出来的状态价值也就为零。把步数上限逐渐调大时，近处的状态通常先出现非零估计，较远的状态要等到回合长到足以走到目标才有机会。
+在课件的例子中，只有到达 target 才获得 reward。Episode 太短时，只有靠近 target 的 states 有机会在截止前获得 reward，较远 states 的 **state value estimates** 会保持为零。随着步数上限增大，近处的 states 通常先出现非零估计。
 
-例如，从某个状态最少要走 8 步才能到达目标，若每条回合最多采 5 步，即使多采很多条，也观察不到该状态通往目标的奖励。把上限设到至少 8 步，才有可能采到这笔奖励，实际需要多长还取决于策略走到目标通常要几步。
-
-回合有自然终点时，采到终点即可。需要设置步数上限时，可以逐步加长回合，比较远处状态的价值估计和贪心动作是否仍明显变化。上限要足够覆盖重要的延迟奖励，有限步数也能做到这一点。**增加回合条数**能缓解采样波动，**延长单条回合**才能让原先被截掉的奖励进入估计。
+例如，从某个 state 最少需要 8 步到达 target，设 5 步上限时，采再多条 episodes 也观察不到这笔 reward。设到至少 8 步才有机会，实际所需的长度还取决于当前 policy 通常怎样走。**Episode length 要足够覆盖重要的延迟 rewards，有限的步数上限就可以做到。** 增加 episode 数量可以减少采样波动，延长单条 episode 才能把原先截掉的 reward 纳入估计。
 
 </div>
 </div>
 
 ## 3. MC Exploring Starts
 
-#### （1）一条回合里的多次访问 {#一条回合里的多次访问}
+#### （1）Visits and the Initial-Visit Method {#一条回合里的多次访问}
 
 <div class="td-slide">
-<div class="td-slide-title">Initial-visit, first-visit &amp; every-visit · 一条回合怎样取样</div>
+<div class="td-slide-title">Visits and the Initial-Visit Method</div>
 <div class="td-slide-body">
 
-在网格世界里，按策略采集的一条回合可以包含下面这段轨迹：
+在 **grid world** 中，按 policy $\pi$ 采到的一条 episode 可能经过：
 
 $$
 s_1\xrightarrow{a_2}s_2\xrightarrow{a_4}s_1
@@ -154,82 +165,101 @@ s_1\xrightarrow{a_2}s_2\xrightarrow{a_4}s_1
 \xrightarrow{a_1}\cdots
 $$
 
-每当一个状态动作对出现在回合中，就算一次**访问（visit）**。从时刻 $t$ 开始的那段轨迹给出回报 $G_t$，可以用来估计该时刻的动作价值。因此，这条回合除了提供 $(s_1,a_2)$ 的回报，还为 $(s_2,a_4)$、$(s_2,a_3)$ 和 $(s_5,a_1)$ 等状态动作对提供了样本。遇到重复访问时，有三种取样方式：
-
-- **Initial-visit** 只用时刻 $t=0$ 的回报更新 $(s_1,a_2)$。MC Basic 用的就是这个方法，每条回合只为起点提供一个样本。
-- **First-visit** 对每个访问过的状态动作对，只用本回合时间最早的那次回报。例如，$(s_2,a_4)$ 用 $G_1$，重复出现的 $(s_1,a_2)$ 只用 $G_0$。
-- **Every-visit** 使用每次访问的回报。在这条轨迹里，$(s_1,a_2)$ 的两次访问分别贡献 $G_0$ 和 $G_2$。
+每次出现一个 state–action pair，就算一次 **visit**。**Initial-visit** 只用 $t=0$ 的 return $G_0$ 估计 $q_\pi(s_1,a_2)$。MC Basic 采用这个办法，因此一条 episode 只为起点提供一个 sample。
 
 </div>
 </div>
 
-#### （2）什么时候改进策略 {#什么时候改进策略}
+#### （2）First-Visit and Every-Visit
 
 <div class="td-slide">
-<div class="td-slide-title">Generalized policy iteration · 每条回合后都可以改进</div>
+<div class="td-slide-title">First-Visit and Every-Visit</div>
 <div class="td-slide-body">
 
-MC Basic 在一轮评价中，先为各个状态动作对收集足够多的回合，取平均回报，再统一改进策略。也可以每采完一条回合，就把它提供的新回报加入相应状态动作对已有的样本，重新计算均值，并对本回合更新过的状态做贪心改进。下一条回合使用改进后的策略。
+从 episode 的中途截取后半段，同样可以计算该时刻的 return。上面的轨迹从 $t=1$、$2$、$3$、$4$ 起算，分别为 $(s_2,a_4)$、$(s_1,a_2)$、$(s_2,a_3)$、$(s_5,a_1)$ 提供 $G_1$、$G_2$、$G_3$、$G_4$。
 
-单条回合的回报可能波动很大，但策略评价可以在尚未完全稳定时就与策略改进交替进行。第四课的[截断策略迭代](value-policy-iteration.md#truncated-policy-iteration)也是这个思路。这种交替进行评价与改进的框架叫作**广义策略迭代（generalized policy iteration，GPI）**，许多有模型和无模型算法都采用它。
+- **First-visit** 对每个出现过的 state–action pair，只取 episode 中时间最早的一次。$(s_1,a_2)$ 虽然出现两次，也只用 $G_0$。
+- **Every-visit** 计入每一次 visit。$(s_1,a_2)$ 的两次访问分别贡献 $G_0$ 和 $G_2$。
 
 </div>
 </div>
 
-#### （3）MC Exploring Starts 伪代码 {#mc-exploring-starts-伪代码}
+#### （3）When to Update the Policy {#什么时候改进策略}
 
 <div class="td-slide">
-<div class="td-slide-title">Pseudocode · 随机起点与倒序累计回报</div>
+<div class="td-slide-title">When to Update the Policy</div>
 <div class="td-slide-body">
 
-从初始策略 $\pi_0$ 开始，每条回合随机选择起始状态动作对 $(s_0,a_0)$，让任意可用的状态动作对都有正概率被选为起点。这就是 **Exploring Starts（探索性起始）**。执行首步后，按当前策略生成剩下的轨迹。回合结束后，用 first-visit 的回报更新样本均值，再按更新后的动作价值选择贪心动作。课件中的 `Returns` 保存每个状态动作对跨回合累积的回报样本。
+MC Basic 在 policy evaluation 中为各 state–action pairs 收齐所需的 episodes，再用平均 return 做一轮 policy improvement。另一种安排是每采完一条 episode，就把这条 episode 提供的 returns 加入已有样本，更新 action value estimates，并在本轮更新过的 states 上做 greedy improvement。下一条 episode 使用更新后的 policy。
+
+</div>
+</div>
+
+#### （4）Generalized Policy Iteration
+
+<div class="td-slide">
+<div class="td-slide-title">Generalized Policy Iteration</div>
+<div class="td-slide-body">
+
+单条 episode 的 return 可能偏离真实的 action value，但 policy evaluation 可以在估计尚未稳定时就与 policy improvement 交替推进。第四课的 [Truncated Policy Iteration](value-policy-iteration.md#truncated-policy-iteration) 也允许只做一部分 evaluation 就进行 improvement。**Generalized Policy Iteration（GPI）** 指这种交替推进的框架，有模型和无模型算法都可以采用。
+
+</div>
+</div>
+
+#### （5）MC Exploring Starts Pseudocode {#mc-exploring-starts-伪代码}
+
+<div class="td-slide">
+<div class="td-slide-title">MC Exploring Starts Pseudocode</div>
+<div class="td-slide-body">
+
+从初始 policy $\pi_0$ 开始。每条 episode 随机选择起始 pair $(s_0,a_0)$，并让每个可用的 state–action pair 都有正概率被选中，这就是 **Exploring Starts**。首步之后按当前 policy 生成剩余轨迹，episode 结束后采用 first-visit 更新 `Returns` 和 action value estimates，并做 greedy improvement。
 
 <figure>
-  <img src="./resources/monte-carlo/mc-exploring-starts-pseudocode.png" alt="课件原版 MC Exploring Starts 伪代码，展示随机起点、倒序计算回报、首次访问判断与策略改进" width="1508" height="974" loading="lazy">
+  <img src="./resources/monte-carlo/mc-exploring-starts-pseudocode.png" alt="课件原版 MC Exploring Starts Pseudocode" width="1508" height="974" loading="lazy">
 </figure>
 
-**为什么 $t$ 从后往前遍历？** 回报 $G_t$ 依赖下一时刻的回报 $G_{t+1}$。在回合终点令 $G_T=0$，从 $t=T-1$ 倒着走，伪代码中的 $g$ 每次就能复用已经算好的后续回报：
+**为什么 $t$ 从后往前遍历？** 在终点令 $G_T=0$。从 $t=T-1$ 开始往前走，每一步都能复用上一步已经算好的 $G_{t+1}$：
 
 $$
 G_T=0,\qquad G_t=r_{t+1}+\gamma G_{t+1}.
 $$
 
-这样一趟就算出所有时刻的回报，省掉了从每个时刻重新加到终点的重复计算。**首次访问仍按时间正序定义。** 倒序时会先碰到 $t=2$ 的 $(s_1,a_2)$，但它在 $t=0$ 已出现，所以跳过这次价值更新，继续倒推，最后用 $G_0$ 更新。即使某次访问不更新价值，该步的奖励也仍要计入 $g$。
+这样一趟即可算完所有 returns。**First-visit 仍按时间正序判定。** 倒序先碰到 $t=2$ 的 $(s_1,a_2)$，因为它在 $t=0$ 已经出现，所以跳过 $t=2$ 的 action value 更新，最后用 $G_0$ 更新。即使跳过更新，也要把当步的 reward 计入递推。
 
 </div>
 </div>
 
-#### （4）为什么需要探索性起始 {#为什么需要探索性起始}
+#### （6）Why Exploring Starts? {#为什么需要探索性起始}
 
 <div class="td-slide">
-<div class="td-slide-title">Exploring starts · 为什么要覆盖各种动作</div>
+<div class="td-slide-title">Why Exploring Starts?</div>
 <div class="td-slide-body">
 
-如果一直按贪心策略行动，某个动作可能始终没被尝试，即使它实际上是最优动作也会被漏掉。让各个状态动作对都有机会成为首步，可以为这些动作提供样本。真实环境往往难以重置到任意状态并指定首步，因此下一步会用**软策略（soft policy）**，让智能体在回合途中也有机会尝试其他动作。
+一直执行 greedy policy 时，估计值偏低的 action 可能没机会得到尝试，即使它实际是 optimal action。让每个 state–action pair 都有机会成为起点，有助于收集这些样本。现实环境往往难以重置到任意 state 并指定首步 action，因此下一节用 **soft policies** 把探索放到 episode 途中。
 
 </div>
 </div>
 
 ## 4. MC ε-Greedy
 
-#### （1）Soft Policies · 把探索放到回合途中 {#soft-policies-·-把探索放到回合途中}
+#### （1）Soft Policies {#soft-policies-·-把探索放到回合途中}
 
 <div class="td-slide">
-<div class="td-slide-title">Soft policies · 到了一个状态也能尝试其他动作</div>
+<div class="td-slide-title">Soft Policies</div>
 <div class="td-slide-body">
 
-如果策略在每个状态 $s$ 对每个可用动作 $a$ 都有 $\pi(a\mid s)>0$，就称它为**软策略（soft policy）**。这样，从环境允许的起点出发，智能体在回合途中到达某个状态时，仍有机会尝试该状态的所有动作。只要有关状态能够到达，就可以通过多次交互收集这些状态动作对的样本，省去把每一对都设为起点的要求。实际能采到多少，取决于可达性、回合长度和采样次数。
+**Soft policy** 在每个 state 对所有可用 actions 分配正概率，即 $\pi(a\mid s)>0$。从环境允许的起点出发，智能体在途中到达一个 state 后，就有机会尝试其中的每个 action。这样可以从途中的 visits 收集数据，省去把每个 pair 都设为起点的要求。能否采到足够样本仍取决于 state 的可达性、episode length 和采样次数。
 
 </div>
 </div>
 
-#### （2）ε-Greedy · 平衡探索与利用 {#ε-greedy-·-平衡探索与利用}
+#### （2）ε-Greedy Policies {#ε-greedy-·-平衡探索与利用}
 
 <div class="td-slide">
-<div class="td-slide-title">ε-greedy policies · 把概率分给利用和探索</div>
+<div class="td-slide-title">ε-Greedy Policies</div>
 <div class="td-slide-body">
 
-记 $m=|\mathcal A(s)|$，从估计值最大的动作中选定一个 $a^*(s)$。以 $1-\varepsilon$ 的概率直接选它，以 $\varepsilon$ 的概率在全部 $m$ 个动作中均匀抽取。均匀抽取也可能选中 $a^*(s)$，所以
+设 $m=|\mathcal A(s)|$，且 $\varepsilon\in[0,1]$。用概率 $1-\varepsilon$ 直接选择 **greedy action** $a^*(s)$，用概率 $\varepsilon$ 在全部 $m$ 个 actions 中均匀抽取。均匀抽取也可能选中 $a^*(s)$：
 
 $$
 \pi(a\mid s)=
@@ -239,45 +269,62 @@ $$
 \end{cases}
 $$
 
-$\varepsilon\in[0,1]$。贪心动作的概率至少与其他动作一样大。$\varepsilon=0$ 时只选贪心动作，$\varepsilon=1$ 时所有动作等概率。取 $0<\varepsilon<1$ 时，既优先利用当前估计最好的动作，又持续探索其他动作。
+Greedy action 的概率至少和其他 actions 一样大。$\varepsilon=0$ 对应 **greedy policy**，$\varepsilon=1$ 对应 **uniform distribution**。两者之间的取值用来平衡 **exploitation** 和 **exploration**。
 
 </div>
 </div>
 
-#### （3）Policy Improvement · 在固定 ε 的策略中选 {#policy-improvement-·-在固定-ε-的策略中选}
+#### （3）Policy Improvement over All Policies
 
 <div class="td-slide">
-<div class="td-slide-title">Policy improvement · 固定探索概率，再做贪心选择</div>
+<div class="td-slide-title">Policy Improvement over All Policies</div>
 <div class="td-slide-body">
 
-MC Basic 和 MC Exploring Starts 在所有策略 $\Pi$ 中最大化 $\sum_a \pi(a\mid s)q_{\pi_k}(s,a)$，可以把全部概率给当前最优动作。MC ε-Greedy 的目标相同，但将候选策略限制为固定 $\varepsilon$ 的策略集合 $\Pi_\varepsilon$。用实际采样得到的估计 $\widehat q_{\pi_k}$ 写成
+MC Basic 和 MC Exploring Starts 的 policy improvement 在所有候选 policies $\Pi$ 中优化同一个目标：
 
 $$
-\pi_{k+1}(\cdot\mid s)
-\in\arg\max_{\pi\in\Pi_\varepsilon}
-\sum_a\pi(a\mid s)\widehat q_{\pi_k}(s,a).
+\pi_{k+1}(\cdot\mid s)\in
+\arg\max_{\pi\in\Pi}\sum_a\pi(a\mid s)q_{\pi_k}(s,a).
 $$
 
-每个动作先分到 $\varepsilon/m$，剩下的 $1-\varepsilon$ 分给估计值最大的动作，便得到上面的概率分布。评价时仍用完整回合的回报更新动作价值，改进时保留随机探索，下一条回合再按改进后的策略采样。
+取 $a_k^*(s)\in\arg\max_{a\in\mathcal A(s)}q_{\pi_k}(s,a)$ 后，可以把它的概率设为 $1$，其余 actions 的概率设为 $0$。
 
 </div>
 </div>
 
-#### （4）MC ε-Greedy 伪代码 {#mc-ε-greedy-伪代码}
+#### （4）Policy Improvement over ε-Greedy Policies {#policy-improvement-·-在固定-ε-的策略中选}
 
 <div class="td-slide">
-<div class="td-slide-title">Pseudocode · 每次访问怎样更新价值</div>
+<div class="td-slide-title">Policy Improvement over ε-Greedy Policies</div>
 <div class="td-slide-body">
 
-给定初始策略和 $\varepsilon$，从允许的起点生成一条回合。回合结束后，仍从 $g=0$ 开始倒序递推 $g\leftarrow r_{t+1}+\gamma g$，把取到的回报加入对应状态动作对的样本，再计算均值，再用更新后的价值设置 ε-greedy 动作概率。
+MC ε-Greedy 把候选范围换成固定 $\varepsilon$ 的 policy 集合 $\Pi_\varepsilon$。实际更新用 **action value estimate** $\widehat q_{\pi_k}$：
+
+$$
+\pi_{k+1}(\cdot\mid s)\in
+\arg\max_{\pi\in\Pi_\varepsilon}\sum_a\pi(a\mid s)\widehat q_{\pi_k}(s,a).
+$$
+
+每个 action 先分到 $\varepsilon/m$，再把剩余的 $1-\varepsilon$ 给估计值最大的 action，就得到上面的 ε-greedy policy。MC ε-Greedy 仍然交替做 policy evaluation 和 policy improvement，靠途中采样覆盖 state–action pairs。
+
+</div>
+</div>
+
+#### （5）MC ε-Greedy Pseudocode {#mc-ε-greedy-伪代码}
+
+<div class="td-slide">
+<div class="td-slide-title">MC ε-Greedy Pseudocode</div>
+<div class="td-slide-body">
+
+给定初始 policy 和 $\varepsilon$，从环境允许的起点生成 episode。结束后令 $g=0$，倒序递推 $g\leftarrow r_{t+1}+\gamma g$，用采到的 returns 更新 action value estimates，再用更新后的估计设置 ε-greedy 概率。
 
 <figure>
-  <img src="./resources/monte-carlo/mc-epsilon-greedy-pseudocode.png" alt="课件原版 MC ε-Greedy 伪代码，展示逐回合采样、倒序累计回报与 ε-greedy 策略更新" width="1536" height="1086" loading="lazy">
+  <img src="./resources/monte-carlo/mc-epsilon-greedy-pseudocode.png" alt="课件原版 MC ε-Greedy Pseudocode" width="1536" height="1086" loading="lazy">
 </figure>
 
-**为什么这里用 every-visit？** 采用软策略后，样本可以主要来自回合途中。若起点有限、回合较长，同一个状态动作对可能在一条回合里出现多次。每次访问都计入均值，就能利用这些回报。沿用上一节的例子，every-visit 会同时计入 $(s_1,a_2)$ 的 $G_0$ 和 $G_2$，first-visit 只计入 $G_0$。同一回合的两段回报可能共享后续奖励，因此多计入一个回报，未必等于多获得一个独立样本。ε-greedy 决定**怎么选动作**，访问方式决定**哪些回报计入估计**，所以这里也可以使用 first-visit。
+**为什么这里用 every-visit？** 使用 soft policy 后，一条较长的 episode 可能在途中多次访问同一个 pair。Every-visit 把这些 returns 都用上，例如同时计入 $(s_1,a_2)$ 的 $G_0$ 和 $G_2$。First-visit 只计入 $G_0$。同一条轨迹内的 returns 可能共享后续 rewards，因此它们可能相关。ε-greedy 决定怎样选 action，visit method 决定哪些 returns 进入估计，所以 ε-greedy 也可以搭配 first-visit。
 
-**图中有一处不一致。** 图中写着 every-visit，下面的 `If` 却只在 $(s_t,a_t)$ 此前未出现时才更新，照这个条件执行就是 first-visit。要实现图中标注的 every-visit，应删除这条检查，在倒序计算出每个 $G_t$ 后都更新对应的回报统计。
+**课件图里的两行写法不一致。** 图中写着 every-visit，但下面的 `If` 只在 $(s_t,a_t)$ 之前没有出现时更新，实际对应 first-visit。要执行 every-visit，删掉这条检查，算出每个 $G_t$ 后都更新一次。
 
 </div>
 </div>
