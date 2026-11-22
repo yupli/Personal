@@ -98,7 +98,7 @@ function decorate() {
     const glyph=el.querySelector(":scope > svg");
     if(!glyph)continue;
     const update=()=>{
-      const wide=glyph.getBoundingClientRect().width>el.clientWidth+1;
+      const wide=glyph.getBoundingClientRect().width>el.getBoundingClientRect().width+1;
       el.classList.toggle("pk-wide-math",wide);
       setScrollable(el,"公式",wide);
     };
