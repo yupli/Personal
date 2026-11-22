@@ -107,3 +107,146 @@ $$
 
 </div>
 </div>
+
+## 2. Robbins–Monro Algorithm {#_2-robbins-monro-algorithm}
+
+#### （1）Stochastic Approximation
+
+<div class="td-slide">
+<div class="td-slide-title">Stochastic Approximation (SA)</div>
+<div class="td-slide-body">
+
+- **目标**。用随机迭代求解 **root finding** 或 **optimization** 问题。
+- **可用信息**。以这里的 Robbins–Monro 为例，每轮只用一次带噪声的函数观测来更新。即使 $g$ 的表达式和导数都未知，也可以计算这一步。
+
+</div>
+</div>
+
+#### （2）Problem Statement
+
+<div class="td-slide">
+<div class="td-slide-title">Problem Statement · 求一个 Root</div>
+<div class="td-slide-body">
+
+给定 $g:\mathbb R\to\mathbb R$，求满足下式的 $w^*$：
+
+$$
+g(w^*)=0.
+$$
+
+例如，对可微的 **objective function** $J(w)$ 做无约束最小化时，可以先求 **stationary point**。令 $g(w)=J'(w)$，问题就变成解 $g(w)=0$。求到的点还需判断是否是 minimum。
+
+</div>
+</div>
+
+#### （3）When the Expression of g Is Unknown
+
+<div class="td-slide">
+<div class="td-slide-title">What if g Is a Black Box?</div>
+<div class="td-slide-body">
+
+能直接算 $g(w)$ 时，可以用常见的数值求根方法。有些问题只能在指定 $w$ 时得到一条带噪声的信息：
+
+- **Neural network**。设总体 loss 为 $J(w)=\mathbb E_Z[\ell(w;Z)]$。可以用 **backpropagation** 算某个 sample 或 minibatch 的 gradient，但数据分布未知时，通常无法直接算出总体 gradient $g(w)=\nabla J(w)$。在可交换微分和期望的条件下，可把随机样本的 gradient 当作它的观测。这里用向量参数举例，下面的收敛定理只讨论标量情形。
+- **Noisy experiment**。想找出使平均读数等于指定 target 的控制量 $w$。每次调到 $w$ 都能测一个读数，减去 target 就得到一次观测，而读数均值随 $w$ 变化的关系可能未知。
+
+</div>
+</div>
+
+#### （4）Robbins–Monro Update
+
+<div class="td-slide">
+<div class="td-slide-title">Robbins–Monro Update · 用观测修正当前 Estimate</div>
+<div class="td-slide-body">
+
+$$
+\boxed{w_{k+1}=w_k-a_k\widetilde g(w_k,\eta_k)},
+\qquad k=1,2,\ldots
+$$
+
+- $w_k$ 是第 $k$ 次 **root estimate**。
+- $\widetilde g(w_k,\eta_k)=g(w_k)+\eta_k$ 是这一步的 **noisy observation**。
+- $a_k>0$ 是 **step size**。
+
+每轮把 $w_k$ 输入 black box，读取 $\widetilde g(w_k,\eta_k)$，再算下一轮的输入 $w_{k+1}$。
+
+</div>
+</div>
+
+#### （5）Illustrative Example
+
+<div class="td-slide">
+<div class="td-slide-title">Illustrative Example · tanh</div>
+<div class="td-slide-body">
+
+- **Function**。$g(w)=\tanh(w-1)$，真实 root 为 $w^*=1$。
+- **Parameters**。$w_1=3$，$a_k=1/k$，$\eta_k\equiv 0$。
+
+无 noise 时，观测值等于 $g(w_k)$，所以更新简化为
+
+$$
+w_{k+1}=w_k-\frac1k\tanh(w_k-1).
+$$
+
+</div>
+</div>
+
+#### （6）Simulation Result
+
+<div class="td-slide">
+<div class="td-slide-title">Simulation Result · Iterates Approach the Root</div>
+<div class="td-slide-body">
+
+<figure>
+  <img src="./resources/stochastic-approximation/robbins-monro-convergence.png" alt="课件中的无噪声 Robbins–Monro 实验，迭代从 w₁=3 靠近 w*=1" width="1442" height="714" loading="lazy">
+</figure>
+
+横轴的圆点是各步的 estimates $w_1,w_2,\ldots$，曲线上的菱形是对应的 $g(w_k)$。这组 iterates 从右侧逐步逼近 $w^*=1$。
+
+</div>
+</div>
+
+#### （7）Intuition · Direction of the Update
+
+<div class="td-slide">
+<div class="td-slide-title">Intuition · 看 g 的符号决定方向</div>
+<div class="td-slide-body">
+
+对单调递增的 $g$，先看无 noise 时的两种情况：
+
+- **右侧**。$w_k>w^*$ 时，$g(w_k)>0$，更新向左移。
+- **左侧**。$w_k<w^*$ 时，$g(w_k)<0$，更新向右移。
+
+这解释了更新方向。还要控制 step size，才能避免跨过 root 太远。在上面的 $\tanh$ 例子里，$|\tanh(w_k-1)|\le |w_k-1|$ 且 $a_k\le1$，所以每一步都向 root 靠近。
+
+</div>
+</div>
+
+#### （8）Robbins–Monro Theorem {#robbins-monro-theorem}
+
+<div class="td-theorem">
+<div class="td-theorem-title">Theorem · Robbins–Monro Convergence</div>
+<div class="td-theorem-body">
+
+在标量 Robbins–Monro 更新中，令 $\mathcal H_k$ 表示已知 $w_k$、尚未收到本轮观测时的历史。下面是一组 **sufficient conditions**：
+
+1. **Slope bounds**。对所有 $w$，存在常数 $0<c_1\le g'(w)\le c_2<\infty$。
+2. **Step sizes**。$a_k>0$，且 $\sum_{k=1}^\infty a_k=\infty$、$\sum_{k=1}^\infty a_k^2<\infty$。
+3. **Noise**。$\mathbb E[\eta_k\mid\mathcal H_k]=0$，且条件二阶矩有统一上界 $\mathbb E[\eta_k^2\mid\mathcal H_k]\le M<\infty$。
+
+在这些条件下，$w_k$ **almost surely** 收敛到唯一的 root $w^*$。课件把第 3 条简写为条件二阶矩有限，这里写明了统一上界。各条件的作用和 $a_k=1/k$ 的计算见[附录](appendix.md#robbins-monro-convergence-conditions)。证明思路见 [Dvoretzky Convergence Theorem](appendix.md#dvoretzky-convergence-theorem)。[课程教材 §6.2](https://raw.githubusercontent.com/MathFoundationRL/Book-Mathematical-Foundation-of-Reinforcement-Learning/refs/heads/main/Book-all-in-one.pdf)
+
+</div>
+</div>
+
+#### （9）When the Conditions Fail
+
+<div class="td-slide">
+<div class="td-slide-title">When the Conditions Fail · Local Convergence and Constant Step Sizes</div>
+<div class="td-slide-body">
+
+- **初值的影响**。$g(w)=w^3-5$ 的导数 $3w^2$ 缺少全局的正下界和有限上界。初值靠近 root、step size 合适时，迭代仍可收敛。初值离得较远时，更新可能越过 root 很远并发散。
+- **Constant step size**。不少 RL 算法采用足够小的常数 $a_k=a>0$。这时 $\sum_k a_k^2$ 发散。在持续有 noise 时，估计可能在 root 附近波动，这种更新仍可用来跟踪随时间变化的量。
+
+</div>
+</div>
