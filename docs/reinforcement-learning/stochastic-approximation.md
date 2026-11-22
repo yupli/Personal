@@ -250,3 +250,107 @@ $$
 
 </div>
 </div>
+
+## 3. Stochastic Gradient Descent (SGD)
+
+#### （1）Optimization Problem
+
+<div class="td-slide">
+<div class="td-slide-title">Optimization Problem · Minimize an Expected Loss</div>
+<div class="td-slide-body">
+
+$$
+\min_w J(w),
+\qquad J(w)=\mathbb E_X[f(w,X)].
+$$
+
+- $w$ 是要优化的 **parameter**。
+- $X$ 是 **random variable**，期望对 $X$ 的分布取。
+- $w$ 和 $X$ 都可以是 scalar 或 vector，$f(w,X)$ 的输出是 scalar。
+
+下面四种方法都沿负 gradient 的方向更新，差别在于每一步用什么计算 **gradient**。
+
+</div>
+</div>
+
+#### （2）Method 1 · Gradient Descent (GD)
+
+<div class="td-slide">
+<div class="td-slide-title">Method 1 · Gradient Descent (GD)</div>
+<div class="td-slide-body">
+
+在可以交换微分和期望的条件下，GD 每步使用 **true gradient**：
+
+$$
+\begin{aligned}
+w_{k+1}
+&=w_k-\alpha_k\nabla_w J(w_k)\\
+&=w_k-\alpha_k\mathbb E_X[\nabla_w f(w_k,X)].
+\end{aligned}
+$$
+
+$\alpha_k>0$ 是 **step size**。如果 $X$ 的分布未知，或者期望本身难算，这个 gradient 就很难直接得到。
+
+</div>
+</div>
+
+#### （3）Method 2 · Batch Gradient Descent (BGD)
+
+<div class="td-slide">
+<div class="td-slide-title">Method 2 · Batch Gradient Descent (BGD)</div>
+<div class="td-slide-body">
+
+用手头全部 $n$ 个 samples 的 gradient 取平均，估计总体 gradient：
+
+$$
+\mathbb E_X[\nabla_w f(w_k,X)]
+\approx \frac1n\sum_{i=1}^n\nabla_w f(w_k,x_i).
+$$
+
+于是 **update rule** 为
+
+$$
+w_{k+1}=w_k-\alpha_k\frac1n\sum_{i=1}^n\nabla_w f(w_k,x_i).
+$$
+
+右侧的平均值是这批数据的 **empirical loss** 的精确 gradient。每次 $w_k$ 改变后，都要用新的 $w_k$ 重新计算整批 samples 的 gradients。
+
+</div>
+</div>
+
+#### （4）Method 3 · Stochastic Gradient Descent (SGD)
+
+<div class="td-slide">
+<div class="td-slide-title">Method 3 · Stochastic Gradient Descent (SGD)</div>
+<div class="td-slide-body">
+
+第 $k$ 步只取一个 sample $x_k$，用它的 gradient 直接更新：
+
+$$
+w_{k+1}=w_k-\alpha_k\nabla_w f(w_k,x_k).
+$$
+
+- **Stochastic gradient**。$\nabla_w f(w_k,x_k)$ 是 true gradient 的一次样本估计。若新样本独立于此前的历史且来自 $X$ 的分布，在给定当前 $w_k$ 时，它的期望等于 $\nabla_w J(w_k)$。
+- **每步只用一个 sample**。把每步用于计算平均 gradient 的 sample 数设为 $1$，就得到这条更新式。每次更新只算一个 gradient，方向也更容易随抽到的 sample 波动。
+
+</div>
+</div>
+
+#### （5）Method 4 · Mini-Batch Gradient Descent (MBGD)
+
+<div class="td-slide">
+<div class="td-slide-title">Method 4 · Mini-Batch Gradient Descent (MBGD)</div>
+<div class="td-slide-body">
+
+第 $k$ 步从数据集中取一个 **mini-batch** $B_k$，设 **batch size** 为 $b=|B_k|$。先在同一个 $w_k$ 上算这 $b$ 个 samples 的 gradients，再取平均做一次更新：
+
+$$
+w_{k+1}=w_k-\alpha_k\frac1b\sum_{i\in B_k}\nabla_w f(w_k,x_i).
+$$
+
+- $b=1$ 时，就是本节的单样本 SGD。
+- $b=n$ 且包含全部数据时，就是 BGD。
+- $1<b<n$ 时，一步只处理部分数据。相较于单样本更新，取平均可以减小 gradient 的波动。相较于全批量更新，每一步需要处理的 samples 更少。
+
+</div>
+</div>
