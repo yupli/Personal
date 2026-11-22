@@ -8,7 +8,7 @@ pageClass: rl-summary
 
 ## 1. Motivating Example
 
-#### （1）Mean Estimation
+### 1.1 Mean Estimation {#_1-mean-estimation}
 
 <div class="td-slide">
 <div class="td-slide-title">Motivating Example · Mean Estimation</div>
@@ -30,7 +30,7 @@ $$
 </div>
 </div>
 
-#### （2）Derive the Incremental Update
+### 1.2 Incremental Mean Update {#_2-derive-the-incremental-update}
 
 <div class="td-slide">
 <div class="td-slide-title">Incremental Update · 用旧均值和新 Sample 推出新均值</div>
@@ -69,9 +69,7 @@ $$
 </div>
 </div>
 
-#### （3）Work Through the First Updates
-
-<div class="td-slide">
+<div class="td-slide" id="_3-work-through-the-first-updates">
 <div class="td-slide-title">Incremental Mean · 逐步代入</div>
 <div class="td-slide-body">
 
@@ -96,7 +94,7 @@ $$
 </div>
 </div>
 
-#### （4）Remarks
+### 1.3 Remarks {#_4-remarks}
 
 <div class="td-slide">
 <div class="td-slide-title">Remarks · Estimate 可以随到随用</div>
@@ -110,7 +108,7 @@ $$
 
 ## 2. Robbins–Monro Algorithm {#_2-robbins-monro-algorithm}
 
-#### （1）Stochastic Approximation
+### 2.1 Stochastic Approximation {#_1-stochastic-approximation}
 
 <div class="td-slide">
 <div class="td-slide-title">Stochastic Approximation (SA)</div>
@@ -122,7 +120,7 @@ $$
 </div>
 </div>
 
-#### （2）Problem Statement
+### 2.2 Root Finding with an Unknown Function {#_2-problem-statement}
 
 <div class="td-slide">
 <div class="td-slide-title">Problem Statement · 求一个 Root</div>
@@ -139,9 +137,7 @@ $$
 </div>
 </div>
 
-#### （3）When the Expression of g Is Unknown
-
-<div class="td-slide">
+<div class="td-slide" id="_3-when-the-expression-of-g-is-unknown">
 <div class="td-slide-title">What if g Is a Black Box?</div>
 <div class="td-slide-body">
 
@@ -153,7 +149,7 @@ $$
 </div>
 </div>
 
-#### （4）Robbins–Monro Update
+### 2.3 Robbins–Monro Update {#_4-robbins–monro-update}
 
 <div class="td-slide">
 <div class="td-slide-title">Robbins–Monro Update · 用观测修正当前 Estimate</div>
@@ -173,7 +169,7 @@ $$
 </div>
 </div>
 
-#### （5）Illustrative Example
+### 2.4 Illustrative Example · Simulation and Intuition {#_5-illustrative-example}
 
 <div class="td-slide">
 <div class="td-slide-title">Illustrative Example · tanh</div>
@@ -191,9 +187,7 @@ $$
 </div>
 </div>
 
-#### （6）Simulation Result
-
-<div class="td-slide">
+<div class="td-slide" id="_6-simulation-result">
 <div class="td-slide-title">Simulation Result · Iterates Approach the Root</div>
 <div class="td-slide-body">
 
@@ -206,9 +200,7 @@ $$
 </div>
 </div>
 
-#### （7）Intuition · Direction of the Update
-
-<div class="td-slide">
+<div class="td-slide" id="_7-intuition-·-direction-of-the-update">
 <div class="td-slide-title">Intuition · 看 g 的符号决定方向</div>
 <div class="td-slide-body">
 
@@ -222,7 +214,7 @@ $$
 </div>
 </div>
 
-#### （8）Robbins–Monro Theorem {#robbins-monro-theorem}
+### 2.5 Robbins–Monro Theorem {#robbins-monro-theorem}
 
 <div class="td-theorem">
 <div class="td-theorem-title">Theorem · Robbins–Monro Convergence</div>
@@ -239,7 +231,7 @@ $$
 </div>
 </div>
 
-#### （9）When the Conditions Fail
+### 2.6 When the Conditions Fail {#_9-when-the-conditions-fail}
 
 <div class="td-slide">
 <div class="td-slide-title">When the Conditions Fail · Local Convergence and Constant Step Sizes</div>
@@ -253,7 +245,7 @@ $$
 
 ## 3. Stochastic Gradient Descent (SGD)
 
-#### （1）Optimization Problem
+### 3.1 Optimization Problem {#_1-optimization-problem}
 
 <div class="td-slide">
 <div class="td-slide-title">Optimization Problem · Minimize an Expected Loss</div>
@@ -273,7 +265,7 @@ $$
 </div>
 </div>
 
-#### （2）Method 1 · Gradient Descent (GD)
+### 3.2 Method 1 · Gradient Descent (GD) {#_2-method-1-·-gradient-descent-gd}
 
 <div class="td-slide">
 <div class="td-slide-title">Method 1 · Gradient Descent (GD)</div>
@@ -294,7 +286,7 @@ $\alpha_k>0$ 是 **step size**。如果 $X$ 的分布未知，或者期望本身
 </div>
 </div>
 
-#### （3）Method 2 · Batch Gradient Descent (BGD)
+### 3.3 Method 2 · Batch Gradient Descent (BGD) {#_3-method-2-·-batch-gradient-descent-bgd}
 
 <div class="td-slide">
 <div class="td-slide-title">Method 2 · Batch Gradient Descent (BGD)</div>
@@ -318,7 +310,7 @@ $$
 </div>
 </div>
 
-#### （4）Method 3 · Stochastic Gradient Descent (SGD)
+### 3.4 Method 3 · Stochastic Gradient Descent (SGD) {#_4-method-3-·-stochastic-gradient-descent-sgd}
 
 <div class="td-slide">
 <div class="td-slide-title">Method 3 · Stochastic Gradient Descent (SGD)</div>
@@ -336,7 +328,7 @@ $$
 </div>
 </div>
 
-#### （5）Method 4 · Mini-Batch Gradient Descent (MBGD)
+### 3.5 Method 4 · Mini-Batch Gradient Descent (MBGD) {#_5-method-4-·-mini-batch-gradient-descent-mbgd}
 
 <div class="td-slide">
 <div class="td-slide-title">Method 4 · Mini-Batch Gradient Descent (MBGD)</div>
@@ -353,7 +345,7 @@ $$
 </div>
 </div>
 
-### Example and Application {#sgd-mean-estimation}
+### 3.6 Example and Application {#sgd-mean-estimation}
 
 <div class="td-slide">
 <div class="td-slide-title">Example · Mean Estimation as an Optimization Problem</div>
@@ -392,7 +384,7 @@ $$
 </div>
 </div>
 
-### Convergence {#sgd-convergence}
+### 3.7 Convergence {#sgd-convergence}
 
 SGD 可以写成求解 $\nabla_w J(w)=0$ 的 Robbins–Monro (RM) update。将 stochastic gradient 拆成 true gradient 和 noise 的过程见[附录](appendix.md#sgd-as-robbins-monro)。
 
@@ -458,7 +450,7 @@ $$
 </div>
 </div>
 
-### A Deterministic Formulation {#sgd-deterministic-formulation}
+### 3.8 A Deterministic Formulation {#sgd-deterministic-formulation}
 
 <div class="td-slide">
 <div class="td-slide-title">Deterministic Objective · A Fixed Dataset</div>
@@ -516,6 +508,8 @@ $$
 
 ## 4. BGD, MBGD, and SGD {#bgd-mbgd-sgd}
 
+### 4.1 Update Rules
+
 <div class="td-slide">
 <div class="td-slide-title">Update Rules · How Many Samples per Step?</div>
 <div class="td-slide-body">
@@ -548,6 +542,8 @@ $$
 
 </div>
 </div>
+
+### 4.2 Batch Size and Gradient Noise
 
 <div class="td-slide">
 <div class="td-slide-title">Batch Size · Gradient Noise and Per-Step Cost</div>
