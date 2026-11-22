@@ -355,7 +355,7 @@ $$
 </div>
 </div>
 
-### 3.4 动作价值形式的 Bellman Expectation Equation {#action-value-bellman-expectation}
+### 3.4 动作价值形式的 Bellman Expectation Equation如何得到的？ {#action-value-bellman-expectation}
 
 <figure>
   <img src="./resources/temporal-difference/sarsa-bellman-expectation.png" alt="由下一状态的动作价值加权平均得到状态价值，再代入并用全期望公式得到动作价值形式的 Bellman expectation equation。" width="1410" height="756" loading="lazy">
