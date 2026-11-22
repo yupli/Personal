@@ -177,3 +177,62 @@ $$
 
 - **Mean estimation**。令 $e_k=w_k-\mu$，其中 $\mu=\mathbb E[X]$。第一节的 update rule 对应 $\alpha_k=\beta_k=1/k$、$\xi_k=x_k-\mu$。若按课件取 $w_1=x_1$，则从 $k=2$ 起，对方差有限的 i.i.d. samples 应用定理，就能得到 almost sure convergence。
 - **TD learning and Q-learning**。这一定理的扩展可用于分析同时更新多个 states 或 state–action pairs 的收敛。[课程教材 §6.3.2–6.3.4](https://raw.githubusercontent.com/MathFoundationRL/Book-Mathematical-Foundation-of-Reinforcement-Learning/refs/heads/main/Book-all-in-one.pdf)
+## 第 6 课 · SGD as Robbins–Monro {#sgd-as-robbins-monro}
+
+<div class="td-slide">
+<div class="td-slide-title">From GD to SGD · True Gradient and Sample Gradient</div>
+<div class="td-slide-body">
+
+在可以交换微分和期望的条件下，GD 使用 true gradient，SGD 使用单个 sample 给出的 gradient：
+
+$$
+\begin{aligned}
+\text{GD:}\quad &w_{k+1}=w_k-\alpha_k\mathbb E_X[\nabla_w f(w_k,X)],\\
+\text{SGD:}\quad &w_{k+1}=w_k-\alpha_k\nabla_w f(w_k,x_k).
+\end{aligned}
+$$
+
+二者的差异来自本轮 sample 的 **gradient noise**。
+
+</div>
+</div>
+
+<div class="td-slide">
+<div class="td-slide-title">From Optimization to Root Finding</div>
+<div class="td-slide-body">
+
+对可微的无约束目标 $J(w)=\mathbb E_X[f(w,X)]$，minimizer 满足 **stationarity condition**。令
+
+$$
+g(w)=\nabla_w J(w)=\mathbb E_X[\nabla_w f(w,X)].
+$$
+
+求 stationary point 就写成 **root-finding problem** $g(w)=0$。当 $J$ 是 strongly convex 时，这个 root 是唯一的 minimizer。
+
+</div>
+</div>
+
+<div class="td-slide">
+<div class="td-slide-title">Robbins–Monro Update · Identify the Noise</div>
+<div class="td-slide-body">
+
+在 $w_k$ 处，把 sample gradient 写成 noisy observation：
+
+$$
+\begin{aligned}
+\eta_k &= \nabla_w f(w_k,x_k)-g(w_k),\\
+\tilde g(w_k,\eta_k)&=g(w_k)+\eta_k=\nabla_w f(w_k,x_k).
+\end{aligned}
+$$
+
+如果 $x_k$ 独立于抽样前的历史 $\mathcal H_k$ 且服从 $X$ 的分布，那么 $\mathbb E[\eta_k\mid\mathcal H_k]=0$。令 RM 的 step size $a_k=\alpha_k$，代入其 update rule：
+
+$$
+w_{k+1}=w_k-a_k\tilde g(w_k,\eta_k)
+=w_k-\alpha_k\nabla_w f(w_k,x_k).
+$$
+
+这就是 SGD。这个等式也适用于 vector parameters。标量版本的 almost sure convergence 还需要[正文定理](stochastic-approximation.md#sgd-convergence)中的 curvature、step size 和 noise 条件。
+
+</div>
+</div>

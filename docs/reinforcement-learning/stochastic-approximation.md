@@ -342,15 +342,221 @@ $$
 <div class="td-slide-title">Method 4 · Mini-Batch Gradient Descent (MBGD)</div>
 <div class="td-slide-body">
 
-第 $k$ 步从数据集中取一个 **mini-batch** $B_k$，设 **batch size** 为 $b=|B_k|$。先在同一个 $w_k$ 上算这 $b$ 个 samples 的 gradients，再取平均做一次更新：
+第 $k$ 步从数据集中取一个 **mini-batch**，设 **batch size** 为 $m$，索引依次为 $I_{k,1},\ldots,I_{k,m}$。先在同一个 $w_k$ 上算这 $m$ 个 samples 的 gradients，再取平均做一次更新：
 
 $$
-w_{k+1}=w_k-\alpha_k\frac1b\sum_{i\in B_k}\nabla_w f(w_k,x_i).
+w_{k+1}=w_k-\alpha_k\frac1m\sum_{\ell=1}^m\nabla_w f(w_k,x_{I_{k,\ell}}).
 $$
 
-- $b=1$ 时，就是本节的单样本 SGD。
-- $b=n$ 且包含全部数据时，就是 BGD。
-- $1<b<n$ 时，一步只处理部分数据。相较于单样本更新，取平均可以减小 gradient 的波动。相较于全批量更新，每一步需要处理的 samples 更少。
+选择 $m$ 时，要同时考虑每轮的 gradient evaluations 和 gradient noise。不同 batch size 和抽样方式怎样影响这两项，见[第 4 节](#bgd-mbgd-sgd)。
+
+</div>
+</div>
+
+### Example and Application {#sgd-mean-estimation}
+
+<div class="td-slide">
+<div class="td-slide-title">Example · Mean Estimation as an Optimization Problem</div>
+<div class="td-slide-body">
+
+假设 $X$ 有有限的二阶矩。考虑 **squared loss**：
+
+$$
+J(w)=\mathbb E\!\left[\frac12\|w-X\|^2\right],
+\qquad \nabla_w f(w,X)=w-X.
+$$
+
+因此 $\nabla_w J(w)=w-\mathbb E[X]$，唯一的 minimizer 是 $w^*=\mathbb E[X]$。
+
+</div>
+</div>
+
+<div class="td-slide">
+<div class="td-slide-title">Application · Recover the Incremental Mean Update</div>
+<div class="td-slide-body">
+
+**GD** 使用 true gradient：
+
+$$
+w_{k+1}=w_k-\alpha_k\mathbb E[w_k-X].
+$$
+
+**SGD** 用本轮 sample $x_k$ 计算 stochastic gradient：
+
+$$
+w_{k+1}=w_k-\alpha_k(w_k-x_k).
+$$
+
+取 $\alpha_k=1/k$，就得到第 1 节的 **incremental mean estimation**。收到第 $k$ 个 sample 后，$w_{k+1}$ 正好等于前 $k$ 个 samples 的平均值。
+
+</div>
+</div>
+
+### Convergence {#sgd-convergence}
+
+SGD 可以写成求解 $\nabla_w J(w)=0$ 的 Robbins–Monro (RM) update。将 stochastic gradient 拆成 true gradient 和 noise 的过程见[附录](appendix.md#sgd-as-robbins-monro)。
+
+<div class="td-theorem">
+<div class="td-theorem-title">Theorem · Convergence of SGD</div>
+<div class="td-theorem-body">
+
+对于标量 $w$，假设可以交换微分与期望，并满足以下 **sufficient conditions**：
+
+1. **Curvature bounds**。对所有 $w$，几乎处处有 $0<c_1\le \partial_w^2 f(w,X)\le c_2<\infty$。
+2. **Step sizes**。$\alpha_k>0$，且 $\sum_{k=1}^\infty\alpha_k=\infty$、$\sum_{k=1}^\infty\alpha_k^2<\infty$。
+3. **Sampling and noise**。每个 $x_k$ 独立地从 $X$ 的分布抽取。令 $\mathcal H_k$ 为抽取前的历史，gradient noise $\eta_k=\partial_w f(w_k,x_k)-J'(w_k)$ 满足 $\mathbb E[\eta_k^2\mid\mathcal H_k]\le M<\infty$，其中 $M$ 与 $k$ 无关。
+
+此时 $w_k$ **almost surely** 收敛到 $J'(w^*)=0$ 的唯一解，也就是 $J$ 的唯一 minimizer。这里写明了与前面 [Robbins–Monro Theorem](#robbins-monro-theorem) 一致的 noise 条件。[课程教材 §6.4](https://raw.githubusercontent.com/MathFoundationRL/Book-Mathematical-Foundation-of-Reinforcement-Learning/refs/heads/main/Book-all-in-one.pdf)
+
+</div>
+</div>
+
+<div class="td-slide">
+<div class="td-slide-title">Relative Error · Compare the Two Gradients</div>
+<div class="td-slide-body">
+
+记 $g(w)=J'(w)$。当 $g(w_k)\ne0$ 时，用 **relative error** 衡量本轮 gradient noise 相对于 true gradient 的大小：
+
+$$
+\delta_k=\frac{|\partial_w f(w_k,x_k)-g(w_k)|}{|g(w_k)|}
+=\frac{|\eta_k|}{|g(w_k)|}.
+$$
+
+由 **mean value theorem** 和 $g(w^*)=0$，在 $w_k$ 与 $w^*$ 之间存在 $\tilde w_k$，使得
+
+$$
+g(w_k)=J''(\tilde w_k)(w_k-w^*).
+$$
+
+</div>
+</div>
+
+<div class="td-slide">
+<div class="td-slide-title">Curvature Bound · Distance to the Minimizer</div>
+<div class="td-slide-body">
+
+若 $\partial_w^2 f(w,X)\ge c>0$，则 $J''(\tilde w_k)\ge c$。代入 denominator 得到
+
+$$
+|g(w_k)|\ge c|w_k-w^*|,
+\qquad
+\delta_k\le\frac{|\eta_k|}{c|w_k-w^*|}.
+$$
+
+</div>
+</div>
+
+<div class="td-slide">
+<div class="td-slide-title">Interpretation · Gradient Noise Near the Optimum</div>
+<div class="td-slide-body">
+
+- **离 $w^*$ 较远时**。如果 gradient noise 的幅度相对稳定，较大的 true gradient 会使 relative error 较小，SGD 的更新方向更接近 GD。
+- **靠近 $w^*$ 时**。true gradient 趋近于零。如果 gradient noise 仍有明显波动，relative error 可能增大。实际更新中的 noise 还会乘以 step size $\alpha_k$，因此方向有波动的 iterates 仍可在上述条件下收敛。
+
+距离出现在 relative error 的**上界**里，$\delta_k$ 本身还取决于每次抽到的 sample。
+
+</div>
+</div>
+
+### A Deterministic Formulation {#sgd-deterministic-formulation}
+
+<div class="td-slide">
+<div class="td-slide-title">Deterministic Objective · A Fixed Dataset</div>
+<div class="td-slide-body">
+
+给定固定的数据 $x_1,\ldots,x_n$，可以直接定义 **finite-sum objective**：
+
+$$
+\min_w J(w),
+\qquad J(w)=\frac1n\sum_{i=1}^n f(w,x_i).
+$$
+
+$w$ 是待优化的 parameter，$f(w,x_i)$ 是第 $i$ 条数据对应的 loss。这个 objective 由数据集确定。
+
+</div>
+</div>
+
+<div class="td-slide">
+<div class="td-slide-title">Update Rules · Full Gradient or One Component</div>
+<div class="td-slide-body">
+
+**Full gradient** 使用全部 $n$ 项：
+
+$$
+w_{k+1}=w_k-\alpha_k\frac1n\sum_{i=1}^n\nabla_w f(w_k,x_i).
+$$
+
+如果每步只处理一条数据，就用索引 $I_k$ 选出其中一项：
+
+$$
+w_{k+1}=w_k-\alpha_k\nabla_w f(w_k,x_{I_k}).
+$$
+
+怎样选择 $I_k$？可以按固定顺序循环，也可以每步随机抽取。后者如何连接到前面的 SGD formulation？
+
+</div>
+</div>
+
+<div class="td-slide">
+<div class="td-slide-title">Uniform Index Sampling · Recover the SGD Formulation</div>
+<div class="td-slide-body">
+
+令 $I$ 在 $\{1,\ldots,n\}$ 上均匀分布，并令 $X=x_I$。对每个 $i$ 有 $\Pr(I=i)=1/n$，因此
+
+$$
+J(w)=\frac1n\sum_{i=1}^n f(w,x_i)=\mathbb E_I[f(w,x_I)].
+$$
+
+这是固定数据集上的精确等式。每步独立、均匀地 **sampling with replacement**，同一个索引可以重复出现。给定抽样前的历史，单样本 gradient 的期望就是 $\nabla_w J(w_k)$，满足其余收敛条件时可以应用上面的 SGD theorem。
+
+如果使用固定顺序，就得到 **cyclic incremental gradient**，其收敛性需要按所用的顺序和 step sizes 分析。
+
+</div>
+</div>
+
+## 4. BGD, MBGD, and SGD {#bgd-mbgd-sgd}
+
+<div class="td-slide">
+<div class="td-slide-title">Update Rules · How Many Samples per Step?</div>
+<div class="td-slide-body">
+
+给定同一批 $n$ 个 samples，三种方法都使用 $w_{k+1}=w_k-\alpha_k d_k$。差别在于怎样计算本轮使用的 gradient $d_k$。
+
+**BGD · 全部 $n$ 条数据**
+
+$$
+d_k=\frac1n\sum_{i=1}^n\nabla_w f(w_k,x_i).
+$$
+
+每条数据恰好用一次，得到 **exact empirical gradient**。在固定 $w_k$ 的比较中，来自总体的独立同分布样本足够多时，这个平均值可近似 **population gradient**。
+
+**MBGD · $m$ 次抽样**
+
+$$
+d_k=\frac1m\sum_{\ell=1}^m\nabla_w f(w_k,x_{I_{k,\ell}}).
+$$
+
+这里每轮从 $\{1,\ldots,n\}$ 独立、均匀地有放回抽取 $m$ 次。$(I_{k,1},\ldots,I_{k,m})$ 是索引序列，同一个索引可以出现多次。
+
+**SGD · 一次抽样**
+
+$$
+d_k=\nabla_w f(w_k,x_{I_k}).
+$$
+
+每轮随机抽取一个索引，计算一个 **stochastic gradient**。
+
+</div>
+</div>
+
+<div class="td-slide">
+<div class="td-slide-title">Batch Size · Gradient Noise and Per-Step Cost</div>
+<div class="td-slide-body">
+
+- **相比 SGD**，MBGD 把 $m$ 个独立抽取的 gradients 取平均。给定当前参数和数据集，平均 gradient 的 variance 是单样本 gradient variance 的 $1/m$（逐分量成立）。
+- **相比 BGD**，当 $m<n$ 时，MBGD 每次更新所需的 gradient evaluations 更少。
+- **当 $m=1$ 时**，MBGD 就是单样本 SGD。
+- **当 $m=n$ 时**，有放回的 MBGD 仍可能重复某些索引、漏掉其他索引。例如 $n=3$ 时，MBGD 可能抽到 $(1,1,3)$，BGD 每次使用 $(1,2,3)$。只有每条数据都恰好使用一次，才保证得到同一个 full-batch update。
 
 </div>
 </div>
