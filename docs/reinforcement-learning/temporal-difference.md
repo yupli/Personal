@@ -623,36 +623,73 @@ $$
 
 ## 6. Q-learning · Optimal Action Values
 
-用下一状态的最大动作值替换 Sarsa 的下一动作样本：
+### 6.1 Q-learning 更新公式 {#q-learning-update}
+
+观察一次转移 $(s_t,a_t,r_{t+1},s_{t+1})$ 后，计算 **TD target**：
+
+$$
+Y_t=r_{t+1}+gammamax_b q_t(s_{t+1},b).
+$$
+
+只更新当前访问的 $(s_t,a_t)$：
 
 $$
 \begin{aligned}
-Y_t &= R_{t+1}+\gamma\max_b Q_t(S_{t+1},b),\\
-q^*(s,a)&=\mathbb E[R_{t+1}
-+\gamma\max_b q^*(S_{t+1},b)\mid s,a].
+\delta_t&=Y_t-q_t(s_t,a_t),\\
+q_{t+1}(s_t,a_t)
+&=q_t(s_t,a_t)+\alpha_t(s_t,a_t)\delta_t.
 \end{aligned}
 $$
 
-第一行是一次样本更新的目标，第二行是要解的 Bellman optimality equation。课件第 58 页汇总表的 Q-learning 一栏漏写了折扣因子，按第 43 页及更新式补上 $\gamma$。
+终止转移的 target 只取 $r_{t+1}$。**Sarsa** 的 target 则用实际采样的下一动作 $a_{t+1}$：
 
-| 策略 | 作用 |
-| --- | --- |
-| Behavior policy（行为策略） | 生成经验，可保留探索概率 |
-| Target policy（目标策略） | 决定更新目标。Q-learning 使用关于当前 $Q$ 的 greedy policy（贪心策略） |
+$$
+Y_t^{\mathrm{Sarsa}}
+=r_{t+1}+\gamma q_t(s_{t+1},a_{t+1}).
+$$
 
-Sarsa 使用行为策略抽出的 $A_{t+1}$ 评价同一策略。Q-learning 的最大值与实际执行的下一动作无关，属于 **off-policy** 更新。课件第 50 页的版本边采样边更新生成经验的策略，Q 更新目标仍取最大值。第 51 页直接使用独立行为策略生成的数据。两种实现都需要充分访问相关状态动作对。
+### 6.2 Q-learning 求解什么？ {#q-learning-optimality-equation}
 
-课件的实验在比较探索（exploration）如何改变状态动作对的覆盖（coverage）。均匀探索生成的轨迹能覆盖更多状态动作对。若行为策略长期偏向少数动作，延长轨迹也可能只增加已常见的访问，稀少表项仍难学好。图中的纵轴比较训练中提取的 greedy policy 的价值与已知最优价值的差距。
+Q-learning 求解动作价值形式的 **Bellman optimality equation**。用 $\mathbb E_{s,a}$ 简记给定 $S_t=s,A_t=a$ 的期望：
 
-### 6.1 Q-learning · 原课件两种实现 {#q-learning-·-原课件两种实现}
+$$
+q^*(s,a)=\mathbb E_{s,a}\!\left[
+R_{t+1}+\gamma\max_b q^*(S_{t+1},b)
+\right].
+$$
+
+更新时，用一次观测到的转移和当前估计 $q_t$ 构造等式右侧的样本目标。
+
+### 6.3 On-policy 与 Off-policy {#q-learning-policy-roles}
+
+- **Behavior policy** 选择实际执行的动作，生成 experience。
+- **Target policy** 是学习或改进的策略。Q-learning 的最大值对应当前 $q_t$ 的 greedy policy。
+
+两者相同就是 **on-policy**，两者不同时就是 **off-policy**。Off-policy 可以利用其他策略生成的 experience，也可以专门用探索性策略扩大 state–action coverage。表格型 Q-learning 要学到所有相关表项，仍需要反复访问这些 state–action pairs。
+
+### 6.4 怎样判断是 On-policy 还是 Off-policy？ {#q-learning-policy-check}
+
+先看算法求解哪个策略的价值，再看更新需要什么样的样本。
+
+- **Sarsa** 更新使用同一策略实际选出的下一动作，属于 **on-policy**。
+- **第 5 课的 MC ε-Greedy** 用当前策略生成的 returns 评价该策略，属于 **on-policy**。
+- **Q-learning** 用下一状态的最大动作值构造 target，采样可以交给另一策略，属于 **off-policy**。
+
+### 6.5 Q-learning · 原课件两种实现 {#q-learning-·-原课件两种实现}
+
+**在线采样（课件称 on-policy version）**。用当前的 $\varepsilon$-greedy policy 与环境交互，每步更新 $q$ 后刷新采样策略。价值更新仍使用 greedy TD target。
 
 <figure>
-  <img src="./resources/temporal-difference/q-learning-50.webp" alt="第 50 页 Q-learning 在线采样伪代码" loading="lazy">
+  <img src="./resources/temporal-difference/q-learning-50.webp" alt="Q-learning 在线采样伪代码。按当前策略采样，更新动作价值，再更新 ε-greedy 采样策略。" loading="lazy">
 </figure>
 
+**独立采样（课件称 off-policy version）**。用独立的 behavior policy $\pi_b$ 生成经验，逐条更新 $q$，并从新 $q$ 中提取 greedy target policy。
+
 <figure>
-  <img src="./resources/temporal-difference/q-learning-51.webp" alt="第 51 页 Q-learning 独立行为策略伪代码" loading="lazy">
+  <img src="./resources/temporal-difference/q-learning-51.webp" alt="Q-learning 独立采样伪代码。读取行为策略生成的转移，更新动作价值和贪心目标策略。" loading="lazy">
 </figure>
+
+探索实验比较的是两种采样方式对 coverage 的影响。轨迹更长也可能只带来更多重复访问。实验用学到的 greedy policy 与最优策略之间的价值差距衡量学习效果。
 
 ## 7. TD 目标汇总
 
