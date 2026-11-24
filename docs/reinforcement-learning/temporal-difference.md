@@ -695,21 +695,41 @@ $$
 
 ### 7.1 统一更新式与 Target {#unified-td-targets}
 
+<div class="td-slide">
+<div class="td-slide-title">Unified Update · 用 Target 更新动作价值</div>
+<div class="td-slide-body">
+
 五种方法共享同一个更新规则。令 $Q=q(s_t,a_t)$，$\bar q_t$ 为本次更新的 **target**：
 
 $$
 Q\leftarrow Q+\alpha_t(s_t,a_t)(\bar q_t-Q).
 $$
 
-- **Sarsa**。$r_{t+1}+\gamma q(s_{t+1},a_{t+1})$
-- **$n$-step Sarsa**。$\sum_{i=1}^{n}\gamma^{i-1}r_{t+i}+\gamma^n q(s_{t+n},a_{t+n})$
-- **Expected Sarsa**。$r_{t+1}+\gamma\sum_b\pi(b\mid s_{t+1})q(s_{t+1},b)$
-- **Q-learning**。$r_{t+1}+\gamma\max_b q(s_{t+1},b)$
-- **Monte Carlo**。完整 return $G_t=\sum_{i=1}^{T-t}\gamma^{i-1}r_{t+i}$，其中 $T$ 是回合结束时刻。
+</div>
+</div>
 
-这里的 $q$ 是执行该次更新时读到的当前估计。遇到终止状态时，奖励只累加到终止时刻，自举项为零。MC 的等权样本均值在第 $N$ 次计入该表项的 return 时取 $\alpha=1/N$。取 $\alpha=1$ 会直接用本次 return 覆盖旧估计。
+<div class="td-slide">
+<div class="td-slide-title">Targets · 五种算法</div>
+<div class="td-slide-body">
+
+| Algorithm | Target $\bar q_t$ |
+| --- | --- |
+| Sarsa | $r_{t+1}+\gamma q(s_{t+1},a_{t+1})$ |
+| $n$-step Sarsa | $\sum_{i=1}^{n}\gamma^{i-1}r_{t+i}+\gamma^n q(s_{t+n},a_{t+n})$ |
+| Expected Sarsa | $r_{t+1}+\gamma\sum_b\pi(b\mid s_{t+1})q(s_{t+1},b)$ |
+| Q-learning | $r_{t+1}+\gamma\max_b q(s_{t+1},b)$ |
+| Monte Carlo | $G_t=\sum_{i=1}^{T-t}\gamma^{i-1}r_{t+i}$ |
+
+$q$ 是更新时的当前估计，$T$ 是回合结束时刻。到达终止状态后，自举项取零。MC 用 $\alpha=1/N$ 计算等权均值，取 $\alpha=1$ 则用本次 return 覆盖旧估计。
+
+</div>
+</div>
 
 ### 7.2 对应的 Bellman 方程 {#unified-bellman-equations}
+
+<div class="td-slide">
+<div class="td-slide-title">Stochastic Approximation · 从 Target 到方程</div>
+<div class="td-slide-body">
 
 从 **stochastic approximation** 的角度看，把样本 target 换成给定当前状态动作对的条件期望，就得到要解的方程。记 $\mathbb E_{s,a}$ 为给定 $S_t=s,A_t=a$ 的期望。
 
@@ -724,7 +744,8 @@ $$
 - **Q-learning**。求解 **Bellman optimality equation**，对下一状态的动作价值取最大值。
 - **Monte Carlo**。直接用 $q_\pi(s,a)=\mathbb E_{s,a}[G_t]$，即把 Bellman expectation equation 展开到回合末尾。
 
-前三种方法在固定策略 $\pi$ 下的解都是 $q_\pi$。Q-learning 对应的解是 $q^*$。
+</div>
+</div>
 
 <style>
 .rl-summary .vp-doc .sarsa-pseudocode {
