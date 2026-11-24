@@ -236,3 +236,29 @@ $$
 
 </div>
 </div>
+
+## 第 8 课 · Linear TD and the Projected Bellman Equation {#linear-td-projected-bellman-equation}
+
+[返回第八课 · Linear Features](value-function-approximation.md#linear-features)
+
+令 $D=\operatorname{diag}(d_\pi)$，$\Phi$ 的每行是一个状态的 feature 向量。线性近似可表示的价值向量为 $\hat v=\Phi w$。用 $T_\pi v=r_\pi+\gamma P_\pi v$ 表示 Bellman operator，$\Pi_D$ 表示按 $D$ 加权的正交投影。
+
+- **True Value Error** 比较 $\Phi w$ 和真实价值 $v_\pi$。
+- **Bellman Error** 比较 $\Phi w$ 和 $T_\pi(\Phi w)$。
+- **Projected Bellman Error** 比较 $\Phi w$ 和 $\Pi_D T_\pi(\Phi w)$。
+
+在有限、遍历的 on-policy Markov chain、折扣 $\gamma<1$、满列秩 feature 和适当递减步长等标准条件下，TD(0) 的线性近似收敛到满足下式的参数：
+
+$$
+\Phi w=\Pi_D T_\pi(\Phi w).
+$$
+
+在平稳分布下对 linear TD 的更新取期望。平均更新为零时，Bellman residual 与每个 feature 在 $D$ 内积下正交：
+
+$$
+\Phi^\top D\big[T_\pi(\Phi w)-\Phi w\big]=0.
+$$
+
+这正是 projected Bellman equation 的条件。它从当前近似做一次 Bellman backup 再投影。直接拟合真实价值 $v_\pi$ 对应的则是 $\Pi_D v_\pi$。
+
+[Shiyu Zhao · Lecture 8 原课件，第 42–44 页](https://github.com/MathFoundationRL/Book-Mathematical-Foundation-of-Reinforcement-Learning/blob/main/Lecture%20slides/slidesForMyLectureVideos/L8_Value%20function%20approximation.pdf)

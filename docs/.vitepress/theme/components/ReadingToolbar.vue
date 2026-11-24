@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, nextTick, onMounted, onBeforeUnmount, watch } from "vue";
 import { useData, withBase } from "vitepress";
-import { lessonInfo, lessonLink } from "../../lessons";
+import { lessonHasSlides, lessonInfo, lessonLink } from "../../lessons";
 import { useReading } from "../reading";
 
 const {page}=useData();
@@ -36,7 +36,7 @@ watch(()=>page.value.relativePath,update);
 <template>
   <nav v-if="isArticle" class="pk-doc-tools" aria-label="笔记操作">
     <div v-if="info" class="pk-version" aria-label="切换课程版本">
-      <a class="pk-btn" :aria-current="info.slides ? 'page' : undefined" :href="withBase(lessonLink(info.index,true))">V1（逐页）</a>
+      <a v-if="lessonHasSlides(info.index)" class="pk-btn" :aria-current="info.slides ? 'page' : undefined" :href="withBase(lessonLink(info.index,true))">V1（逐页）</a>
       <a class="pk-btn" :aria-current="!info.slides ? 'page' : undefined" :href="withBase(lessonLink(info.index,false))">V2（总结）</a>
     </div>
     <button type="button" class="pk-btn" :aria-pressed="bookmark" @click="reading.toggle({path,title:page.title})">{{bookmark?'取消收藏':'收藏本页'}}</button>

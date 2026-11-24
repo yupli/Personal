@@ -1,6 +1,6 @@
 import { defineConfig } from "vitepress";
 import container from "markdown-it-container";
-import { lessonInfo, lessonLink, lessonList } from "./lessons";
+import { lessonHasSlides, lessonInfo, lessonLink, lessonList } from "./lessons";
 import { writeSearchIndex } from "./site-content.mts";
 import { enhanceMath } from "./site-math.mts";
 
@@ -23,7 +23,7 @@ export default defineConfig({
     const lesson = lessonInfo(relativePath);
     if (!lesson) return;
     const { index, slides } = lesson;
-    const neighbor = (i: number) => lessonList[i] ? {
+    const neighbor = (i: number) => lessonList[i] && (!slides || lessonHasSlides(i)) ? {
       text: "第 " + (i + 1) + " 课 · " + lessonList[i][1] + (slides ? " · V1（逐页）" : " · V2（总结）"),
       link: lessonLink(i, slides),
     } : false;
@@ -219,6 +219,10 @@ export default defineConfig({
             { text: "V1（逐页）", link: "/reinforcement-learning/temporal-difference-slides" },
             { text: "V2（总结）", link: "/reinforcement-learning/temporal-difference" },
           ],
+        },
+        {
+          text: "第 8 课 · 价值函数近似",
+          items: [{ text: "V2（总结）", link: "/reinforcement-learning/value-function-approximation" }],
         },
         { text: "附录", link: "/reinforcement-learning/appendix" },
       ],
