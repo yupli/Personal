@@ -691,19 +691,40 @@ $$
 
 探索实验比较的是两种采样方式对 coverage 的影响。轨迹更长也可能只带来更多重复访问。实验用学到的 greedy policy 与最优策略之间的价值差距衡量学习效果。
 
-## 7. TD 目标汇总
+## 7. Unified Point of View {#_7-td-目标汇总}
 
-所有动作值更新都可写成 $Q\leftarrow Q+\alpha(Y-Q)$，区别集中在目标 $Y$。
+### 7.1 统一更新式与 Target {#unified-td-targets}
 
-| 算法 | 目标 $Y$ | 对应方程 |
-| --- | --- | --- |
-| Sarsa | $R_{t+1}+\gamma Q(S_{t+1},A_{t+1})$ | Bellman expectation equation |
-| Expected Sarsa | $R_{t+1}+\gamma\sum_a\pi(a\mid S_{t+1})Q(S_{t+1},a)$ | Bellman expectation equation |
-| n-step Sarsa | $G^{(n)}_t$ | 多步 Bellman expectation equation |
-| Q-learning | $R_{t+1}+\gamma\max_a Q(S_{t+1},a)$ | Bellman optimality equation |
-| MC | $G_t$ | 给定策略的完整回报期望 |
+五种方法共享同一个更新规则。令 $Q=q(s_t,a_t)$，$\bar q_t$ 为本次更新的 **target**：
 
-MC 的等权样本均值对应第 $N$ 次访问使用 $\alpha=1/N$。课件把 $\alpha=1$ 写作直接放入单次回报，这只是统一更新式中的单样本情形。
+$$
+Q\leftarrow Q+\alpha_t(s_t,a_t)(\bar q_t-Q).
+$$
+
+- **Sarsa**。$r_{t+1}+\gamma q(s_{t+1},a_{t+1})$
+- **$n$-step Sarsa**。$\sum_{i=1}^{n}\gamma^{i-1}r_{t+i}+\gamma^n q(s_{t+n},a_{t+n})$
+- **Expected Sarsa**。$r_{t+1}+\gamma\sum_b\pi(b\mid s_{t+1})q(s_{t+1},b)$
+- **Q-learning**。$r_{t+1}+\gamma\max_b q(s_{t+1},b)$
+- **Monte Carlo**。完整 return $G_t=\sum_{i=1}^{T-t}\gamma^{i-1}r_{t+i}$，其中 $T$ 是回合结束时刻。
+
+这里的 $q$ 是执行该次更新时读到的当前估计。遇到终止状态时，奖励只累加到终止时刻，自举项为零。MC 的等权样本均值在第 $N$ 次计入该表项的 return 时取 $\alpha=1/N$。取 $\alpha=1$ 会直接用本次 return 覆盖旧估计。
+
+### 7.2 对应的 Bellman 方程 {#unified-bellman-equations}
+
+从 **stochastic approximation** 的角度看，把样本 target 换成给定当前状态动作对的条件期望，就得到要解的方程。记 $\mathbb E_{s,a}$ 为给定 $S_t=s,A_t=a$ 的期望。
+
+$$
+q(s,a)=\mathbb E_{s,a}[\bar q_t(q)].
+$$
+
+右侧的 $\bar q_t(q)$ 取自上面相应的一行，把奖励和采样到的状态、动作视为随机变量。
+
+- **Sarsa、Expected Sarsa**。求解同一个单步 **Bellman expectation equation**。Sarsa 对下一动作采样，Expected Sarsa 提前按 $\pi$ 对下一动作取期望。
+- **$n$-step Sarsa**。求解同一策略的 $n$ 步 Bellman expectation equation。
+- **Q-learning**。求解 **Bellman optimality equation**，对下一状态的动作价值取最大值。
+- **Monte Carlo**。直接用 $q_\pi(s,a)=\mathbb E_{s,a}[G_t]$，即把 Bellman expectation equation 展开到回合末尾。
+
+前三种方法在固定策略 $\pi$ 下的解都是 $q_\pi$。Q-learning 对应的解是 $q^*$。
 
 <style>
 .rl-summary .vp-doc .sarsa-pseudocode {
