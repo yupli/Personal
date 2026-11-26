@@ -265,22 +265,83 @@ $$
 </div>
 </div>
 
-## 4. Function Approximators and Gridworld {#linear-features}
+## 4. Selection of Function Approximators {#linear-features}
 
-### 4.1 Linear TD 与 Tabular TD
+### 4.1 Linear 与 Nonlinear Approximators
 
 <div class="td-slide">
-<div class="td-slide-title">Linear TD · Gradient 就是 Feature Vector</div>
+<div class="td-slide-title">两种 Approximator · 怎样选择模型？</div>
 <div class="td-slide-body">
 
-用线性模型时，$\nabla_w\hat v(s,w)=\phi(s)$，所以 $w_{t+1}=w_t+\alpha_t\delta_t\phi(s_t)$。如果 $\phi(s)$ 是状态的 **one-hot vector**，每次只改该状态的一个参数，得到第七课的 tabular TD。
-
-也可以用 **neural network** 直接学习非线性的 $\hat v(s,w)$，用 backpropagation 计算 gradient。
+- **Linear function**。用 $\hat v(s,w)=\phi(s)^\top w$。Feature vector $\phi(s)$ 可由 **polynomial basis** 或 **Fourier basis** 构成。第 1 节的直线和二次曲线都属于这种形式。
+- **Neural network**。输入状态 $s$，输出价值估计 $\hat v(s,w)$，网络参数为 $w$。网络可以表示非线性的价值函数，gradient 可由 backpropagation 计算。
 
 </div>
 </div>
 
-### 4.2 Gridworld · Feature 决定可以拟合的形状
+### 4.2 TD-Linear
+
+<div class="td-slide">
+<div class="td-slide-title">TD-Linear · Gradient 等于 Feature Vector</div>
+<div class="td-slide-body">
+
+对 $\hat v(s,w)=\phi(s)^\top w$ 求导，得到 $\nabla_w\hat v(s,w)=\phi(s)$。代入第 3 节的 semi-gradient TD 更新，得到 **TD-Linear**。
+
+$$
+\begin{aligned}
+y_t&=r_{t+1}+\gamma\phi(s_{t+1})^\top w_t,\\
+\delta_t&=y_t-\phi(s_t)^\top w_t,\\
+w_{t+1}&=w_t+\alpha_t\delta_t\phi(s_t).
+\end{aligned}
+$$
+
+终止转移取 $y_t=r_{t+1}$。
+
+</div>
+</div>
+
+<div class="td-slide">
+<div class="td-slide-title">Linear Approximation · 优点与缺点</div>
+<div class="td-slide-body">
+
+**缺点（Disadvantage）**
+
+合适的 feature vector 往往难选。训练只能调整已有特征的系数。
+
+**优点（Advantages）**
+
+- Linear TD 的收敛性质更容易分析。
+- **Tabular representation** 是 linear function approximation 的一个特例。
+
+</div>
+</div>
+
+### 4.3 Tabular TD 是 TD-Linear 的特例 {#_4-1-linear-td-与-tabular-td}
+
+<div class="td-slide">
+<div class="td-slide-title">One-hot Features · 每个状态选中一个表项</div>
+<div class="td-slide-body">
+
+令 $\phi(s)=e_s\in\mathbb R^{|\mathcal S|}$，其中 $e_s$ 对应状态 $s$ 的分量为 $1$，其余分量为 $0$。于是
+
+$$
+\hat v(s,w)=e_s^\top w=w(s).
+$$
+
+代入 TD-Linear 后，普通转移的 TD error 为 $\delta_t=r_{t+1}+\gamma w_t(s_{t+1})-w_t(s_t)$，而向量更新是 $w_{t+1}=w_t+\alpha_t\delta_t e_{s_t}$。
+
+两边左乘 $e_{s_t}^\top$，就只读出状态 $s_t$ 的分量。
+
+$$
+w_{t+1}(s_t)=w_t(s_t)+\alpha_t\delta_t.
+$$
+
+只有当前状态的表项被更新，这就是 **tabular TD**。
+
+</div>
+</div>
+
+### 4.4 Gridworld · Feature 决定可以拟合的形状 {#_4-2-gridworld-·-feature-决定可以拟合的形状}
 
 <div class="td-slide">
 <div class="td-slide-title">5×5 Gridworld · 用平面拟合价值曲面</div>
