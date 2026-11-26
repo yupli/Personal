@@ -140,3 +140,96 @@ $$
 
 </div>
 </div>
+
+### 2.2 Average Reward {#average-reward}
+
+<div class="td-slide">
+<div class="td-slide-title">Metric 2 · Average One-step Reward</div>
+<div class="td-slide-body">
+
+**Average reward** 用平稳分布 $d_\pi$ 对各状态的期望单步奖励加权。
+
+$$
+\bar r_\pi=\sum_{s\in\mathcal S}d_\pi(s)r_\pi(s)
+=\mathbb E_{S\sim d_\pi}[r_\pi(S)].
+$$
+
+其中 $r_\pi(s)$ 先按策略对动作取平均，$r(s,a)$ 是给定状态和动作的期望即时奖励。
+
+$$
+\begin{aligned}
+r_\pi(s)&=\sum_{a\in\mathcal A(s)}\pi(a\mid s)r(s,a),\\
+r(s,a)&=\mathbb E[R\mid s,a]=\sum_r r\,p(r\mid s,a).
+\end{aligned}
+$$
+
+</div>
+</div>
+
+<div class="td-slide">
+<div class="td-slide-title">Equivalent Definition · 长期每步奖励</div>
+<div class="td-slide-body">
+
+从 $s_0$ 出发，按 $\pi$ 生成轨迹。若策略诱导的有限 Markov chain 遍历，且奖励期望有限，则
+
+$$
+\lim_{n\to\infty}\frac1n
+\mathbb E_\pi\!\left[\sum_{k=1}^n R_k\mid S_0=s_0\right]
+=\bar r_\pi.
+$$
+
+状态分布趋于 $d_\pi$ 后，每步期望奖励趋于 $\sum_s d_\pi(s)r_\pi(s)$，这些期望的时间平均也趋于同一个值。因此长期平均与起点 $s_0$ 无关。
+
+</div>
+</div>
+
+### 2.3 Remarks on the Metrics {#remarks-on-policy-metrics}
+
+<div class="td-slide">
+<div class="td-slide-title">Remarks 1–2 · 参数与折扣</div>
+<div class="td-slide-body">
+
+- **Parameter dependence**。两种指标都随策略 $\pi_\theta$ 变化，因此都可以选作要最大化的 $J(\theta)$。
+- **Discounted and undiscounted settings**。Average value 来自折扣回报，通常取 $0\le\gamma<1$。在持续任务中，若采用 $\gamma=1$，无限奖励总和可能发散，可以用每步长期平均的 $\bar r_\pi$ 定义目标。
+
+</div>
+</div>
+
+<div class="td-slide">
+<div class="td-slide-title">Remark 3 · 平稳条件下的关系</div>
+<div class="td-slide-body">
+
+Average reward 在定义里只出现单步奖励，但 $d_\pi$ 已包含策略长期访问各状态的频率。若 Average Value 也用 $d=d_\pi$ 加权，并且 $0\le\gamma<1$，则
+
+$$
+\bar r_\pi=(1-\gamma)\bar v_\pi.
+$$
+
+从 $S_0\sim d_\pi$ 出发，之后每一步的状态分布都是 $d_\pi$，所以每步期望奖励都等于 $\bar r_\pi$。把它代入折扣回报并对几何级数求和，即得 $\bar v_\pi=\bar r_\pi/(1-\gamma)$。固定 $\gamma$ 时，这两个指标对策略的排序相同。用一般的固定起点分布 $d_0$ 加权时，这一比例关系一般不成立。
+
+</div>
+</div>
+
+### 2.4 Exercise · Expected Discounted Return {#expected-discounted-return}
+
+<div class="td-slide">
+<div class="td-slide-title">Exercise · 期望折扣回报对应哪个指标？</div>
+<div class="td-slide-body">
+
+令 $G_0=\sum_{t=0}^\infty\gamma^t R_{t+1}$，目标为 $J(\theta)=\mathbb E[G_0]$。轨迹从 $S_0\sim d$ 开始，动作由 $\pi_\theta$ 采样，奖励与下一状态由环境产生。
+
+对起始状态应用 **law of total expectation**。
+
+$$
+\begin{aligned}
+J(\theta)
+&=\sum_{s\in\mathcal S}d(s)\mathbb E_{\pi_\theta}[G_0\mid S_0=s]\\
+&=\sum_{s\in\mathcal S}d(s)v_{\pi_\theta}(s)\\
+&=\bar v_{\pi_\theta}.
+\end{aligned}
+$$
+
+所以它就是以起始分布 $d$ 加权的 **Average Value**。
+
+</div>
+</div>
