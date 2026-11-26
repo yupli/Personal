@@ -557,13 +557,26 @@ $$
 #### 7.4 Algorithm and Gridworld Example {#_6-3-algorithm-and-gridworld-example}
 
 <div class="td-slide">
-<div class="td-slide-title">Pseudocode · Deep Q-learning</div>
+<div class="td-slide-title">Pseudocode · Deep Q-learning（Off-policy）</div>
 <div class="td-slide-body">
 
-1. 初始化 online network，复制参数到 target network。
-2. 用探索性 behavior policy 收集转移，存入 replay buffer。课件示例使用预先采集的轨迹。
-3. 每次均匀抽取一个 mini-batch，用 target network 计算 $y$，以平方误差更新 online network。
-4. 每隔 $C$ 次更新同步参数。需要输出策略时，从 online network 取 greedy action。
+用 behavior policy $\pi_b$ 采集转移，连同终止标记存入 replay buffer $\mathcal B$。初始化 online network 参数 $w$，令 $w_T\leftarrow w$。
+
+1. 从 $\mathcal B$ 均匀抽一个 mini-batch。
+2. 对每条转移 $(s_i,a_i,r_i,s'_i)$，用 target network 计算 $y_i$。非终止转移取 $r_i+\gamma\max_b\hat q(s'_i,b,w_T)$，终止转移取 $r_i$。
+3. 固定这批 $y_i$，对各样本的平方误差 $(y_i-\hat q(s_i,a_i,w))^2$ 取平均，做一次 gradient descent，只更新 $w$。
+4. 每隔 $C$ 次训练更新，执行 $w_T\leftarrow w$。
+
+</div>
+</div>
+
+<div class="td-slide">
+<div class="td-slide-title">Remarks · 课件的三个问题</div>
+<div class="td-slide-body">
+
+1. **为什么没有显式的 policy update？** 这版伪代码用 $\pi_b$ 预先采集经验，训练循环直接更新 Q-network。要执行学到的策略时，按当前 $\hat q$ 取 $\arg\max_a\hat q(s,a,w)$，所以更新价值估计也会改变由它导出的 greedy policy。
+2. **为什么这里省略了前面推导的 $\varepsilon$-greedy 更新公式？** 那条公式用新估计调整下一轮采样的行为策略。这里的样本已由 $\pi_b$ 产生，训练时从 buffer 取样。若改为边交互边训练，仍可以用该公式从 online network 构造探索用的 behavior policy，TD target 继续取下一状态的最大动作价值。
+3. **课件和原论文的网络输入输出有什么区别？** 课件输入一对 $(s,a)$，输出一个 $\hat q(s,a)$。Mnih 等人的 DQN 只输入状态表示，一次前向就输出所有离散动作的 Q 值。训练时从输出向量取出实际动作的分量计算损失，计算 target 时对下一状态的输出取最大值。[DQN 原论文（Nature, 2015）](https://doi.org/10.1038/nature14236)
 
 </div>
 </div>
