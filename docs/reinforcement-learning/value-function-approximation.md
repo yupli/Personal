@@ -485,12 +485,22 @@ $$
 #### 7.3 Experience Replay {#_6-2-experience-replay}
 
 <div class="td-slide">
-<div class="td-slide-title">Replay Buffer · 随机抽取 Mini-batch</div>
+<div class="td-slide-title">What Is Experience Replay?</div>
 <div class="td-slide-body">
 
-把转移 $(s,a,r,s')$ 和终止标记存进 **replay buffer**。每次训练从 buffer 中随机抽一个 mini-batch。这会打散原轨迹的时间顺序，减弱相邻转移的相关性，也允许同一条经验用于多次更新。
+- 把与环境交互得到的转移 $(s,a,r,s')$ 和终止标记存进 **replay buffer**。
+- 每次训练，从 buffer 中随机抽一个 **mini-batch**。课件介绍的做法是对缓冲区里的记录均匀抽样。
 
-<strong>均匀抽取的对象是什么？</strong> 目标函数中，$(S,A)\sim d$ 决定各状态动作对的权重，给定 $(S,A)$ 后，$(R,S')$ 的联合分布由环境决定。课件以均匀的 $d$ 说明等权目标。实际的 uniform replay 给 buffer 中每条记录相同的抽样权重，因此状态动作对的权重仍随它在 buffer 中出现的频率变化。
+</div>
+</div>
+
+<div class="td-slide">
+<div class="td-slide-title">Why Sample from the Replay Buffer?</div>
+<div class="td-slide-body">
+
+- **先看目标函数里的分布。** $(S,A)\sim d$ 决定各状态动作对的权重。给定 $(S,A)$ 后，$(R,S')$ 的联合分布由环境决定。课件用均匀的 $d$ 说明各状态动作对等权的目标。
+- **再看经验是怎么来的。** 行为策略沿轨迹采样，相邻转移通常相关，状态动作对出现的次数也各不相同。
+- **随机回放的作用。** 跨时间抽样能减弱同一批样本中的相邻相关性，同一条经验也可以多次参与更新。均匀回放给每条记录相同的抽取概率，所以某个状态动作对在 buffer 里出现得越频繁，被抽到的总概率越大。
 
 </div>
 </div>

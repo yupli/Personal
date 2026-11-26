@@ -334,7 +334,36 @@ $$
 ### 3.2 Log-policy Form {#log-policy-form}
 
 <div class="td-slide">
-<div class="td-slide-title">Log-derivative Trick · 从求和到期望</div>
+<div class="td-slide-title">A Compact Form of the Gradient</div>
+<div class="td-slide-body">
+
+先令 $Z=\sum_s\eta(s)>0$，将状态权重归一化为 $\tilde\eta(s)=\eta(s)/Z$。取 $S\sim\tilde\eta$、$A\sim\pi(\cdot\mid S,\theta)$，前面的加权求和可写成
+
+$$
+\sum_s\eta(s)\,g_\pi(s;q)
+=Z\,\mathbb E\!\left[\nabla_\theta\ln\pi(A\mid S,\theta)\,q(S,A)\right].
+$$
+
+</div>
+</div>
+
+<div class="td-slide">
+<div class="td-slide-title">Sample-based Gradient · 用样本估计梯度</div>
+<div class="td-slide-body">
+
+按 $S\sim\tilde\eta$、$A\sim\pi(\cdot\mid S,\theta)$ 抽到一个样本 $(s,a)$ 后，可用
+
+$$
+Z\,\nabla_\theta\ln\pi(a\mid s,\theta)\,q(s,a)
+$$
+
+估计上面的加权和。若该加权和等于目标的精确梯度，且采用对应的真实动作价值，这就是一个无偏梯度估计。多个样本可以取平均。状态从哪个分布采样，决定了这组样本估计的是哪种加权和。
+
+</div>
+</div>
+
+<div class="td-slide">
+<div class="td-slide-title">How to Prove It? · Log-derivative Trick</div>
 <div class="td-slide-body">
 
 对正概率动作，由链式法则有
@@ -344,7 +373,7 @@ $$
 =\frac{\nabla_\theta\pi(a\mid s,\theta)}{\pi(a\mid s,\theta)}.
 $$
 
-因此 $\nabla_\theta\pi=\pi\,\nabla_\theta\ln\pi$。出现的 $\pi(a\mid s,\theta)$ 恰好是动作的条件概率。令 $Z=\sum_s\eta(s)>0$、$\tilde\eta(s)=\eta(s)/Z$，先把状态求和写成 $S\sim\tilde\eta$ 的期望，再把动作求和写成 $A\sim\pi(\cdot\mid S,\theta)$ 的条件期望。
+因此 $\nabla_\theta\pi=\pi\,\nabla_\theta\ln\pi$。出现的 $\pi(a\mid s,\theta)$ 恰好是动作的条件概率。用上面定义的 $Z$ 和 $\tilde\eta$，先把状态求和写成 $S\sim\tilde\eta$ 的期望，再把动作求和写成 $A\sim\pi(\cdot\mid S,\theta)$ 的条件期望。
 
 $$
 \begin{aligned}
@@ -362,21 +391,6 @@ $$
 $$
 
 若 $\eta$ 本身是概率分布，如 $d_\pi$，则 $Z=1$。
-
-</div>
-</div>
-
-<div class="td-slide">
-<div class="td-slide-title">Sample-based Gradient · 用样本估计梯度</div>
-<div class="td-slide-body">
-
-按 $S\sim\tilde\eta$、$A\sim\pi(\cdot\mid S,\theta)$ 抽到一个样本 $(s,a)$ 后，可用
-
-$$
-Z\,\nabla_\theta\ln\pi(a\mid s,\theta)\,q(s,a)
-$$
-
-估计上面的加权和。若该加权和等于目标的精确梯度，且采用对应的真实动作价值，这就是一个无偏梯度估计。多个样本可以取平均。状态从哪个分布采样，决定了这组样本估计的是哪种加权和。
 
 </div>
 </div>

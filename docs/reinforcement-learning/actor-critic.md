@@ -127,12 +127,12 @@ QAC 中的 **Q** 指 Critic 学习动作价值 $q(s,a,w)$。Actor 的梯度由�
 
 ## 3. Advantage Actor–Critic (A2C) {#a2c}
 
-在 QAC 的策略梯度中减去一个只依赖状态的 **baseline**，可以调整梯度估计的方差。取状态价值作为 baseline，就得到 **advantage**。本节的 A2C 用一步 TD error 估计这个 advantage。
+从 QAC 扩展到 A2C 时，课件先引入 **baseline**，目的是降低梯度估计的方差。
 
 ### 3.1 Baseline Invariance {#baseline-invariance}
 
 <div class="td-slide">
-<div class="td-slide-title">Why Is It Valid?</div>
+<div class="td-slide-title">Baseline Invariance</div>
 <div class="td-slide-body">
 
 固定当前策略 $\pi=\pi_{\theta_t}$。设 $S\sim\eta$，$A\sim\pi(\cdot\mid S)$，记 $g(S,A)=\nabla_\theta\ln\pi(A\mid S,\theta_t)$。对任意只依赖状态的标量 $b(S)$，策略梯度的期望项满足
@@ -141,6 +141,16 @@ $$
 \mathbb E[g(S,A)q_\pi(S,A)]
 =\mathbb E[g(S,A)(q_\pi(S,A)-b(S))].
 $$
+
+- 为什么减去 baseline 仍成立？
+- 这样做对梯度估计有什么用？
+
+</div>
+</div>
+
+<div class="td-slide">
+<div class="td-slide-title">Why Is It Valid?</div>
+<div class="td-slide-body">
 
 证明从被减去的 baseline 项出发。用 $\pi\nabla_\theta\ln\pi=\nabla_\theta\pi$，并把 $b(s)$ 提出动作求和。
 
@@ -178,7 +188,18 @@ $$
 \end{aligned}
 $$
 
-例如，当动作价值的量级远小于 $10^6$，且策略梯度非零时，取 $b(s)=10^6$ 会把二阶矩放大。合适的 baseline 能减小单样本估计的波动。前面介绍的基础 REINFORCE 和 QAC 相当于取 $b(s)=0$，这个选择的方差取决于任务和策略。
+例如，当动作价值的量级远小于 $10^6$，且策略梯度非零时，取 $b(s)=10^6$ 会把二阶矩放大。
+
+</div>
+</div>
+
+<div class="td-slide">
+<div class="td-slide-title">Our Goal · Minimize the Variance</div>
+<div class="td-slide-body">
+
+选择 $b$ 使总方差最小。这样，用单个样本估计 $\mathbb E[X]$ 时，梯度估计的整体波动更小。
+
+前面介绍的基础 **REINFORCE** 和 **QAC** 都相当于取 $b(s)=0$。零 baseline 对应的方差取决于任务和策略，是否最优需要和其他选择比较。
 
 </div>
 </div>
@@ -203,11 +224,13 @@ b^*(s)
 {\mathbb E_{A\mid s}[c(s,A)]}.
 $$
 
-实际可省去梯度范数权重，直接对动作价值取策略平均，得到状态价值 baseline。$v_\pi(s)$ 计算更简单，一般只在加权均值恰好等于普通均值时达到上述最小方差。[Greensmith 等 · Variance Reduction in Reinforcement Learning](https://www.jmlr.org/papers/volume5/greensmith04a/greensmith04a.pdf)
+最优式要计算每个动作的梯度范数。课件随后省去这个权重，直接按策略对动作价值取平均。[Greensmith 等 · Variance Reduction in Reinforcement Learning](https://www.jmlr.org/papers/volume5/greensmith04a/greensmith04a.pdf)
 
 $$
 b(s)=\mathbb E_{A\mid s}[q_\pi(s,A)]=v_\pi(s).
 $$
+
+这就得到状态价值 baseline。加权均值与普通均值相等时，它也能达到上述最小方差。
 
 </div>
 </div>
@@ -310,6 +333,24 @@ w_{t+1}&=w_t+\alpha_w\delta_t\,\nabla_w v(s_t,w_t),\\
 $$
 
 这里 $\alpha_w$ 和 $\alpha_\theta$ 分别是 Critic 和 Actor 的学习率。Critic 用 $\delta_t$ 修正状态价值，Actor 把它作为已采样动作的优势估计。终止转移取下一状态价值为零。这个版本用正在优化的策略采集数据，因此是 **on-policy**。直接按随机策略采样即可探索，可以省去额外的 $\varepsilon$-greedy 动作选择。
+
+</div>
+</div>
+
+## 4. Off-policy Actor–Critic {#off-policy-actor-critic}
+
+### 4.1 Introduction {#off-policy-introduction}
+
+<div class="td-slide">
+<div class="td-slide-title">Introduction</div>
+<div class="td-slide-body">
+
+- **前面的策略梯度更新是 on-policy。**
+  - **为什么？** 沿用课件的简写，$\nabla_\theta J(\theta)=\mathbb E_{S\sim\eta,\,A\sim\pi(\cdot\mid S)}[\ast]$。直接用样本估计这个期望时，动作来自正在优化的策略 $\pi$。
+
+- **能否改成 off-policy？**
+  - 可以，用 **importance sampling（重要性采样）**。
+  - 重要性采样也可用于其他期望估计问题，例如用一个分布的样本来估计另一个分布下的期望。
 
 </div>
 </div>
