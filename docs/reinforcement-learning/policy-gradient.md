@@ -78,3 +78,65 @@ $\alpha>0$ 是 step size，$\nabla_\theta J(\theta_t)$ 就是 **policy gradient*
 
 </div>
 </div>
+
+## 2. Metrics to Define Optimal Policies {#metrics-to-define-optimal-policies}
+
+### 2.1 Average Value {#average-value}
+
+<div class="td-slide">
+<div class="td-slide-title">Metric 1 · Average State Value</div>
+<div class="td-slide-body">
+
+课件介绍两种衡量策略表现的指标。第一种是 **average state value**，简称 **average value**。它把各状态在策略 $\pi$ 下的价值加权成一个标量。
+
+$$
+\bar v_\pi=\sum_{s\in\mathcal S}d(s)v_\pi(s)
+=\mathbb E_{S\sim d}[v_\pi(S)].
+$$
+
+每个状态的权重满足 $d(s)\ge 0$，且 $\sum_s d(s)=1$，因此可以把 $d$ 看作状态分布。
+
+</div>
+</div>
+
+<div class="td-slide">
+<div class="td-slide-title">Vector-product Form</div>
+<div class="td-slide-body">
+
+按同一状态顺序，把权重和状态价值分别排成列向量 $d$ 与 $v_\pi$，两者都属于 $\mathbb R^{|\mathcal S|}$。Average value 就是它们的内积。
+
+$$
+\bar v_\pi=d^\top v_\pi.
+$$
+
+</div>
+</div>
+
+<div class="td-slide">
+<div class="td-slide-title">Case 1 · 与策略无关的固定分布</div>
+<div class="td-slide-body">
+
+将固定分布记为 $d_0$，对应指标为 $\bar v_\pi^{\,0}=d_0^\top v_\pi$。策略参数变化时，$d_0$ 保持不变，求梯度时只需对状态价值求导。
+
+- **Uniform distribution**。取 $d_0(s)=1/|\mathcal S|$，给所有状态相同的权重。
+- **Fixed initial state**。如果每个 episode 都从 $s_0$ 开始，取 $d_0(s_0)=1$，其他状态的权重为 $0$。此时 $\bar v_\pi^{\,0}=v_\pi(s_0)$，衡量的是从 $s_0$ 出发的期望折扣回报。
+
+</div>
+</div>
+
+<div class="td-slide">
+<div class="td-slide-title">Case 2 · 随策略变化的 Stationary Distribution</div>
+<div class="td-slide-body">
+
+也可以取 $d=d_\pi$，即策略 $\pi$ 诱导的 **stationary distribution**。令 $P_\pi$ 为该策略下的状态转移概率矩阵，则
+
+$$
+d_\pi^\top P_\pi=d_\pi^\top,
+\qquad
+\bar v_\pi=d_\pi^\top v_\pi.
+$$
+
+在遍历条件下，长期访问频率越高的状态权重越大，较少访问的状态权重较小。策略变化时，$d_\pi$ 也可能随之变化。[第八课 · Stationary Distribution](value-function-approximation.md#_2-2-stationary-distribution)
+
+</div>
+</div>
