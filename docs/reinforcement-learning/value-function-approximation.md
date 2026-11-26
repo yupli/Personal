@@ -154,20 +154,66 @@ $$
 </div>
 </div>
 
-## 3. Optimization · TD with Function Approximation {#td-function-approximation}
+## 3. Optimization Algorithms {#td-function-approximation}
 
-### 3.1 从 SGD 到 Semi-gradient TD
+### 3.1 从 Gradient Descent 到 SGD {#_3-1-从-sgd-到-semi-gradient-td}
 
 <div class="td-slide">
-<div class="td-slide-title">SGD · 理想更新需要真实的 State Value</div>
+<div class="td-slide-title">Gradient Descent · 对目标函数求导</div>
 <div class="td-slide-body">
 
-如果能得到 $v_\pi(s_t)$，第六课的 SGD 给出
+对第 2 节的目标 $J(w)$ 做 **gradient descent**。
+
+$$
+w_{k+1}=w_k-\alpha_k\nabla_w J(w_k).
+$$
+
+令 $e(s,w)=v_\pi(s)-\hat v(s,w)$。固定策略下，$v_\pi$ 与状态分布 $d$ 都不随 $w$ 变化。对平方误差应用 chain rule，得到
 
 $$
 \begin{aligned}
-e_t&=v_\pi(s_t)-\hat v(s_t,w_t),\\
-w_{t+1}&=w_t+\alpha_t e_t\nabla_w\hat v(s_t,w_t).
+\nabla_w J(w)
+&=\mathbb E_d[e(S,w)\nabla_w e(S,w)]\\
+&=-\mathbb E_d[e(S,w)\nabla_w\hat v(S,w)].
+\end{aligned}
+$$
+
+第 2 节的 $1/2$ 抵消了平方求导产生的 $2$。
+
+</div>
+</div>
+
+<div class="td-slide">
+<div class="td-slide-title">SGD · 用一个状态替代期望</div>
+<div class="td-slide-body">
+
+用状态样本 $s_t$ 计算 **stochastic gradient**，得到
+
+$$
+\begin{aligned}
+w_{t+1}&=w_t+\alpha_t e(s_t,w_t)
+  \nabla_w\hat v(s_t,w_t).
+\end{aligned}
+$$
+
+这一步仍需要待估计的真实价值 $v_\pi(s_t)$。实际更新可以用下面两种 **target** 来代替它。
+
+</div>
+</div>
+
+### 3.2 Monte Carlo 与 TD Learning
+
+<div class="td-slide">
+<div class="td-slide-title">Monte Carlo · 用完整 Return 作 Target</div>
+<div class="td-slide-body">
+
+按 $\pi$ 生成一个 episode 后，取从 $s_t$ 开始的 discounted return $g_t$ 作为 $v_\pi(s_t)$ 的样本。
+
+$$
+\begin{aligned}
+e_t^{\mathrm{MC}}&=g_t-\hat v(s_t,w_t),\\
+w_{t+1}&=w_t+\alpha_t e_t^{\mathrm{MC}}
+  \nabla_w\hat v(s_t,w_t).
 \end{aligned}
 $$
 
@@ -189,6 +235,32 @@ w_{t+1}&=w_t+\alpha_t\delta_t\nabla_w\hat v(s_t,w_t).
 $$
 
 本次更新把 $y_t$ 当作常数，只对当前预测求导，因此叫 **semi-gradient**。终止转移取 $y_t=r_{t+1}$。
+
+</div>
+</div>
+
+### 3.3 TD Learning Pseudocode
+
+<div class="td-slide">
+<div class="td-slide-title">Pseudocode · TD Learning with Function Approximation</div>
+<div class="td-slide-body">
+
+**Initialization**。选定对 $w$ 可微的 $\hat v(s,w)$ 和初始参数 $w_0$。目标是近似给定策略 $\pi$ 的 state values。
+
+1. 按 $\pi$ 生成 episode。每收到一条转移 $(s_t,r_{t+1},s_{t+1})$，就计算本步的 target 和 TD error $\delta_t$。
+2. 用 $w_{t+1}=w_t+\alpha_t\delta_t\nabla_w\hat v(s_t,w_t)$ 更新参数，再处理下一条转移。
+
+**Linear case**。若 $\hat v(s,w)=\phi(s)^\top w$，则 gradient 等于 $\phi(s_t)$，更新写成
+
+$$
+\begin{aligned}
+y_t&=r_{t+1}+\gamma\phi(s_{t+1})^\top w_t,\\
+\delta_t&=y_t-\phi(s_t)^\top w_t,\\
+w_{t+1}&=w_t+\alpha_t\delta_t\phi(s_t).
+\end{aligned}
+$$
+
+终止转移同样取 $y_t=r_{t+1}$。
 
 </div>
 </div>
