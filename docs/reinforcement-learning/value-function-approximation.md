@@ -391,9 +391,9 @@ $$
 </div>
 </div>
 
-## 5. Sarsa and Q-learning with Function Approximation {#approximate-control}
+<span id="_5-1-sarsa-·-用采样到的下一动作"></span>
 
-#### 5.1 Sarsa with Function Approximation {#_5-1-sarsa-·-用采样到的下一动作}
+## 5. Sarsa with Function Approximation {#approximate-control}
 
 <div class="td-slide">
 <div class="td-slide-title">Semi-gradient Sarsa · 从 State Value 换成 Action Value</div>
@@ -440,26 +440,48 @@ $$
 </div>
 </div>
 
-#### 5.2 Q-learning · 用下一状态的最大动作值
+<span id="_5-2-q-learning-·-用下一状态的最大动作值"></span>
+
+## 6. Q-learning with Function Approximation {#q-learning-function-approximation}
 
 <div class="td-slide">
 <div class="td-slide-title">Semi-gradient Q-learning · Greedy Target</div>
 <div class="td-slide-body">
 
-参数更新沿用上一小节的形式。Q-learning 的 target 为
+沿用 Sarsa 的 **semi-gradient** 更新形式，在下一状态的可用动作中取最大价值。
 
 $$
-y_t=r_{t+1}+\gamma\max_b\hat q(s_{t+1},b,w_t).
+\begin{aligned}
+y_t&=r_{t+1}+\gamma\max_b\hat q(s_{t+1},b,w_t),\\
+\delta_t&=y_t-\hat q(s_t,a_t,w_t),\\
+w_{t+1}&=w_t+\alpha_t\delta_t\nabla_w\hat q(s_t,a_t,w_t).
+\end{aligned}
 $$
 
-两种算法在终止转移都只用即时奖励。Gridworld 实验沿用第七课的指标，用每回合 total reward、episode length 和学到的 greedy policy 检查控制效果。共享参数让一次更新可以影响多个状态动作对。
+终止转移取 $y_t=r_{t+1}$。求 gradient 时把 $y_t$ 当作常数。
 
 </div>
 </div>
 
-## 6. Deep Q-learning {#deep-q-learning}
+<div class="td-slide">
+<div class="td-slide-title">Pseudocode · Q-learning Control</div>
+<div class="td-slide-body">
 
-#### 6.1 Online Network 与 Target Network
+初始化参数 $w_0$、策略 $\pi_0$ 和探索率 $\varepsilon>0$。每个 episode 从初始状态开始，重复以下步骤。
+
+1. **Collect experience**。按 $\pi_t(\cdot\mid s_t)$ 选动作 $a_t$，执行后观察 $r_{t+1}$ 和 $s_{t+1}$。
+2. **Value update**。用 greedy TD target 计算 $\delta_t$，再用上式更新参数。
+3. **Policy update**。用更新后的 $\hat q$ 在 $s_t$ 选一个 greedy action。沿用第 5 节的 $\varepsilon$-greedy 规则，给该动作 $1-\varepsilon+\varepsilon/m$ 的概率，给其他动作 $\varepsilon/m$，其中 $m=|\mathcal A(s_t)|$。
+4. 若未终止，进入 $s_{t+1}$，下一轮再按更新后的策略选动作。
+
+课件将这一实现称为 **on-policy version**，因为训练过程中用当前探索策略在线采样。更新仍使用 greedy target，因此 Q-learning 仍是 **off-policy**。
+
+</div>
+</div>
+
+## 7. Deep Q-learning {#deep-q-learning}
+
+#### 7.1 Online Network 与 Target Network {#_6-1-online-network-与-target-network}
 
 <div class="td-slide">
 <div class="td-slide-title">DQN Loss · 用暂时固定的 Target 拟合动作价值</div>
@@ -479,7 +501,7 @@ $$
 </div>
 </div>
 
-#### 6.2 Experience Replay
+#### 7.2 Experience Replay {#_6-2-experience-replay}
 
 <div class="td-slide">
 <div class="td-slide-title">Replay Buffer · 随机抽取 Mini-batch</div>
@@ -490,7 +512,7 @@ $$
 </div>
 </div>
 
-#### 6.3 Algorithm and Gridworld Example
+#### 7.3 Algorithm and Gridworld Example {#_6-3-algorithm-and-gridworld-example}
 
 <div class="td-slide">
 <div class="td-slide-title">Pseudocode · Deep Q-learning</div>
