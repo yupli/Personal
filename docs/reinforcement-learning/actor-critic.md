@@ -354,3 +354,75 @@ $$
 
 </div>
 </div>
+
+### 4.2 Importance Sampling {#importance-sampling}
+
+<div class="td-slide">
+<div class="td-slide-title">Importance Sampling · 用另一个分布的样本估计期望</div>
+<div class="td-slide-body">
+
+要估计的是目标分布 $p_0$ 下的期望 $\mathbb E_{X\sim p_0}[X]$，手中的样本却来自 $p_1$。假设 $p_1$ 覆盖 $p_0$，即 $p_0(x)>0$ 时有 $p_1(x)>0$。对离散情形，把原来的求和写成 $p_1$ 加权的形式。
+
+$$
+\begin{aligned}
+\mathbb E_{X\sim p_0}[X]
+&=\sum_x p_0(x)x\\
+&=\sum_{x:\,p_1(x)>0}p_1(x)\underbrace{\frac{p_0(x)}{p_1(x)}x}_{f(x)}\\
+&=\mathbb E_{X\sim p_1}[f(X)].
+\end{aligned}
+$$
+
+**怎样估计 $\mathbb E_{X\sim p_1}[f(X)]$？** 从 $p_1$ 独立抽取 $X_1,\ldots,X_n$，对变换后的值取样本均值。
+
+$$
+\bar f=\frac1n\sum_{i=1}^n f(X_i),
+\qquad X_i\overset{\mathrm{i.i.d.}}{\sim}p_1.
+$$
+
+样本均值的期望等于目标期望。若 $f(X)$ 在 $p_1$ 下的方差有限，独立采样使方差缩小为单个样本的 $1/n$。
+
+$$
+\begin{aligned}
+\mathbb E[\bar f]&=\mathbb E_{X\sim p_1}[f(X)],\\
+\operatorname{Var}(\bar f)&=\frac1n\operatorname{Var}_{X\sim p_1}(f(X)).
+\end{aligned}
+$$
+
+</div>
+</div>
+
+<div class="td-slide">
+<div class="td-slide-title">Importance Weight · 样本权重怎么解释？</div>
+<div class="td-slide-body">
+
+把实际抽到的样本 $x_1,\ldots,x_n$ 代入，得到课件中的估计式。
+
+$$
+\mathbb E_{X\sim p_0}[X]
+\approx \bar f
+=\frac1n\sum_{i=1}^n f(x_i)
+=\frac1n\sum_{i=1}^n\frac{p_0(x_i)}{p_1(x_i)}x_i.
+$$
+
+$\frac{p_0(x_i)}{p_1(x_i)}$ 称为 **importance weight（重要性权重）**。
+
+- 若 $p_0(x_i)=p_1(x_i)$，该样本的权重为 $1$。若所有样本的权重都为 $1$，$\bar f$ 就是普通样本均值 $\bar x$。
+- 若 $p_0(x_i)>p_1(x_i)$，这个值在目标分布下更常出现。权重大于 $1$，补偿它在实际采样中较少出现的频率。
+- 若 $p_0(x_i)<p_1(x_i)$，权重小于 $1$，该样本对估计的贡献相应减小。
+
+</div>
+</div>
+
+<div class="td-slide">
+<div class="td-slide-title">You May Ask · 既然能算出概率，为什么还要采样？</div>
+<div class="td-slide-body">
+
+**问题。** 估计式已经需要计算 $p_0(x_i)$。既然给定 $x$ 就能算出 $p_0(x)$，为什么还要估计期望？
+
+**回答。** 逐点计算概率或密度，与对整个分布求和或积分，计算量可以相差很大。重要性采样只需要在抽到的样本处计算概率比。
+
+- 对连续变量，直接求期望涉及积分。
+- $p_0$ 的表达式可能很复杂。有时可以用神经网络计算给定输入的概率或密度，整个分布的期望仍难以直接计算。
+
+</div>
+</div>
