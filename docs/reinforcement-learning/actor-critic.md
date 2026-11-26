@@ -575,3 +575,140 @@ $$
 
 </div>
 </div>
+
+### 5.2 The Theorem of Deterministic Policy Gradient {#deterministic-policy-gradient-theorem}
+
+<div class="td-slide">
+<div class="td-slide-title">The Ways to Represent a Policy</div>
+<div class="td-slide-body">
+
+- 对离散动作，$\pi(a\mid s,\theta)\in[0,1]$ 表示动作概率。它也能表示确定性策略，此时每个状态下有一个动作的概率为 $1$。
+- 课件用 $\mu$ 专门表示确定性策略。它把状态 $s$ 映射到一个动作 $a$，即 $\mu:\mathcal S\to\mathcal A$。
+
+$$
+a=\mu(s,\theta)\doteq\mu(s).
+$$
+
+- 可以用神经网络表示 $\mu$。网络以 $s$ 为输入，以 $\theta$ 为参数，直接输出 $a$。固定参数时，简写为 $\mu(s)$。
+
+</div>
+</div>
+
+<div class="td-slide">
+<div class="td-slide-title">Why Do We Need a New Policy Gradient Theorem?</div>
+<div class="td-slide-body">
+
+前面的随机策略梯度用 $\nabla_\theta\ln\pi(a\mid s,\theta)$。对于连续动作下的确定性策略，给定状态后的全部概率集中在 $a=\mu(s,\theta)$，无法直接沿用这个对数密度梯度。接下来求的是参数变化如何通过动作输出 $\mu(s,\theta)$ 影响回报。
+
+</div>
+</div>
+
+<div class="td-slide">
+<div class="td-slide-title">Objective · Average State Value</div>
+<div class="td-slide-body">
+
+在折扣情形下，课件以初始状态分布 $d_0$ 对状态价值取平均。
+
+$$
+J(\theta)
+=\mathbb E_{S_0\sim d_0}[v_\mu(S_0)]
+=\sum_{s\in\mathcal S}d_0(s)v_\mu(s).
+$$
+
+$d_0$ 满足 $\sum_s d_0(s)=1$，选取时令它独立于 $\mu$，因此求导时只需对状态价值求导。课件列出两种常见选择。
+
+1. **固定起点 $s_0$**。取 $d_0(s_0)=1$，其他状态取 $0$，此时 $J(\theta)=v_\mu(s_0)$。
+2. **行为策略的平稳分布**。给定用于采集数据的行为策略 $\beta$，可令 $d_0=d_\beta$。从这个分布起步后，$v_\mu$ 仍按目标策略 $\mu$ 评价未来回报。
+
+</div>
+</div>
+
+<div class="td-theorem">
+<div class="td-theorem-title">Theorem · Deterministic Policy Gradient in the Discounted Case</div>
+<div class="td-theorem-body">
+
+设 $\gamma\in(0,1)$，策略对参数可微，动作价值对动作可微，且满足定理的正则条件。令 $\rho_\mu(s)$ 为从 $S_0\sim d_0$ 出发、按 $\mu$ 行动的折扣访问权重，$\tilde\rho_\mu$ 为归一化后的状态分布。
+
+$$
+\rho_\mu(s)=\sum_{k=0}^{\infty}\gamma^k\Pr_{d_0,\mu}(S_k=s),
+\qquad
+\tilde\rho_\mu(s)=(1-\gamma)\rho_\mu(s).
+$$
+
+$$
+\begin{aligned}
+\nabla_\theta J(\theta)
+&=\sum_s \rho_\mu(s)\,\nabla_\theta\mu(s,\theta)\,
+  \left.\nabla_a q_\mu(s,a)\right|_{a=\mu(s,\theta)}\\
+&=\frac{1}{1-\gamma}\,
+  \mathbb E_{S\sim\tilde\rho_\mu}
+  \!\left[\nabla_\theta\mu(S,\theta)\,
+  \left.\nabla_a q_\mu(S,a)\right|_{a=\mu(S,\theta)}\right].
+\end{aligned}
+$$
+
+$\nabla_\theta\mu$ 的每一列是一个动作分量对 $\theta$ 的梯度。它把 Critic 给出的动作方向转换成 Actor 的参数方向。期望式保留了折扣访问权重归一化的系数。[Silver 等 · Deterministic Policy Gradient Theorem](https://proceedings.mlr.press/v32/silver14.pdf)
+
+</div>
+</div>
+
+<div class="td-slide">
+<div class="td-slide-title">Why Is There No Expectation over Actions?</div>
+<div class="td-slide-body">
+
+给定 $S=s$ 后，$\mu$ 已经确定了唯一动作 $a=\mu(s,\theta)$。因此只需先求 $q_\mu(s,a)$ 对 $a$ 的梯度，再在这个动作处取值，并用链式法则传回 $\theta$。动作已经由状态给定，外层只对状态取期望。
+
+这使得 **off-policy** 实现可以让行为策略 $\beta$ 负责探索：Critic 用交互数据评估 $q_\mu$，Actor 在同一个状态上直接计算 $\mu(s,\theta)$。定理仍对 $\tilde\rho_\mu$ 取期望，若直接用行为策略的状态分布代替它，通常得到近似梯度。DPG 也可以用目标策略的状态样本做 on-policy 更新。[Silver 等 · On-Policy and Off-Policy Deterministic Actor–Critic](https://proceedings.mlr.press/v32/silver14.pdf)
+
+</div>
+</div>
+
+### 5.3 The Algorithm of Deterministic Actor–Critic {#deterministic-actor-critic-algorithm}
+
+<div class="td-slide">
+<div class="td-slide-title">Gradient Ascent · 从期望到单个状态样本</div>
+<div class="td-slide-body">
+
+用上一个小节的策略梯度最大化 $J(\theta)$。令 $\mu_t=\mu(\cdot,\theta_t)$，沿用课件的更新写法，把固定系数 $1/(1-\gamma)$ 并入步长 $\alpha_\theta$。
+
+$$
+\theta_{t+1}
+=\theta_t+\alpha_\theta
+\mathbb E_{S\sim\tilde\rho_{\mu_t}}
+\!\left[\nabla_\theta\mu(S,\theta_t)\,
+\left.\nabla_a q_{\mu_t}(S,a)\right|_{a=\mu(S,\theta_t)}\right].
+$$
+
+用单个状态样本 $s_t$ 替代期望，得到随机梯度上升的形式。
+
+$$
+\theta_{t+1}
+=\theta_t+\alpha_\theta\nabla_\theta\mu(s_t,\theta_t)\,
+\left.\nabla_a q_{\mu_t}(s_t,a)\right|_{a=\mu(s_t,\theta_t)}.
+$$
+
+</div>
+</div>
+
+<figure>
+  <img src="./resources/actor-critic/deterministic-actor-critic-pseudocode.webp" alt="课件原版 Deterministic Actor–Critic 伪代码。按行为策略采样，计算动作价值的 TD error，先更新 Critic，再用更新后的 Critic 对目标动作求导来更新 Actor。" width="1652" height="1270" loading="lazy">
+</figure>
+
+图中 Initialization 的 $v(s,w_0)$ 是记号笔误，后续的 TD error 和 Actor 更新用的是动作价值函数 $q(s,a,w)$，因此应初始化 $q(s,a,w_0)$。
+
+- **TD error**。执行 $\beta$ 选出的 $a_t$，用 $q(s_t,a_t,w_t)$ 作为当前预测。下一状态的动作取目标策略输出 $\mu(s_{t+1},\theta_t)$。终止转移的目标只取 $r_{t+1}$。
+- **Critic**。用 TD error 更新动作价值参数，得到 $w_{t+1}$。
+- **Actor**。用更新后的 Critic，在当前状态的目标动作 $a=\mu(s_t,\theta_t)$ 处求 $\nabla_a q(s_t,a,w_{t+1})$，再传回策略参数。这里的目标动作可能与交互样本中的 $a_t$ 不同。
+
+<div class="td-slide">
+<div class="td-slide-title">Remarks</div>
+<div class="td-slide-body">
+
+- **行为策略与目标策略**。这是一个 off-policy 实现，负责采样的 $\beta$ 可以不同于要改进的 $\mu$。
+- **探索**。也可以在目标动作上加噪声，让实际执行的动作是 $\mu(s_t,\theta_t)+\varepsilon_t$。
+- **怎样表示 $q(s,a,w)$？**
+  - **Linear function**。取 $q(s,a,w)=\phi(s,a)^\top w$，其中 $\phi(s,a)$ 是状态动作对的特征向量。[DPG 原论文](https://proceedings.mlr.press/v32/silver14.pdf)
+  - **Neural networks**。Deep Deterministic Policy Gradient（DDPG）用深度网络表示 Actor 和 Critic。[DDPG 原论文](https://arxiv.org/abs/1509.02971)
+
+</div>
+</div>
