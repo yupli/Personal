@@ -14,7 +14,12 @@ pageClass: rl-summary
 
 前七课用表格存储 **state value** 和 **action value**。以 $q_\pi$ 为例，行对应状态，列对应动作，每格存一个 $q_\pi(s,a)$。课件中 9 个状态、每个状态 5 个动作，共有 45 个表项。
 
-- **优点**。查表直观，逐项更新也容易分析。
+**优点（Advantage）**
+
+查表直观，逐项更新也容易分析。
+
+**缺点（Disadvantages）**
+
 - **Storage**。状态或动作越多，需要的表项越多。连续空间无法逐项列成有限表。
 - **Generalization**。表项各自独立，更新一个表项时，其他表项的估计不会随之改变。
 
@@ -66,36 +71,85 @@ $$
 
 ## 2. Objective Function {#objective-function}
 
-### 2.1 Weighted Value Error
+### 2.1 Weighted Value Error {#_2-1-weighted-value-error}
 
 <div class="td-slide">
-<div class="td-slide-title">Objective · 哪些状态的误差更重要？</div>
+<div class="td-slide-title">Policy Evaluation · 要找怎样的参数？</div>
 <div class="td-slide-body">
 
-固定策略 $\pi$，用状态分布 $d$ 给平方误差加权。系数 $1/2$ 方便求导。
+固定策略 $\pi$，用 $\hat v(s,w)$ 近似真实的 **state value** $v_\pi(s)$。我们要找一组参数 $w$，让它在整个状态空间上的近似误差尽可能小。这是 **policy evaluation**，后面再扩展到 **policy improvement**。
+
+1. 本节定义 **objective function**，衡量近似误差。
+2. 下一节从这个目标出发，推导参数更新算法。
+
+</div>
+</div>
+
+<div class="td-slide">
+<div class="td-slide-title">Objective · 最小化平方误差</div>
+<div class="td-slide-body">
+
+令随机状态 $S\sim d$，寻找使下式最小的 $w$。
 
 $$
 J(w)=\frac12\mathbb E_{S\sim d}
 \big[(v_\pi(S)-\hat v(S,w))^2\big].
 $$
 
-- **Uniform distribution**。每个状态权重相同。
-- **Stationary distribution**。按策略 $\pi$ 诱导的 Markov chain 的长期访问频率加权，常访问的状态权重更大。
+前面的 $1/2$ 方便下一节求导，最优参数与课件中的写法相同。分布 $d$ 决定各状态的误差在目标里占多大权重。
 
 </div>
 </div>
 
-### 2.2 Stationary Distribution
+### 2.2 Uniform Distribution {#uniform-distribution}
 
 <div class="td-slide">
-<div class="td-slide-title">Stationary Distribution · 一步转移后分布保持不变</div>
+<div class="td-slide-title">Uniform Distribution · 每个状态权重相同</div>
 <div class="td-slide-body">
 
-用行向量记状态分布。若 $d_\pi=d_\pi P_\pi$，则从 $d_\pi$ 出发做一步转移，状态分布仍是 $d_\pi$。有限、不可约且非周期的 Markov chain 会从任意初始分布收敛到这个分布。
+若有限状态集 $\mathcal S$ 上的每个状态都取概率 $1/|\mathcal S|$，则
 
-因此，按 $\pi$ 产生的长轨迹可以为这个加权目标提供样本。对于回合任务，长期访问分布还取决于 episode 的重启方式。
+$$
+J(w)=\frac{1}{2|\mathcal S|}
+\sum_{s\in\mathcal S}(v_\pi(s)-\hat v(s,w))^2.
+$$
 
-在课件的四状态例子里，$d_\pi\approx(0.0345,0.1084,0.1330,0.7241)$。长轨迹中约 72% 的访问落在第四个状态，所以按 $d_\pi$ 加权时，第四个状态的误差占更大权重。
+**缺点**。策略 $\pi$ 对各状态的访问频率可能相差很大，均匀权重会让罕见状态和常见状态同样影响拟合。
+
+</div>
+</div>
+
+### 2.3 Stationary Distribution {#_2-2-stationary-distribution}
+
+<div class="td-slide">
+<div class="td-slide-title">Stationary Distribution · 按长期访问频率加权</div>
+<div class="td-slide-body">
+
+令 $d_\pi(s)$ 表示策略 $\pi$ 诱导的 Markov chain 的 stationary distribution。它满足 $d_\pi(s)\ge 0$，且 $\sum_{s\in\mathcal S}d_\pi(s)=1$。用它给误差加权，得到
+
+$$
+J(w)=\frac12\sum_{s\in\mathcal S}
+d_\pi(s)(v_\pi(s)-\hat v(s,w))^2.
+$$
+
+在遍历条件下，常访问的状态有更大的 $d_\pi(s)$，对拟合结果的影响也更大。
+
+</div>
+</div>
+
+<div class="td-slide">
+<div class="td-slide-title">Stationary Equation · 一步转移后分布保持不变</div>
+<div class="td-slide-body">
+
+记 $P_\pi(s,s')$ 为按 $\pi$ 从 $s$ 转移到 $s'$ 的概率。把 $d_\pi^\top$ 写成行向量，平稳条件是
+
+$$
+d_\pi^\top=d_\pi^\top P_\pi.
+$$
+
+右侧第 $s'$ 项是 $\sum_s d_\pi(s)P_\pi(s,s')$，即一步转移后落在 $s'$ 的总概率。它等于原来的 $d_\pi(s')$，因此状态分布保持不变。
+
+对有限、不可约且非周期的 Markov chain，任意初始分布经过足够多步都会趋近唯一的 $d_\pi$。沿一条长轨迹统计各状态的访问比例，也会趋近相应的 $d_\pi(s)$。
 
 </div>
 </div>
