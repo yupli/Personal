@@ -20,6 +20,9 @@ export default defineConfig({
   buildEnd: ({ outDir }) => writeSearchIndex(outDir),
 
   transformPageData({ relativePath, frontmatter }) {
+    if (relativePath.startsWith("reinforcement-learning/")) {
+      frontmatter.outline ??= 2;
+    }
     const lesson = lessonInfo(relativePath);
     if (!lesson) return;
     const { index, slides } = lesson;
