@@ -233,3 +233,145 @@ $$
 
 </div>
 </div>
+
+## 3. Gradients of the Metrics {#gradients-of-the-metrics}
+
+### 3.1 Policy Gradient for Each Metric {#policy-gradient-for-each-metric}
+
+<div class="td-slide">
+<div class="td-slide-title">Common Form · 状态加权的策略梯度</div>
+<div class="td-slide-body">
+
+选定目标 $J(\theta)$ 后，先求 $\nabla_\theta J(\theta)$，再用梯度上升更新策略参数。上一节的三个目标 $\bar r_\pi$、$\bar v_\pi$ 和 $\bar v_\pi^{\,0}$ 可以用同一种加权求和形式来表达梯度或其近似。
+
+$$
+\begin{aligned}
+g_\pi(s;q)&=\sum_{a\in\mathcal A(s)}
+\nabla_\theta\pi(a\mid s,\theta)\,q(s,a),\\
+\sum_{s\in\mathcal S}\eta(s)\,g_\pi(s;q)
+&=\sum_{s\in\mathcal S}\eta(s)
+\sum_{a\in\mathcal A(s)}\nabla_\theta\pi(a\mid s,\theta)\,q(s,a).
+\end{aligned}
+$$
+
+$\eta(s)$ 是状态权重。目标和折扣设定共同决定使用哪种权重、哪种动作价值，以及结果是等式还是近似。
+
+</div>
+</div>
+
+<div class="td-slide">
+<div class="td-slide-title">Average Reward and Stationary Average Value</div>
+<div class="td-slide-body">
+
+对长期平均奖励 $\bar r_\pi$，状态权重取平稳分布 $d_\pi$。在有限遍历情形下，用折扣动作价值 $q_\pi^\gamma$ 可以得到课件中的近似。若采用平均奖励设定下的 **differential action value** $q_\pi^{\mathrm{diff}}$，以 $R_{t+1}-\bar r_\pi$ 为中心化奖励来衡量后续回报，则策略梯度定理给出精确梯度。[Sutton 等 · Policy Gradient Theorem](https://proceedings.neurips.cc/paper_files/paper/1999/file/464d828b85b0bed98e80ade0a5c43b0f-Paper.pdf)
+
+$$
+\begin{aligned}
+\nabla_\theta\bar r_\pi
+&\approx\sum_s d_\pi(s)\,g_\pi(s;q_\pi^\gamma)
+\qquad(\gamma\to1^-),\\
+\nabla_\theta\bar r_\pi
+&=\sum_s d_\pi(s)\,g_\pi(s;q_\pi^{\mathrm{diff}}).
+\end{aligned}
+$$
+
+若 $\bar v_\pi$ 也以 $d_\pi$ 加权，由上一节的 $\bar r_\pi=(1-\gamma)\bar v_\pi$，在固定 $0\le\gamma<1$ 时可直接得到
+
+$$
+\nabla_\theta\bar v_\pi=\frac{1}{1-\gamma}\nabla_\theta\bar r_\pi.
+$$
+
+</div>
+</div>
+
+<div class="td-slide">
+<div class="td-slide-title">Fixed Start Distribution · 折扣状态访问权重</div>
+<div class="td-slide-body">
+
+对 $\bar v_\pi^{\,0}$，轨迹从固定分布 $d_0$ 出发。令 $\rho_\pi(s)$ 为从 $d_0$ 出发后访问状态 $s$ 的 **discounted occupancy**，第 $t$ 步的访问概率按 $\gamma^t$ 加权。
+
+$$
+\begin{aligned}
+\rho_\pi(s)&=\sum_{t=0}^{\infty}\gamma^t
+\Pr_{S_0\sim d_0,\,\pi}(S_t=s),\\
+\nabla_\theta\bar v_\pi^{\,0}
+&=\sum_s\rho_\pi(s)\,g_\pi(s;q_\pi^\gamma).
+\end{aligned}
+$$
+
+在持续任务中，$\sum_s\rho_\pi(s)=1/(1-\gamma)$。因此 $(1-\gamma)\rho_\pi$ 是可用于采样的概率分布，用它写成期望时需保留外部因子 $1/(1-\gamma)$ 才得到原梯度。
+
+</div>
+</div>
+
+### 3.2 Log-policy Form {#log-policy-form}
+
+<div class="td-slide">
+<div class="td-slide-title">Log-derivative Trick · 从求和到期望</div>
+<div class="td-slide-body">
+
+对正概率动作，由链式法则有
+
+$$
+\nabla_\theta\ln\pi(a\mid s,\theta)
+=\frac{\nabla_\theta\pi(a\mid s,\theta)}{\pi(a\mid s,\theta)}.
+$$
+
+把 $\nabla_\theta\pi=\pi\,\nabla_\theta\ln\pi$ 代回求和式后，内层可按动作概率取条件期望。令 $Z=\sum_s\eta(s)>0$、$\tilde\eta(s)=\eta(s)/Z$，再对状态取期望。
+
+$$
+\begin{aligned}
+\sum_s\eta(s)\,g_\pi(s;q)
+&=\sum_s\eta(s)\sum_a\pi(a\mid s,\theta)
+  \nabla_\theta\ln\pi(a\mid s,\theta)\,q(s,a)\\
+&=Z\,\mathbb E_{S\sim\tilde\eta}
+  \left[\mathbb E_{A\sim\pi(\cdot\mid S,\theta)}
+  \!\left[\nabla_\theta\ln\pi(A\mid S,\theta)\,q(S,A)\right]\right]\\
+&=Z\,\mathbb E\!\left[\nabla_\theta\ln\pi(A\mid S,\theta)\,q(S,A)\right].
+\end{aligned}
+$$
+
+若 $\eta$ 本身是概率分布，如 $d_\pi$，则 $Z=1$。
+
+</div>
+</div>
+
+<div class="td-slide">
+<div class="td-slide-title">Sample-based Gradient · 用样本估计梯度</div>
+<div class="td-slide-body">
+
+按 $S\sim\tilde\eta$、$A\sim\pi(\cdot\mid S,\theta)$ 抽到一个样本 $(s,a)$ 后，可用
+
+$$
+Z\,\nabla_\theta\ln\pi(a\mid s,\theta)\,q(s,a)
+$$
+
+估计上面的加权和。若该加权和等于目标的精确梯度，且采用对应的真实动作价值，这就是一个无偏梯度估计。多个样本可以取平均。状态从哪个分布采样，决定了这组样本估计的是哪种加权和。
+
+</div>
+</div>
+
+### 3.3 Softmax Policy {#softmax-policy}
+
+<div class="td-slide">
+<div class="td-slide-title">Softmax · 从动作分数到概率</div>
+<div class="td-slide-body">
+
+计算 $\ln\pi(a\mid s,\theta)$ 需要正概率。对有限实数向量 $x=[x_1,\ldots,x_n]^\top$，**softmax** 给出的 $z_i$ 均为正，且 $\sum_i z_i=1$。
+
+$$
+z_i=\frac{e^{x_i}}{\sum_{j=1}^n e^{x_j}}.
+$$
+
+把状态 $s$ 输入参数为 $\theta$ 的神经网络，令 $h(s,a,\theta)$ 为动作 $a$ 的 **logit**。对可用动作的分数做 softmax，即得到策略
+
+$$
+\pi(a\mid s,\theta)
+=\frac{e^{h(s,a,\theta)}}
+{\sum_{a'\in\mathcal A(s)} e^{h(s,a',\theta)}}.
+$$
+
+当状态有多个可用动作时，每个动作都有正概率被采样，因此策略能在访问到的状态进行探索。也有直接对确定性策略求梯度的 **Deterministic Policy Gradient（DPG）** 方法。
+
+</div>
+</div>
