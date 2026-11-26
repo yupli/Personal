@@ -375,3 +375,114 @@ $$
 
 </div>
 </div>
+
+## 4. Gradient-ascent Algorithm {#gradient-ascent-algorithm}
+
+### 4.1 From Expected to Stochastic Updates {#stochastic-policy-updates}
+
+<div class="td-slide">
+<div class="td-slide-title">Gradient Ascent · 从期望到样本</div>
+<div class="td-slide-body">
+
+令 $\pi_t=\pi(\cdot\mid\cdot,\theta_t)$。在上一节的梯度表达式成立时，令 $Z$ 为状态权重总和，$\tilde\eta$ 为归一化后的状态分布。用正的学习率 $\alpha$ 沿梯度方向更新参数。
+
+$$
+\begin{aligned}
+\theta_{t+1}
+&=\theta_t+\alpha\nabla_\theta J(\theta_t)\\
+&=\theta_t+\alpha Z\,\mathbb E\!\left[
+\nabla_\theta\ln\pi(A\mid S,\theta_t)\,q_{\pi_t}(S,A)\right].
+\end{aligned}
+$$
+
+从对应的分布采到一个 $(s_t,a_t)$ 后，可用单样本代替期望。真实的 $q_{\pi_t}$ 通常未知，再以 $q_t(s_t,a_t)$ 代替它，就得到实际使用的随机更新。以下沿用课件记法，将固定的正比例因子 $Z$ 并入 $\alpha$。
+
+$$
+\theta_{t+1}
+=\theta_t+\alpha\,\nabla_\theta\ln\pi(a_t\mid s_t,\theta_t)\,
+q_t(s_t,a_t).
+$$
+
+本课的 **REINFORCE** 用 Monte Carlo 回报估计动作价值。下一课再讨论 TD 估计。
+
+</div>
+</div>
+
+### 4.2 On-policy Sampling {#on-policy-gradient-sampling}
+
+<div class="td-slide">
+<div class="td-slide-title">Remark 1 · How to Do Sampling?</div>
+<div class="td-slide-body">
+
+- **状态 $S$**。对以 $d_\pi$ 加权的目标，在遍历条件下，按当前策略运行得到的长期状态频率可近似 $d_\pi$。对固定起点的折扣目标，从 $d_0$ 出发产生轨迹，并按上一节的折扣访问权重计入各时间步。
+- **动作 $A$**。在采到的状态 $s_t$，按当前策略抽取 $a_t\sim\pi(\cdot\mid s_t,\theta_t)$。用于更新的轨迹来自待优化的策略，因此这里采用 **on-policy** 采样。
+
+</div>
+</div>
+
+### 4.3 Interpreting the Update {#interpreting-the-policy-update}
+
+<div class="td-slide">
+<div class="td-slide-title">Remark 2 · How Does the Sampled Action Probability Change?</div>
+<div class="td-slide-body">
+
+用上一节的 log-derivative 恒等式，可把随机更新改写为动作概率梯度乘上有符号的系数 $\beta_t$。
+
+$$
+\beta_t=\frac{q_t(s_t,a_t)}{\pi(a_t\mid s_t,\theta_t)},
+\qquad
+\theta_{t+1}=\theta_t+\alpha\beta_t\nabla_\theta\pi(a_t\mid s_t,\theta_t).
+$$
+
+记 $p_t(\theta)=\pi(a_t\mid s_t,\theta)$。对抽到的这个状态和动作做一阶 Taylor 展开。
+
+$$
+\begin{aligned}
+p_t(\theta_{t+1})-p_t(\theta_t)
+&\approx \nabla_\theta p_t(\theta_t)^\top
+(\theta_{t+1}-\theta_t)\\
+&=\alpha\beta_t\left\|\nabla_\theta p_t(\theta_t)\right\|^2.
+\end{aligned}
+$$
+
+当步长足够小且 $\nabla_\theta p_t(\theta_t)\ne 0$，$\beta_t>0$ 会提高已采样动作在 $s_t$ 下的概率，$\beta_t<0$ 会降低它。$\beta_t=0$ 时，这次更新量为零。
+
+</div>
+</div>
+
+<div class="td-slide">
+<div class="td-slide-title">Exploration and Exploitation · 系数 $\beta_t$ 的两部分</div>
+<div class="td-slide-body">
+
+- **分子 $q_t(s_t,a_t)$**。在动作概率和概率梯度给定时，价值估计越高，一阶概率增量越大。
+- **分母 $\pi(a_t\mid s_t,\theta_t)$**。在价值估计和概率梯度给定时，概率较低的动作一旦被采到，系数的绝对值更大。对动作取期望时，分母与采样概率抵消，恢复动作求和中的 $\nabla_\theta\pi(a\mid s,\theta_t)$。实际更新的幅度还取决于概率梯度，探索来自按随机策略采样。
+
+</div>
+</div>
+
+### 4.4 REINFORCE Algorithm {#reinforce-algorithm}
+
+<div class="td-slide">
+<div class="td-slide-title">Monte Carlo Policy Gradient</div>
+<div class="td-slide-body">
+
+用同一策略生成一个完整回合。对每个 $(s_t,a_t)$，以从该步到终止的实际折扣回报 **return-to-go** 作为动作价值估计。
+
+$$
+G_t=\sum_{j=t+1}^{T}\gamma^{j-t-1}r_j,
+\qquad
+q_t(s_t,a_t)=G_t.
+$$
+
+在生成该回合的策略下，$G_t$ 的条件期望就是 $q_\pi^\gamma(s_t,a_t)$。得到完整回报后，再用它给 log-policy 梯度加权。
+
+</div>
+</div>
+
+<figure>
+  <img src="./resources/policy-gradient/reinforce-pseudocode.webp" alt="课件原版 REINFORCE 伪代码。初始化策略、折扣因子和步长。每轮按当前策略生成完整回合，逐步以折扣回报做 Value update，以回报乘 log-policy 梯度做 Policy update，最后把更新后的参数带入下一轮。" width="1572" height="874" loading="lazy">
+</figure>
+
+课件中的 $\theta_k$ 是第 $k$ 轮生成回合时的参数，内层 $\theta_t$ 从这组参数开始更新。末尾的 $\theta_k=\theta_T$ 表示把更新完的参数带入下一轮，用外层下标可写成 $\theta_{k+1}\gets\theta_T$。
+
+若要用整条轨迹构造固定起点折扣目标 $\bar v_\pi^{\,0}$ 的无偏梯度估计，可在采样回合的参数处计算所有 log-policy 梯度，将每步的 $G_t$ 乘上 $\gamma^t$ 后求和，再统一更新。$\gamma^t$ 对应状态的折扣访问权重，$G_t$ 内的折扣则从该步开始计算。[Sutton & Barto · §13.3 REINFORCE](https://web.stanford.edu/class/psych209/Readings/SuttonBartoRL.pdf)
