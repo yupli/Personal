@@ -393,25 +393,49 @@ $$
 
 ## 5. Sarsa and Q-learning with Function Approximation {#approximate-control}
 
-#### 5.1 Sarsa · 用采样到的下一动作
+#### 5.1 Sarsa with Function Approximation {#_5-1-sarsa-·-用采样到的下一动作}
 
 <div class="td-slide">
 <div class="td-slide-title">Semi-gradient Sarsa · 从 State Value 换成 Action Value</div>
 <div class="td-slide-body">
 
-用 $\hat q(s,a,w)$ 表示 action value。按当前策略采样 $a_{t+1}$，定义
+把第 3 节 **semi-gradient TD** 的 state value $\hat v(s,w)$ 换成 action value $\hat q(s,a,w)$。下一动作 $a_{t+1}$ 按当前策略 $\pi_t(\cdot\mid s_{t+1})$ 采样。
 
 $$
-y_t=r_{t+1}+\gamma\hat q(s_{t+1},a_{t+1},w_t).
+\begin{aligned}
+y_t&=r_{t+1}+\gamma\hat q(s_{t+1},a_{t+1},w_t),\\
+\delta_t&=y_t-\hat q(s_t,a_t,w_t),\\
+w_{t+1}&=w_t+\alpha_t\delta_t\nabla_w\hat q(s_t,a_t,w_t).
+\end{aligned}
 $$
 
-把误差 $\delta_t=y_t-\hat q(s_t,a_t,w_t)$ 乘当前预测的 gradient，得到
+更新时将 $y_t$ 当作常数，只对当前预测求导。终止转移取 $y_t=r_{t+1}$。
+
+</div>
+</div>
+
+<div class="td-slide">
+<div class="td-slide-title">Pseudocode · Sarsa Control</div>
+<div class="td-slide-body">
+
+初始化 $w$。每个 episode 从 $s_0$ 出发，按当前 $\varepsilon$-greedy policy 选初始动作。
+
+1. **Collect experience**。执行 $a_t$，观察 $r_{t+1}$ 和 $s_{t+1}$。若未终止，按 $\pi_t$ 采样下一动作 $a_{t+1}$。
+2. **Policy evaluation**。用上面的 Sarsa 更新式算出 $w_{t+1}$。
+3. **Policy improvement**。用更新后的 $\hat q$ 在 $s_t$ 选一个 greedy action $a^*$，再更新 $\varepsilon$-greedy 的概率。
+4. 若未终止，进入 $s_{t+1}$ 并沿用已采样的 $a_{t+1}$。
+
+令 $m=|\mathcal A(s_t)|$，第 3 步的策略更新为
 
 $$
-w_{t+1}=w_t+\alpha_t\delta_t\nabla_w\hat q(s_t,a_t,w_t).
+\pi_{t+1}(a\mid s_t)=
+\begin{cases}
+1-\varepsilon+\varepsilon/m, & a=a^*,\\
+\varepsilon/m, & a\ne a^*.
+\end{cases}
 $$
 
-做 control 时，用当前 $\hat q$ 构造 $\varepsilon$-greedy policy，继续采样和更新。
+评估用到的下一动作，也是交互中实际执行的下一动作，因此 Sarsa 是 **on-policy**。
 
 </div>
 </div>
