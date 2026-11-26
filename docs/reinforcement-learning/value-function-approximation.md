@@ -479,40 +479,82 @@ $$
 </div>
 </div>
 
-## 7. Deep Q-learning {#deep-q-learning}
+## 7. Deep Q-learning（DQN） {#deep-q-learning}
 
-#### 7.1 Online Network 与 Target Network {#_6-1-online-network-与-target-network}
+#### 7.1 从 Q-learning 到 DQN Loss
 
 <div class="td-slide">
-<div class="td-slide-title">DQN Loss · 用暂时固定的 Target 拟合动作价值</div>
+<div class="td-slide-title">Deep Q-Network · 用神经网络近似动作价值</div>
 <div class="td-slide-body">
 
-DQN 用神经网络近似 $q^*$。令 $w$ 为 **online network** 的参数，$w^-$ 为 **target network** 的参数。
+DQN 用神经网络作为 **nonlinear function approximator** 来估计 $q^*$。沿用第 6 节的 greedy target，把单步 TD error 的平方作为训练信号。先考虑预测和 target 都用同一组参数 $w$ 的写法。
 
 $$
 \begin{aligned}
-y &= r+\gamma\max_b\hat q(s',b,w^-),\\
-L(w)&=\mathbb E[(y-\hat q(s,a,w))^2].
+Y(w)&=R+\gamma\max_{b\in\mathcal A(S')}\hat q(S',b,w),\\
+\delta(w)&=Y(w)-\hat q(S,A,w),\\
+J(w)&=\mathbb E[\delta(w)^2].
 \end{aligned}
 $$
 
-终止转移令 $y=r$。训练时固定 $w^-$，只更新 $w$，每隔 $C$ 次更新把 $w$ 复制给 $w^-$。这样连续几步使用同一套 target 参数。
+**与 Bellman Optimality Equation 的关系**。若 $\hat q=q^*$，则 $\mathbb E[\delta\mid S,A]=0$。随机奖励或转移仍可能让单次 TD error 非零。这里是先对单次误差平方再取期望，Bellman optimality residual 的平方则是先对误差取条件期望再平方。
+
+因为 $w$ 同时出现在预测和 $Y(w)$ 中，每次更新预测也会改变 target。DQN 用另一组参数计算 target，并把这组参数固定一段时间。
 
 </div>
 </div>
 
-#### 7.2 Experience Replay {#_6-2-experience-replay}
+#### 7.2 Online Network 与 Target Network {#_6-1-online-network-与-target-network}
+
+<div class="td-slide">
+<div class="td-slide-title">Technique 1 · 固定 Target，再更新 Online Network</div>
+<div class="td-slide-body">
+
+**Online network**（课件也称 main network）用参数 $w$ 预测 $\hat q(S,A,w)$。**Target network** 用参数 $w_T$ 计算 $Y_T$。
+
+$$
+\begin{aligned}
+Y_T&=R+\gamma\max_{b\in\mathcal A(S')}\hat q(S',b,w_T),\\
+L(w;w_T)&=\mathbb E[(Y_T-\hat q(S,A,w))^2].
+\end{aligned}
+$$
+
+终止转移取 $Y_T=R$。固定 $w_T$，记 $e_T=Y_T-\hat q(S,A,w)$。平方损失的 gradient 为
+
+$$
+\nabla_w L=-2\mathbb E[e_T\nabla_w\hat q(S,A,w)].
+$$
+
+训练时用 mini-batch 的平均值估计这个 gradient，只更新 $w$。初始化取 $w_T=w$，之后每隔 $C$ 次训练更新执行一次 $w_T\leftarrow w$。
+
+</div>
+</div>
+
+#### 7.3 Experience Replay {#_6-2-experience-replay}
 
 <div class="td-slide">
 <div class="td-slide-title">Replay Buffer · 随机抽取 Mini-batch</div>
 <div class="td-slide-body">
 
-把每条经验存进 **replay buffer**，训练时均匀抽取 mini-batch。这样可以复用旧转移，也能减弱连续轨迹中相邻样本的相关性。抽样分布由 buffer 里的数据决定，哪些状态动作对能被学到仍取决于数据覆盖。
+把转移 $(s,a,r,s')$ 和终止标记存进 **replay buffer**。每次训练从 buffer 中随机抽一个 mini-batch。这会打散原轨迹的时间顺序，减弱相邻转移的相关性，也允许同一条经验用于多次更新。
+
+<strong>均匀抽取的对象是什么？</strong> 目标函数中，$(S,A)\sim d$ 决定各状态动作对的权重，给定 $(S,A)$ 后，$(R,S')$ 的联合分布由环境决定。课件以均匀的 $d$ 说明等权目标。实际的 uniform replay 给 buffer 中每条记录相同的抽样权重，因此状态动作对的权重仍随它在 buffer 中出现的频率变化。
 
 </div>
 </div>
 
-#### 7.3 Algorithm and Gridworld Example {#_6-3-algorithm-and-gridworld-example}
+<div class="td-slide">
+<div class="td-slide-title">Tabular Q-learning · Replay 也能复用样本</div>
+<div class="td-slide-body">
+
+- **表格法**。为每个 $(s,a)$ 求解一条 Bellman optimality equation。采样频率影响更新次数，均匀访问和 replay 都不是必要条件，关键是相关表项得到充分访问。
+- **DQN**。不同状态动作对共享参数，mini-batch loss 是一个加权平均，采样分布决定拟合更重视哪些数据。
+- 表格法也可以用 replay。一次环境交互产生的转移可以反复用于更新，从而提高 **sample efficiency**。
+
+</div>
+</div>
+
+#### 7.4 Algorithm and Gridworld Example {#_6-3-algorithm-and-gridworld-example}
 
 <div class="td-slide">
 <div class="td-slide-title">Pseudocode · Deep Q-learning</div>
