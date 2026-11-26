@@ -244,29 +244,11 @@ $$
 
 #### 3.3 TD Learning Pseudocode
 
-<div class="td-slide">
-<div class="td-slide-title">Pseudocode · TD Learning with Function Approximation</div>
-<div class="td-slide-body">
+<figure>
+  <img src="./resources/value-function-approximation/td-pseudocode.webp" alt="TD 课件伪代码。初始化近似函数与参数。按给定策略生成回合，逐步执行一般形式或线性形式的参数更新。" width="2124" height="1092" loading="lazy">
+</figure>
 
-**Initialization**。选定对 $w$ 可微的 $\hat v(s,w)$ 和初始参数 $w_0$。目标是近似给定策略 $\pi$ 的 state values。
-
-1. 按 $\pi$ 生成 episode。每收到一条转移 $(s_t,r_{t+1},s_{t+1})$，就计算本步的 target 和 TD error $\delta_t$。
-2. 用 $w_{t+1}=w_t+\alpha_t\delta_t\nabla_w\hat v(s_t,w_t)$ 更新参数，再处理下一条转移。
-
-**Linear case**。若 $\hat v(s,w)=\phi(s)^\top w$，则 gradient 等于 $\phi(s_t)$，更新写成
-
-$$
-\begin{aligned}
-y_t&=r_{t+1}+\gamma\phi(s_{t+1})^\top w_t,\\
-\delta_t&=y_t-\phi(s_t)^\top w_t,\\
-w_{t+1}&=w_t+\alpha_t\delta_t\phi(s_t).
-\end{aligned}
-$$
-
-终止转移同样取 $y_t=r_{t+1}$。
-
-</div>
-</div>
+终止转移的 TD target 只取即时奖励。
 
 ### 4. Selection of Function Approximators {#linear-features}
 
@@ -414,31 +396,11 @@ $$
 </div>
 </div>
 
-<div class="td-slide">
-<div class="td-slide-title">Pseudocode · Sarsa Control</div>
-<div class="td-slide-body">
+<figure>
+  <img src="./resources/value-function-approximation/sarsa-pseudocode.webp" alt="Sarsa 课件伪代码。每个回合内执行当前动作，采样下一动作，依次更新参数和 ε-greedy policy。" width="1584" height="1142" loading="lazy">
+</figure>
 
-初始化 $w$。每个 episode 从 $s_0$ 出发，按当前 $\varepsilon$-greedy policy 选初始动作。
-
-1. **Collect experience**。执行 $a_t$，观察 $r_{t+1}$ 和 $s_{t+1}$。若未终止，按 $\pi_t$ 采样下一动作 $a_{t+1}$。
-2. **Policy evaluation**。用上面的 Sarsa 更新式算出 $w_{t+1}$。
-3. **Policy improvement**。用更新后的 $\hat q$ 在 $s_t$ 选一个 greedy action $a^*$，再更新 $\varepsilon$-greedy 的概率。
-4. 若未终止，进入 $s_{t+1}$ 并沿用已采样的 $a_{t+1}$。
-
-令 $m=|\mathcal A(s_t)|$，第 3 步的策略更新为
-
-$$
-\pi_{t+1}(a\mid s_t)=
-\begin{cases}
-1-\varepsilon+\varepsilon/m, & a=a^*,\\
-\varepsilon/m, & a\ne a^*.
-\end{cases}
-$$
-
-评估用到的下一动作，也是交互中实际执行的下一动作，因此 Sarsa 是 **on-policy**。
-
-</div>
-</div>
+若未到达终止状态，下一步沿用已采样的动作。终止转移只用即时奖励作 target。
 
 <span id="_5-2-q-learning-·-用下一状态的最大动作值"></span>
 
@@ -463,21 +425,11 @@ $$
 </div>
 </div>
 
-<div class="td-slide">
-<div class="td-slide-title">Pseudocode · Q-learning Control</div>
-<div class="td-slide-body">
+<figure>
+  <img src="./resources/value-function-approximation/q-learning-pseudocode.webp" alt="Q-learning 课件伪代码。初始化参数、策略和探索率。每个回合内执行动作，依次做 greedy target 参数更新和 ε-greedy policy 更新。" width="1528" height="1018" loading="lazy">
+</figure>
 
-初始化参数 $w_0$、策略 $\pi_0$ 和探索率 $\varepsilon>0$。每个 episode 从初始状态开始，重复以下步骤。
-
-1. **Collect experience**。按 $\pi_t(\cdot\mid s_t)$ 选动作 $a_t$，执行后观察 $r_{t+1}$ 和 $s_{t+1}$。
-2. **Value update**。用 greedy TD target 计算 $\delta_t$，再用上式更新参数。
-3. **Policy update**。用更新后的 $\hat q$ 在 $s_t$ 选一个 greedy action。沿用第 5 节的 $\varepsilon$-greedy 规则，给该动作 $1-\varepsilon+\varepsilon/m$ 的概率，给其他动作 $\varepsilon/m$，其中 $m=|\mathcal A(s_t)|$。
-4. 若未终止，进入 $s_{t+1}$，下一轮再按更新后的策略选动作。
-
-课件将这一实现称为 **on-policy version**，因为训练过程中用当前探索策略在线采样。更新仍使用 greedy target，因此 Q-learning 仍是 **off-policy**。
-
-</div>
-</div>
+课件中的 on-policy version 指用当前探索策略在线采样。价值更新使用 greedy target，因此仍属于 off-policy。终止转移只用即时奖励作 target。
 
 ## 7. Deep Q-learning（DQN） {#deep-q-learning}
 
@@ -556,19 +508,11 @@ $$
 
 #### 7.4 Algorithm and Gridworld Example {#_6-3-algorithm-and-gridworld-example}
 
-<div class="td-slide">
-<div class="td-slide-title">Pseudocode · Deep Q-learning（Off-policy）</div>
-<div class="td-slide-body">
+<figure>
+  <img src="./resources/value-function-approximation/dqn-pseudocode.webp" alt="Off-policy DQN 课件伪代码。把行为策略生成的经验存入回放缓冲区，循环抽取 mini-batch、计算 target、更新主网络，并定期同步目标网络。" width="2060" height="1165" loading="lazy">
+</figure>
 
-用 behavior policy $\pi_b$ 采集转移，连同终止标记存入 replay buffer $\mathcal B$。初始化 online network 参数 $w$，令 $w_T\leftarrow w$。
-
-1. 从 $\mathcal B$ 均匀抽一个 mini-batch。
-2. 对每条转移 $(s_i,a_i,r_i,s'_i)$，用 target network 计算 $y_i$。非终止转移取 $r_i+\gamma\max_b\hat q(s'_i,b,w_T)$，终止转移取 $r_i$。
-3. 固定这批 $y_i$，对各样本的平方误差 $(y_i-\hat q(s_i,a_i,w))^2$ 取平均，做一次 gradient descent，只更新 $w$。
-4. 每隔 $C$ 次训练更新，执行 $w_T\leftarrow w$。
-
-</div>
-</div>
+初始化时令目标网络与 online network 参数相同。终止转移只用即时奖励作 target。
 
 <div class="td-slide">
 <div class="td-slide-title">Remarks · 课件的三个问题</div>
