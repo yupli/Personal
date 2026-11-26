@@ -21,7 +21,7 @@ pageClass: rl-summary
 <div class="td-slide-title">Parameterized Policy · 多个状态共享参数</div>
 <div class="td-slide-body">
 
-把策略写成 **parameterized function** $\pi(a\mid s,\theta)$，其中 $\theta\in\mathbb R^m$ 是 **parameter vector**。例如，在离散动作空间中，神经网络可以输入状态 $s$，输出该状态下各个动作的概率。
+把策略写成 **parameterized function** $\pi(a\mid s,\theta)$，其中 $\theta\in\mathbb R^m$ 是 **parameter vector**。例如，在离散动作空间中，神经网络以状态 $s$ 为输入，以 $\theta$ 为网络参数，输出这一状态下各个动作的概率。
 
 - **Storage**。大状态空间下，可以用同一组参数表示多个状态的策略，减少逐状态存储。
 - **Generalization**。用某个状态的经验更新共享参数，可能同时改变其他状态的动作概率。
@@ -106,7 +106,11 @@ $$
 按同一状态顺序，把权重和状态价值分别排成列向量 $d$ 与 $v_\pi$，两者都属于 $\mathbb R^{|\mathcal S|}$。Average value 就是它们的内积。
 
 $$
-\bar v_\pi=d^\top v_\pi.
+\begin{aligned}
+v_\pi&=[v_\pi(s_1),\ldots,v_\pi(s_{|\mathcal S|})]^\top,\\
+d&=[d(s_1),\ldots,d(s_{|\mathcal S|})]^\top,\\
+\bar v_\pi&=\sum_{s\in\mathcal S}d(s)v_\pi(s)=d^\top v_\pi.
+\end{aligned}
 $$
 
 </div>
@@ -119,7 +123,7 @@ $$
 将固定分布记为 $d_0$，对应指标为 $\bar v_\pi^{\,0}=d_0^\top v_\pi$。策略参数变化时，$d_0$ 保持不变，求梯度时只需对状态价值求导。
 
 - **Uniform distribution**。取 $d_0(s)=1/|\mathcal S|$，给所有状态相同的权重。
-- **Fixed initial state**。如果每个 episode 都从 $s_0$ 开始，取 $d_0(s_0)=1$，其他状态的权重为 $0$。此时 $\bar v_\pi^{\,0}=v_\pi(s_0)$，衡量的是从 $s_0$ 出发的期望折扣回报。
+- **Fixed initial state**。如果每个 episode 都从 $s_0$ 开始，取 $d_0(s_0)=1$，且对 $s\ne s_0$ 取 $d_0(s)=0$。此时 $\bar v_\pi^{\,0}=v_\pi(s_0)$，衡量的是从 $s_0$ 出发的期望折扣回报。
 
 </div>
 </div>
@@ -170,15 +174,30 @@ $$
 <div class="td-slide-title">Equivalent Definition · 长期每步奖励</div>
 <div class="td-slide-body">
 
-从 $s_0$ 出发，按 $\pi$ 生成轨迹。若策略诱导的有限 Markov chain 遍历，且奖励期望有限，则
+从 $S_t=s_0$ 开始按 $\pi$ 行动，得到奖励序列 $(R_{t+1},R_{t+2},\ldots)$。前 $n$ 步的每步期望奖励等于奖励总和的期望除以 $n$。
 
 $$
+\begin{aligned}
+&\frac1n\mathbb E_\pi\!\left[R_{t+1}+\cdots+R_{t+n}\mid S_t=s_0\right]\\
+&\quad=\frac1n\sum_{k=1}^n\sum_s
+\Pr_\pi(S_{t+k-1}=s\mid S_t=s_0)\,r_\pi(s).
+\end{aligned}
+$$
+
+若策略诱导的有限 Markov chain 遍历且奖励期望有限，式中的状态分布趋于 $d_\pi$。每步期望奖励及其时间平均都趋于 $\sum_s d_\pi(s)r_\pi(s)$，因此
+
+$$
+\begin{aligned}
 \lim_{n\to\infty}\frac1n
-\mathbb E_\pi\!\left[\sum_{k=1}^n R_k\mid S_0=s_0\right]
+\mathbb E_\pi\!\left[\sum_{k=1}^n R_{t+k}\mid S_t=s_0\right]
+&=\lim_{n\to\infty}\frac1n
+\mathbb E_\pi\!\left[\sum_{k=1}^n R_{t+k}\right]\\
+&=\sum_s d_\pi(s)r_\pi(s)
 =\bar r_\pi.
+\end{aligned}
 $$
 
-状态分布趋于 $d_\pi$ 后，每步期望奖励趋于 $\sum_s d_\pi(s)r_\pi(s)$，这些期望的时间平均也趋于同一个值。因此长期平均与起点 $s_0$ 无关。
+任意起点 $s_0$ 都给出同一个极限，因此也可对任意起始分布取期望。按平稳分布加权和沿轨迹取长期平均，是 $\bar r_\pi$ 的两个等价定义。
 
 </div>
 </div>
@@ -216,7 +235,13 @@ $$
 <div class="td-slide-title">Exercise · 期望折扣回报对应哪个指标？</div>
 <div class="td-slide-body">
 
-令 $G_0=\sum_{t=0}^\infty\gamma^t R_{t+1}$，目标为 $J(\theta)=\mathbb E[G_0]$。轨迹从 $S_0\sim d$ 开始，动作由 $\pi_\theta$ 采样，奖励与下一状态由环境产生。
+令 $G_0=\sum_{t=0}^\infty\gamma^t R_{t+1}$，目标为 $J(\theta)=\mathbb E[G_0]$。从 $S_0\sim d$ 开始生成轨迹。
+
+$$
+S_0,A_0,R_1,S_1,A_1,R_2,S_2,\ldots
+$$
+
+每步先按策略抽取 $A_t\sim\pi_\theta(\cdot\mid S_t)$，再由环境的联合分布 $p(r,s'\mid S_t,A_t)$ 生成 $(R_{t+1},S_{t+1})$。期望同时涵盖起始状态、动作和环境转移的随机性。
 
 对起始状态应用 **law of total expectation**。
 
@@ -254,7 +279,7 @@ g_\pi(s;q)&=\sum_{a\in\mathcal A(s)}
 \end{aligned}
 $$
 
-$\eta(s)$ 是状态权重。目标和折扣设定共同决定使用哪种权重、哪种动作价值，以及结果是等式还是近似。
+$\eta(s)$ 是状态权重。求导时要同时看目标（固定起点的 $\bar v_\pi^{\,0}$、平稳加权的 $\bar v_\pi$ 或 $\bar r_\pi$）及回报设定（折扣或不折扣）。下面分别写出精确梯度和课件采用的近似。由归一化带来的常数比例将在 3.2 节中保留。
 
 </div>
 </div>
@@ -268,7 +293,8 @@ $\eta(s)$ 是状态权重。目标和折扣设定共同决定使用哪种权重�
 $$
 \begin{aligned}
 \nabla_\theta\bar r_\pi
-&\approx\sum_s d_\pi(s)\,g_\pi(s;q_\pi^\gamma)
+&\approx\sum_s d_\pi(s)\sum_a
+\nabla_\theta\pi(a\mid s,\theta)\,q_\pi^\gamma(s,a)
 \qquad(\gamma\to1^-),\\
 \nabla_\theta\bar r_\pi
 &=\sum_s d_\pi(s)\,g_\pi(s;q_\pi^{\mathrm{diff}}).
@@ -295,7 +321,8 @@ $$
 \rho_\pi(s)&=\sum_{t=0}^{\infty}\gamma^t
 \Pr_{S_0\sim d_0,\,\pi}(S_t=s),\\
 \nabla_\theta\bar v_\pi^{\,0}
-&=\sum_s\rho_\pi(s)\,g_\pi(s;q_\pi^\gamma).
+&=\sum_s\rho_\pi(s)\sum_a
+\nabla_\theta\pi(a\mid s,\theta)\,q_\pi^\gamma(s,a).
 \end{aligned}
 $$
 
@@ -317,13 +344,16 @@ $$
 =\frac{\nabla_\theta\pi(a\mid s,\theta)}{\pi(a\mid s,\theta)}.
 $$
 
-把 $\nabla_\theta\pi=\pi\,\nabla_\theta\ln\pi$ 代回求和式后，内层可按动作概率取条件期望。令 $Z=\sum_s\eta(s)>0$、$\tilde\eta(s)=\eta(s)/Z$，再对状态取期望。
+因此 $\nabla_\theta\pi=\pi\,\nabla_\theta\ln\pi$。出现的 $\pi(a\mid s,\theta)$ 恰好是动作的条件概率。令 $Z=\sum_s\eta(s)>0$、$\tilde\eta(s)=\eta(s)/Z$，先把状态求和写成 $S\sim\tilde\eta$ 的期望，再把动作求和写成 $A\sim\pi(\cdot\mid S,\theta)$ 的条件期望。
 
 $$
 \begin{aligned}
 \sum_s\eta(s)\,g_\pi(s;q)
 &=\sum_s\eta(s)\sum_a\pi(a\mid s,\theta)
   \nabla_\theta\ln\pi(a\mid s,\theta)\,q(s,a)\\
+&=Z\,\mathbb E_{S\sim\tilde\eta}\!\left[
+  \sum_a\pi(a\mid S,\theta)
+  \nabla_\theta\ln\pi(a\mid S,\theta)\,q(S,a)\right]\\
 &=Z\,\mathbb E_{S\sim\tilde\eta}
   \left[\mathbb E_{A\sim\pi(\cdot\mid S,\theta)}
   \!\left[\nabla_\theta\ln\pi(A\mid S,\theta)\,q(S,A)\right]\right]\\
@@ -371,7 +401,14 @@ $$
 {\sum_{a'\in\mathcal A(s)} e^{h(s,a',\theta)}}.
 $$
 
-当状态有多个可用动作时，每个动作都有正概率被采样，因此策略能在访问到的状态进行探索。也有直接对确定性策略求梯度的 **Deterministic Policy Gradient（DPG）** 方法。
+</div>
+</div>
+
+<div class="td-slide">
+<div class="td-slide-title">Neural Network Policy · 输出层与探索</div>
+<div class="td-slide-body">
+
+当所有状态共用动作集合 $\mathcal A$ 时，网络有 $|\mathcal A|$ 个动作输出。输出层使用 softmax，将每个动作的 logit 转成对应的 $\pi(a\mid s,\theta)$。有两个或更多可用动作时，每个动作的概率都在 $(0,1)$ 内，因此可按这个随机策略在访问到的状态探索各个动作。也有直接对确定性策略求梯度的 **Deterministic Policy Gradient（DPG）** 方法。
 
 </div>
 </div>
@@ -395,7 +432,15 @@ $$
 \end{aligned}
 $$
 
-从对应的分布采到一个 $(s_t,a_t)$ 后，可用单样本代替期望。真实的 $q_{\pi_t}$ 通常未知，再以 $q_t(s_t,a_t)$ 代替它，就得到实际使用的随机更新。以下沿用课件记法，将固定的正比例因子 $Z$ 并入 $\alpha$。
+从对应的分布采到一个 $(s_t,a_t)$ 后，先用含真实动作价值的单样本代替期望。以下沿用课件记法，将固定的正比例因子 $Z$ 并入 $\alpha$。
+
+$$
+\theta_{t+1}
+=\theta_t+\alpha\,\nabla_\theta\ln\pi(a_t\mid s_t,\theta_t)\,
+q_{\pi_t}(s_t,a_t).
+$$
+
+真实的 $q_{\pi_t}$ 通常未知。再以估计值 $q_t(s_t,a_t)$ 代入，得到实际使用的随机更新。
 
 $$
 \theta_{t+1}
@@ -441,11 +486,17 @@ $$
 p_t(\theta_{t+1})-p_t(\theta_t)
 &\approx \nabla_\theta p_t(\theta_t)^\top
 (\theta_{t+1}-\theta_t)\\
+&=\alpha\beta_t\,\nabla_\theta p_t(\theta_t)^\top
+\nabla_\theta p_t(\theta_t)\\
 &=\alpha\beta_t\left\|\nabla_\theta p_t(\theta_t)\right\|^2.
 \end{aligned}
 $$
 
-当步长足够小且 $\nabla_\theta p_t(\theta_t)\ne 0$，$\beta_t>0$ 会提高已采样动作在 $s_t$ 下的概率，$\beta_t<0$ 会降低它。$\beta_t=0$ 时，这次更新量为零。
+当步长足够小且 $\nabla_\theta p_t(\theta_t)\ne 0$ 时，有
+
+- $\beta_t>0$ 沿动作概率的梯度前进，$\pi(a_t\mid s_t,\theta_{t+1})>\pi(a_t\mid s_t,\theta_t)$。
+- $\beta_t<0$ 沿反方向前进，$\pi(a_t\mid s_t,\theta_{t+1})<\pi(a_t\mid s_t,\theta_t)$。
+- $\beta_t=0$ 时，本次更新量为零。
 
 </div>
 </div>
@@ -466,7 +517,7 @@ $$
 <div class="td-slide-title">Monte Carlo Policy Gradient</div>
 <div class="td-slide-body">
 
-用同一策略生成一个完整回合。对每个 $(s_t,a_t)$，以从该步到终止的实际折扣回报 **return-to-go** 作为动作价值估计。
+**REINFORCE** 是早期的策略梯度算法之一。它先用同一策略生成一个完整回合，再对每个 $(s_t,a_t)$ 以从该步到终止的实际折扣回报 **return-to-go** 作为动作价值估计。
 
 $$
 G_t=\sum_{j=t+1}^{T}\gamma^{j-t-1}r_j,
