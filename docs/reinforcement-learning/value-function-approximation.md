@@ -9,10 +9,23 @@ pageClass: rl-summary
 ### 1.1 从表格到共享参数
 
 <div class="td-slide">
+<div class="td-slide-title">Tabular Representation · 每个状态动作对有一格</div>
+<div class="td-slide-body">
+
+前七课用表格存储 **state value** 和 **action value**。以 $q_\pi$ 为例，行对应状态，列对应动作，每格存一个 $q_\pi(s,a)$。课件中 9 个状态、每个状态 5 个动作，共有 45 个表项。
+
+- **优点**。查表直观，逐项更新也容易分析。
+- **Storage**。状态或动作越多，需要的表项越多。连续空间无法逐项列成有限表。
+- **Generalization**。表项各自独立，更新一个表项时，其他表项的估计不会随之改变。
+
+</div>
+</div>
+
+<div class="td-slide">
 <div class="td-slide-title">Curve Fitting · 用一条曲线表示多个状态的价值</div>
 <div class="td-slide-body">
 
-把每个状态的价值 $v_\pi(s)$ 看作一个数据点。状态很多时，可以用一个参数化函数 $\hat v(s,w)$ 拟合这些点。更新共享参数 $w$，也会改变其他使用这些参数的状态的预测，这就是 **generalization**。
+固定策略 $\pi$，把一维状态及其价值看成数据点 $(s,v_\pi(s))$。状态很多时，可以用同一个 **parameterized function** $\hat v(s,w)$ 来拟合这些点。
 
 </div>
 </div>
@@ -29,7 +42,24 @@ $$
 \hat v(s,w)=\phi(s)^\top w.
 $$
 
+- $w\in\mathbb R^m$ 是 **parameter vector**，存放要学习的系数。
+- $\phi(s)\in\mathbb R^m$ 是状态 $s$ 的 **feature vector**，存放用来表示该状态的特征。
+
 加入 $s^2$ 后，曲线可以弯曲。这里的 **linear** 指对参数 $w$ 线性，feature 本身可以是状态的非线性函数。
+
+</div>
+</div>
+
+### 1.3 Quick Summary
+
+<div class="td-slide">
+<div class="td-slide-title">Value Function Approximation · Storage 与 Generalization</div>
+<div class="td-slide-body">
+
+用 $\hat v(s,w)\approx v_\pi(s)$ 近似状态价值，也可以用 $\hat q(s,a,w)$ 近似动作价值。
+
+- **Storage**。对状态价值而言，参数维数 $m$ 可以远小于状态数 $|\mathcal S|$。
+- **Generalization**。从一个已访问状态得到的经验会更新共享参数 $w$，也可能改变其他尚未访问状态的价值估计。
 
 </div>
 </div>
