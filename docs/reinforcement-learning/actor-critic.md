@@ -426,3 +426,152 @@ $\frac{p_0(x_i)}{p_1(x_i)}$ 称为 **importance weight（重要性权重）**。
 
 </div>
 </div>
+
+### 4.3 The Theorem of Off-policy Policy Gradient {#off-policy-policy-gradient-theorem}
+
+<div class="td-slide">
+<div class="td-slide-title">Behavior Policy · Target Policy · Objective</div>
+<div class="td-slide-body">
+
+和 on-policy 情形一样，先确定策略优化的目标，再求它的梯度。
+
+- **行为策略 $\beta$**（behavior policy）负责与环境交互，生成经验样本。
+- **目标策略 $\pi_\theta$**（target policy）用这些样本来更新。在奖励设定下，目标是最大化
+
+$$
+J(\theta)
+=\sum_{s\in\mathcal S}d_\beta(s)v_{\pi_\theta}(s)
+=\mathbb E_{S\sim d_\beta}[v_{\pi_\theta}(S)].
+$$
+
+$d_\beta$ 是行为策略的平稳状态分布。可以把这个指标理解为从 $d_\beta$ 选择起点，再按目标策略行动时的期望折扣回报。求 $\theta$ 的梯度时，行为策略 $\beta$ 固定。
+
+</div>
+</div>
+
+<div class="td-theorem">
+<div class="td-theorem-title">Theorem · Off-policy Policy Gradient Theorem</div>
+<div class="td-theorem-body">
+
+在折扣情形 $\gamma\in(0,1)$ 下，令 $\rho(s)$ 为从 $S_0\sim d_\beta$ 出发、随后按 $\pi_\theta$ 行动的折扣状态访问权重。把它归一化为 $\tilde\rho$ 后，梯度可写为
+
+$$
+\nabla_\theta J(\theta)
+=\frac{1}{1-\gamma}
+\mathbb E_{S\sim\tilde\rho,\,A\sim\beta(\cdot\mid S)}
+\!\left[
+\frac{\pi(A\mid S,\theta)}{\beta(A\mid S)}
+\,\nabla_\theta\ln\pi(A\mid S,\theta)\,q_\pi(S,A)
+\right].
+$$
+
+$$
+\rho(s)=\sum_{k=0}^{\infty}\gamma^k
+  \Pr_{S_0\sim d_\beta,\,\pi_\theta}(S_k=s),
+\qquad
+\tilde\rho(s)=(1-\gamma)\rho(s).
+$$
+
+动作 $A$ 从 $\beta(\cdot\mid S)$ 抽取，概率比 $\pi(A\mid S,\theta)/\beta(A\mid S)$ 把动作的期望还原到目标策略下。这要求 $\beta$ 覆盖 $\pi$ 的动作，即 $\pi(a\mid s,\theta)>0$ 时 $\beta(a\mid s)>0$。状态仍按上式的折扣访问权重计入。
+
+课件的简写把 $\rho$ 放在期望下标。教材定义的 $\rho$ 是总和为 $1/(1-\gamma)$ 的权重，所以写成概率分布 $\tilde\rho$ 下的期望时，式外要乘回这一系数。证明见教材 §10.3.2 的 Box 10.2。[《强化学习的数学原理》教材](https://raw.githubusercontent.com/MathFoundationRL/Book-Mathematical-Foundation-of-Reinforcement-Learning/refs/heads/main/Book-all-in-one.pdf)
+
+</div>
+</div>
+
+### 4.4 The Algorithm of Off-policy Actor–Critic {#off-policy-actor-critic-algorithm}
+
+<div class="td-slide">
+<div class="td-slide-title">Baseline Invariance · 选取状态价值作为基准</div>
+<div class="td-slide-body">
+
+Off-policy 策略梯度也可以减去只依赖状态的 baseline $b(s)$。以下期望沿用上一节的 $S\sim\tilde\rho$ 和 $A\sim\beta(\cdot\mid S)$。
+
+$$
+\nabla_\theta J(\theta)=
+\frac{1}{1-\gamma}\mathbb E\!\left[
+\frac{\pi(A\mid S,\theta)}{\beta(A\mid S)}
+\nabla_\theta\ln\pi(A\mid S,\theta)
+\big(q_\pi(S,A)-b(S)\big)
+\right].
+$$
+
+给定 $S=s$，对动作取期望时，重要性权重把 $\beta$ 下的动作求和换回 $\pi$ 下的动作求和。于是 baseline 项化为 $b(s)\nabla_\theta\sum_a\pi(a\mid s,\theta)=0$。
+
+为减小估计方差，课件取 $b(S)=v_\pi(S)$。括号里的差值就成为目标策略的 advantage。
+
+$$
+\nabla_\theta J(\theta)=
+\frac{1}{1-\gamma}\mathbb E\!\left[
+\frac{\pi(A\mid S,\theta)}{\beta(A\mid S)}
+\nabla_\theta\ln\pi(A\mid S,\theta)
+\big(q_\pi(S,A)-v_\pi(S)\big)
+\right].
+$$
+
+</div>
+</div>
+
+<div class="td-slide">
+<div class="td-slide-title">Stochastic Gradient Ascent · 从 Advantage 到 TD Error</div>
+<div class="td-slide-body">
+
+写成单样本更新时，将固定系数 $1/(1-\gamma)$ 并入 Actor 的步长 $\alpha_\theta$。令 $q_t$ 和 $v_t$ 分别表示对目标策略的动作价值和状态价值的估计。
+
+$$
+\theta_{t+1}=\theta_t+\alpha_\theta
+\frac{\pi(a_t\mid s_t,\theta_t)}{\beta(a_t\mid s_t)}
+\nabla_\theta\ln\pi(a_t\mid s_t,\theta_t)
+\big(q_t(s_t,a_t)-v_t(s_t)\big).
+$$
+
+与 on-policy A2C 一样，用一步 TD error 估计 advantage。
+
+$$
+q_t(s_t,a_t)-v_t(s_t)
+\approx
+\underbrace{r_{t+1}+\gamma v_t(s_{t+1})-v_t(s_t)}_{\delta_t}.
+$$
+
+把 $\delta_t$ 代入，再用 $\pi\nabla_\theta\ln\pi=\nabla_\theta\pi$，得到课件的两种等价写法。
+
+$$
+\begin{aligned}
+\theta_{t+1}
+&=\theta_t+\alpha_\theta
+\frac{\pi(a_t\mid s_t,\theta_t)}{\beta(a_t\mid s_t)}
+\,\delta_t\,\nabla_\theta\ln\pi(a_t\mid s_t,\theta_t)\\
+&=\theta_t+\alpha_\theta
+\frac{\delta_t}{\beta(a_t\mid s_t)}
+\,\nabla_\theta\pi(a_t\mid s_t,\theta_t).
+\end{aligned}
+$$
+
+</div>
+</div>
+
+<figure>
+  <img src="./resources/actor-critic/off-policy-actor-critic-pseudocode.webp" alt="课件原版 Off-policy Actor–Critic 伪代码。初始化行为策略、目标策略和价值函数。每步按行为策略采样，用更新前的价值参数计算 TD error，再用同一个重要性权重和 TD error 更新 Critic 和 Actor。" width="1496" height="1038" loading="lazy">
+</figure>
+
+伪代码先按 $\beta$ 选动作，再用 $v(\cdot,w_t)$ 计算 TD error。**Critic 和 Actor 都乘同一个动作概率比** $\pi(a_t\mid s_t,\theta_t)/\beta(a_t\mid s_t)$。Critic 借此把给定状态下的 TD 更新校正到目标策略，Actor 用校正后的优势信号更新 $\theta$。终止转移取下一状态价值为零。[教材 §10.3.3 · Algorithm 10.3](https://raw.githubusercontent.com/MathFoundationRL/Book-Mathematical-Foundation-of-Reinforcement-Learning/refs/heads/main/Book-all-in-one.pdf)
+
+**与定理的关系。** 定理中的状态分布是 $\tilde\rho$。若直接用行为策略轨迹逐步更新，长期状态分布是 $d_\beta$。图中概率比只校正动作分布。因此当 $d_\beta$ 与 $\tilde\rho$ 不同时，这个简单版本用的是近似梯度。
+
+## 5. Deterministic Actor–Critic (DPG) {#deterministic-actor-critic}
+
+### 5.1 Introduction {#dpg-introduction}
+
+<div class="td-slide">
+<div class="td-slide-title">Introduction</div>
+<div class="td-slide-body">
+
+到目前为止，前面讨论的策略梯度方法都用了 **stochastic policy（随机策略）**。以离散动作的 softmax 策略为例，每个可用动作都满足 $\pi(a\mid s,\theta)>0$，智能体按这些概率抽取动作。
+
+**策略梯度方法能不能用 deterministic policy（确定性策略）？**
+
+- 可以。确定性策略给定状态就直接输出一个动作，记为 $a=\mu(s,\theta)$。
+- 这样可以直接输出连续动作，例如一个实数或一个实数向量。
+
+</div>
+</div>
