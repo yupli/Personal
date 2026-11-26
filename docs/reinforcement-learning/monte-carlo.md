@@ -2,7 +2,7 @@
 pageClass: rl-summary
 ---
 
-# 第 5 课 · Monte Carlo Methods · V2（总结）
+# 第 5 课 · Monte Carlo Methods
 
 ## 1. From Policy Iteration to Model-Free RL
 

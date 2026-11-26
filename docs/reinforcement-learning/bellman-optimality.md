@@ -2,7 +2,7 @@
 pageClass: rl-summary
 ---
 
-# 第 3 课 · 贝尔曼最优公式 · V2（总结）
+# 第 3 课 · 贝尔曼最优公式
 
 ## 1. Optimal Policy {#_1-optimal-policy-optimal-value}
 

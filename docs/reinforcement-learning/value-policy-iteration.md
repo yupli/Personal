@@ -2,7 +2,7 @@
 pageClass: rl-summary
 ---
 
-# 第 4 课 · 值迭代与策略迭代 · V2（总结）
+# 第 4 课 · 值迭代与策略迭代
 
 ## 1. Value Iteration
 

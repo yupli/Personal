@@ -1,13 +1,11 @@
 <script setup lang="ts">
 import { computed, nextTick, onMounted, onBeforeUnmount, watch } from "vue";
-import { useData, withBase } from "vitepress";
-import { lessonHasSlides, lessonInfo, lessonLink } from "../../lessons";
+import { useData } from "vitepress";
 import { useReading } from "../reading";
 
 const {page}=useData();
 const reading=useReading();
 const path=computed(()=>"/"+page.value.relativePath.replace(/\.md$/,".html"));
-const info=computed(()=>lessonInfo(path.value));
 const isArticle=computed(()=>/^\/(?:or-opt|reinforcement-learning)\//.test(path.value)&&!path.value.endsWith("/index.html"));
 const bookmark=computed(()=>reading.saved.value.some(x=>x.path===path.value));
 let timer:number|undefined;
@@ -35,11 +33,6 @@ watch(()=>page.value.relativePath,update);
 
 <template>
   <nav v-if="isArticle" class="pk-doc-tools" aria-label="笔记操作">
-    <div v-if="info" class="pk-version" aria-label="切换课程版本">
-      <a v-if="lessonHasSlides(info.index)" class="pk-btn" :aria-current="info.slides ? 'page' : undefined" :href="withBase(lessonLink(info.index,true))">V1（逐页）</a>
-      <a class="pk-btn" :aria-current="!info.slides ? 'page' : undefined" :href="withBase(lessonLink(info.index,false))">V2（总结）</a>
-    </div>
     <button type="button" class="pk-btn" :aria-pressed="bookmark" @click="reading.toggle({path,title:page.title})">{{bookmark?'取消收藏':'收藏本页'}}</button>
   </nav>
-  <p v-if="info?.slides" class="pk-slide-hint">点击课件图片可放大。</p>
 </template>

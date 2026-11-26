@@ -3,14 +3,13 @@ import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue"
 import { useRoute, withBase } from "vitepress";
 import { normalizeSearch, searchParts } from "../search-excerpt";
 
-type SearchDoc = { title:string; path:string; area:string; version:string; sections:{id:string;title:string;text:string}[] };
+type SearchDoc = { title:string; path:string; area:string; sections:{id:string;title:string;text:string}[] };
 const dialog = ref<HTMLDialogElement>();
 const input = ref<HTMLInputElement>();
 const trigger = ref<HTMLButtonElement>();
 const query = ref("");
 const composing = ref(false);
 const area = ref("");
-const version = ref("");
 const index = ref<SearchDoc[]>([]);
 const state = ref<"idle"|"loading"|"error"|"ready">("idle");
 const route = useRoute();
@@ -18,14 +17,14 @@ const results = computed(() => {
   const terms = [...new Set(normalizeSearch(query.value).split(/\s+/).filter(Boolean))];
   if (!terms.length) return [];
   return index.value.flatMap(doc => {
-    if (area.value && doc.area !== area.value || version.value && doc.version !== version.value) return [];
+    if (area.value && doc.area !== area.value) return [];
     const title = normalizeSearch(doc.title);
     return doc.sections.map(section => {
       const heading = normalizeSearch(section.title), body = normalizeSearch(section.text);
       const score = terms.reduce((sum,t) => sum + (heading.includes(t) ? 12 : title.includes(t) ? 8 : body.includes(t) ? 2 : 0),0);
       return {doc,section,score,match:terms.every(t=>heading.includes(t)||title.includes(t)||body.includes(t))};
     }).filter(r=>r.match).sort((a,b)=>b.score-a.score).slice(0,2);
-  }).sort((a,b)=>b.score-a.score || Number(b.doc.version==="v2")-Number(a.doc.version==="v2"))
+  }).sort((a,b)=>b.score-a.score)
     .slice(0,20)
     .map(({ doc, section }) => ({
       doc,
@@ -103,8 +102,7 @@ onBeforeUnmount(()=>window.removeEventListener("keydown",shortcut));
       <div class="pk-dialog-bar"><h2 id="pk-search-heading">搜索笔记</h2><button type="button" class="pk-btn" @click="dialog?.close()">关闭</button></div>
       <input ref="input" class="pk-input" v-model="query" type="search" aria-label="搜索关键词" placeholder="例如：贝尔曼、BOE、单纯形法" @keydown="goToFirst" @compositionstart="composing = true" @compositionend="composing = false" @blur="composing = false">
       <div class="pk-filters">
-        <label>板块 <select class="pk-input" v-model="area" @change="area !== 'rl' && (version='')"><option value="">全部</option><option value="or">运筹优化</option><option value="rl">强化学习</option></select></label>
-        <label>版本 <select class="pk-input" v-model="version" :disabled="area==='or'"><option value="">全部</option><option value="v1">V1（逐页）</option><option value="v2">V2（总结）</option></select></label>
+        <label>板块 <select class="pk-input" v-model="area"><option value="">全部</option><option value="or">运筹优化</option><option value="rl">强化学习</option></select></label>
       </div>
       <p role="status" v-if="state==='loading'">正在加载搜索索引…</p>
       <p v-else-if="state==='error'" role="status">暂时无法加载搜索索引。 <button type="button" class="pk-btn" @click="load">重试</button></p>

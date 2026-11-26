@@ -14,8 +14,4 @@ import LessonCatalog from '../.vitepress/theme/components/LessonCatalog.vue'
 
 ## 目录
 
-第 1–7 课提供 V1（逐页）和 V2（总结），第 8 课提供 V2（总结）。
-
 <LessonCatalog />
-
-[附录](appendix.md)

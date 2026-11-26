@@ -1,8 +1,6 @@
 import { readdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 
-import { lessonInfo } from "./lessons";
-
 function plain(s: string) {
   const entities: Record<string,string> = { amp: "&", lt: "<", gt: ">", quot: '"', apos: "'", nbsp: " ", "#39": "'" };
   return s.replace(/<mjx-container\b[\s\S]*?<\/mjx-container>|<svg\b[\s\S]*?<\/svg>/g, " ")
@@ -22,7 +20,6 @@ export async function writeSearchIndex(outDir: string) {
     return {
       title, path: path.replace(/(?:^|\/)index\.html$/, match => match.startsWith("/") ? "/" : ""),
       area: path.startsWith("reinforcement-learning/") ? "rl" : path.startsWith("or-opt/") ? "or" : "home",
-      version: lessonInfo(path)?.slides ? "v1" : lessonInfo(path) ? "v2" : "",
       sections: [
         { id:"", title:"", text:plain(body.slice(0,headings[0]?.index ?? body.length)) },
         ...headings.map((h,i) => ({

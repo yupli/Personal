@@ -2,7 +2,7 @@
 pageClass: rl-summary
 ---
 
-# 第 7 课 · 时序差分方法 · V2（总结）
+# 第 7 课 · 时序差分方法
 
 ## 1. 时序差分（Temporal-Difference，TD）· State-value Prediction
 

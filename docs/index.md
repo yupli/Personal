@@ -11,7 +11,7 @@ features:
     link: /or-opt/
     linkText: 浏览运筹优化
   - title: 强化学习
-    details: 从基本概念与贝尔曼方程读起，可选课件逐页版或公式总结版。
+    details: 从基本概念与贝尔曼方程读起，沿课程顺序回顾公式、算法和例子。
     link: /reinforcement-learning/
     linkText: 浏览强化学习
 ---

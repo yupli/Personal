@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { nextTick, onMounted, onBeforeUnmount, ref, watch } from "vue";
 import { useRoute } from "vitepress";
-import { lessonInfo } from "../../lessons";
 
 const route=useRoute();
 const lightbox=ref<HTMLDialogElement>();
@@ -106,22 +105,15 @@ function decorate() {
     observeResize.set(el,update);
     resize?.observe(el);
   }
-  const isSlides=lessonInfo(route.path)?.slides;
   for(const img of doc.querySelectorAll<HTMLImageElement>("img")){
     if(img.closest("a, button") || !img.alt)continue;
     const button=document.createElement("button");button.type="button";
     button.setAttribute("aria-label","放大原图："+img.alt);
     button.setAttribute("aria-haspopup","dialog");
     button.addEventListener("click",()=>show(img,button));
-    if(isSlides){
-      button.className="pk-zoom-image";
-      img.before(button);
-      button.append(img);
-    } else {
-      button.className="pk-btn pk-zoom-trigger pk-enhancement";
-      button.textContent="放大原图";
-      img.after(button);
-    }
+    button.className="pk-btn pk-zoom-trigger pk-enhancement";
+    button.textContent="放大原图";
+    img.after(button);
   }
 }
 function schedule() {

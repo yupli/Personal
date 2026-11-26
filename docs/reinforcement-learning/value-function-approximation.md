@@ -2,7 +2,7 @@
 pageClass: rl-summary
 ---
 
-# 第 8 课 · 价值函数近似 · V2（总结）
+# 第 8 课 · 价值函数近似
 
 ## 1. Motivating Example · Curve Fitting {#curve-fitting}
 

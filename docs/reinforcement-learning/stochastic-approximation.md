@@ -2,7 +2,7 @@
 pageClass: rl-summary
 ---
 
-# 第 6 课 · Stochastic Approximation and Stochastic Gradient Descent · V2（总结）
+# 第 6 课 · Stochastic Approximation and Stochastic Gradient Descent
 
 <span id="_1-incremental-mean-estimation"></span>
 

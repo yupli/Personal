@@ -2,7 +2,7 @@
 pageClass: rl-summary
 ---
 
-# 第 2 课 · 贝尔曼公式 · V2（总结）
+# 第 2 课 · 贝尔曼公式
 
 ## 1. Return & State Value
 

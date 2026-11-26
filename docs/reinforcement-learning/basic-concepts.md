@@ -2,7 +2,7 @@
 pageClass: rl-summary
 ---
 
-# 第 1 课 · 基本概念 · V2（总结）
+# 第 1 课 · 基本概念
 
 ## 1. States, Actions & Transitions
 
