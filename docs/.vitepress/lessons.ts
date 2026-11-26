@@ -10,6 +10,7 @@ export const lessonList = [
   ["temporal-difference", "时序差分方法"],
   ["value-function-approximation", "价值函数近似"],
   ["policy-gradient", "策略梯度方法"],
+  ["actor-critic", "Actor–Critic 方法"],
 ] as const;
 
 export function lessonInfo(path: string) {
