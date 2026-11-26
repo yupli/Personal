@@ -9,6 +9,7 @@ export const lessonList = [
   ["stochastic-approximation", "随机近似与随机梯度下降"],
   ["temporal-difference", "时序差分方法"],
   ["value-function-approximation", "价值函数近似"],
+  ["policy-gradient", "策略梯度方法"],
 ] as const;
 
 export function lessonInfo(path: string) {
