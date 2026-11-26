@@ -341,19 +341,49 @@ $$
 </div>
 </div>
 
-### 4.4 Gridworld · Feature 决定可以拟合的形状 {#_4-2-gridworld-·-feature-决定可以拟合的形状}
+<span id="_4-2-gridworld-·-feature-决定可以拟合的形状"></span>
+
+### 4.4 Summary {#value-approximation-summary}
 
 <div class="td-slide">
-<div class="td-slide-title">5×5 Gridworld · 用平面拟合价值曲面</div>
+<div class="td-slide-title">Summary · 从 Policy Evaluation 到 Semi-gradient TD</div>
 <div class="td-slide-body">
 
-以坐标 $(x,y)$ 表示状态，$\phi(s)=[1,x,y]^\top$ 只需要三个参数，预测值构成一个平面。课件图中，TD-Linear 学到了价值变化的大致方向，但误差在训练后趋于平稳。
+1. **Objective**。固定 $\pi$，用 $J(w)=\frac12\mathbb E_d[(v_\pi(S)-\hat v(S,w))^2]$ 衡量价值近似的误差。
+2. **SGD**。对样本 $s_t$，用误差 $v_\pi(s_t)-\hat v(s_t,w_t)$ 乘 $\nabla_w\hat v(s_t,w_t)$ 来更新参数。
+3. **Semi-gradient TD**。真实价值未知，用 $r_{t+1}+\gamma\hat v(s_{t+1},w_t)$ 替代 $v_\pi(s_t)$，更新时把这个 target 当作常数。
 
-<figure>
-  <img src="./resources/value-function-approximation/td-linear-plane.webp" alt="左侧是真实价值曲面，中间是 TD-Linear 的平面近似，右侧是按 episode 显示的 RMSE。" loading="lazy">
-</figure>
+这三步解释了 TD 更新的来由。换成含当前估计的 TD target 后，更新方向一般会偏离 $J(w)$ 的负梯度。
 
-加入 $x^2,y^2,xy$ 后可拟合二次曲面。课件继续比较了 6 维和 10 维 feature，展示了增加 feature 如何改善这组实验里的拟合。线性 TD 求解的方程见[附录](appendix.md#linear-td-projected-bellman-equation)。
+</div>
+</div>
+
+<div class="td-slide">
+<div class="td-slide-title">Theoretical Analysis · 三种误差</div>
+<div class="td-slide-body">
+
+令 $\hat v(w)$ 表示所有状态的价值估计，$D=\operatorname{diag}(d_\pi)$，$\|x\|_D^2=x^\top D x$。Bellman operator 为 $T_\pi x=r_\pi+\gamma P_\pi x$。
+
+**True Value Error** 衡量估计与真实价值的差距。在 $d=d_\pi$ 时，$J_E(w)=2J(w)$。
+
+$$
+J_E(w)=\|\hat v(w)-v_\pi\|_D^2.
+$$
+
+**Bellman Error** 比较当前估计与一次 Bellman backup 的结果。
+
+$$
+J_{\mathrm{BE}}(w)=\|\hat v(w)-T_\pi\hat v(w)\|_D^2.
+$$
+
+**Projected Bellman Error** 先将 backup 的结果投影回线性模型能表示的空间，再比较。$\Pi_D$ 是按 $D$ 加权的正交投影。
+
+$$
+J_{\mathrm{PBE}}(w)
+=\|\hat v(w)-\Pi_D T_\pi\hat v(w)\|_D^2.
+$$
+
+在标准 on-policy 线性收敛条件下，TD-Linear 收敛到 projected Bellman equation 的解，此时 $J_{\mathrm{PBE}}=0$。[附录 · Projected Bellman Equation](appendix.md#linear-td-projected-bellman-equation)
 
 </div>
 </div>
