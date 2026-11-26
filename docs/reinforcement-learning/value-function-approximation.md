@@ -1,12 +1,13 @@
 ---
 pageClass: rl-summary
+outline: [2, 3]
 ---
 
 # 第 8 课 · 价值函数近似
 
 ## 1. Motivating Example · Curve Fitting {#curve-fitting}
 
-### 1.1 从表格到共享参数
+#### 1.1 从表格到共享参数
 
 <div class="td-slide">
 <div class="td-slide-title">Tabular Representation · 每个状态动作对有一格</div>
@@ -35,7 +36,7 @@ pageClass: rl-summary
 </div>
 </div>
 
-### 1.2 Linear in Parameters
+#### 1.2 Linear in Parameters
 
 <div class="td-slide">
 <div class="td-slide-title">Polynomial Features · 直线与二次曲线</div>
@@ -55,7 +56,7 @@ $$
 </div>
 </div>
 
-### 1.3 Quick Summary
+#### 1.3 Quick Summary
 
 <div class="td-slide">
 <div class="td-slide-title">Value Function Approximation · Storage 与 Generalization</div>
@@ -69,9 +70,11 @@ $$
 </div>
 </div>
 
-## 2. Objective Function {#objective-function}
+## Algorithm for state value estimation {#algorithm-for-state-value-estimation}
 
-### 2.1 Weighted Value Error {#_2-1-weighted-value-error}
+### 2. Objective Function {#objective-function}
+
+#### 2.1 Weighted Value Error {#_2-1-weighted-value-error}
 
 <div class="td-slide">
 <div class="td-slide-title">Policy Evaluation · 要找怎样的参数？</div>
@@ -101,7 +104,7 @@ $$
 </div>
 </div>
 
-### 2.2 Uniform Distribution {#uniform-distribution}
+#### 2.2 Uniform Distribution {#uniform-distribution}
 
 <div class="td-slide">
 <div class="td-slide-title">Uniform Distribution · 每个状态权重相同</div>
@@ -119,7 +122,7 @@ $$
 </div>
 </div>
 
-### 2.3 Stationary Distribution {#_2-2-stationary-distribution}
+#### 2.3 Stationary Distribution {#_2-2-stationary-distribution}
 
 <div class="td-slide">
 <div class="td-slide-title">Stationary Distribution · 按长期访问频率加权</div>
@@ -154,9 +157,9 @@ $$
 </div>
 </div>
 
-## 3. Optimization Algorithms {#td-function-approximation}
+### 3. Optimization Algorithms {#td-function-approximation}
 
-### 3.1 从 Gradient Descent 到 SGD {#_3-1-从-sgd-到-semi-gradient-td}
+#### 3.1 从 Gradient Descent 到 SGD {#_3-1-从-sgd-到-semi-gradient-td}
 
 <div class="td-slide">
 <div class="td-slide-title">Gradient Descent · 对目标函数求导</div>
@@ -201,7 +204,7 @@ $$
 </div>
 </div>
 
-### 3.2 Monte Carlo 与 TD Learning
+#### 3.2 Monte Carlo 与 TD Learning
 
 <div class="td-slide">
 <div class="td-slide-title">Monte Carlo · 用完整 Return 作 Target</div>
@@ -239,7 +242,7 @@ $$
 </div>
 </div>
 
-### 3.3 TD Learning Pseudocode
+#### 3.3 TD Learning Pseudocode
 
 <div class="td-slide">
 <div class="td-slide-title">Pseudocode · TD Learning with Function Approximation</div>
@@ -265,9 +268,9 @@ $$
 </div>
 </div>
 
-## 4. Selection of Function Approximators {#linear-features}
+### 4. Selection of Function Approximators {#linear-features}
 
-### 4.1 Linear 与 Nonlinear Approximators
+#### 4.1 Linear 与 Nonlinear Approximators
 
 <div class="td-slide">
 <div class="td-slide-title">两种 Approximator · 怎样选择模型？</div>
@@ -279,7 +282,7 @@ $$
 </div>
 </div>
 
-### 4.2 TD-Linear
+#### 4.2 TD-Linear
 
 <div class="td-slide">
 <div class="td-slide-title">TD-Linear · Gradient 等于 Feature Vector</div>
@@ -316,7 +319,7 @@ $$
 </div>
 </div>
 
-### 4.3 Tabular TD 是 TD-Linear 的特例 {#_4-1-linear-td-与-tabular-td}
+#### 4.3 Tabular TD 是 TD-Linear 的特例 {#_4-1-linear-td-与-tabular-td}
 
 <div class="td-slide">
 <div class="td-slide-title">One-hot Features · 每个状态选中一个表项</div>
@@ -343,7 +346,7 @@ $$
 
 <span id="_4-2-gridworld-·-feature-决定可以拟合的形状"></span>
 
-### 4.4 Summary {#value-approximation-summary}
+#### 4.4 Summary {#value-approximation-summary}
 
 <div class="td-slide">
 <div class="td-slide-title">Summary · 从 Policy Evaluation 到 Semi-gradient TD</div>
@@ -390,7 +393,7 @@ $$
 
 ## 5. Sarsa and Q-learning with Function Approximation {#approximate-control}
 
-### 5.1 Sarsa · 用采样到的下一动作
+#### 5.1 Sarsa · 用采样到的下一动作
 
 <div class="td-slide">
 <div class="td-slide-title">Semi-gradient Sarsa · 从 State Value 换成 Action Value</div>
@@ -413,7 +416,7 @@ $$
 </div>
 </div>
 
-### 5.2 Q-learning · 用下一状态的最大动作值
+#### 5.2 Q-learning · 用下一状态的最大动作值
 
 <div class="td-slide">
 <div class="td-slide-title">Semi-gradient Q-learning · Greedy Target</div>
@@ -432,7 +435,7 @@ $$
 
 ## 6. Deep Q-learning {#deep-q-learning}
 
-### 6.1 Online Network 与 Target Network
+#### 6.1 Online Network 与 Target Network
 
 <div class="td-slide">
 <div class="td-slide-title">DQN Loss · 用暂时固定的 Target 拟合动作价值</div>
@@ -452,7 +455,7 @@ $$
 </div>
 </div>
 
-### 6.2 Experience Replay
+#### 6.2 Experience Replay
 
 <div class="td-slide">
 <div class="td-slide-title">Replay Buffer · 随机抽取 Mini-batch</div>
@@ -463,7 +466,7 @@ $$
 </div>
 </div>
 
-### 6.3 Algorithm and Gridworld Example
+#### 6.3 Algorithm and Gridworld Example
 
 <div class="td-slide">
 <div class="td-slide-title">Pseudocode · Deep Q-learning</div>
